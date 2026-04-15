@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev" : "npx tailwindcss -i ./src/input.css -o ./dist/output.css --watch"
+    "dev": "npx tailwindcss -i ./src/input.css -o ./dist/output.css --watch"
   },
   "repository": {
     "type": "git",
@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/DucNguyen1402-dev/js-capstone-shopping-admin#readme",
   "dependencies": {
-    "@tailwindcss/cli": "^4.2.2"
+    "@tailwindcss/cli": "^4.2.2",
+    "prettier-plugin-tailwindcss": "^0.7.2"
   }
 }
