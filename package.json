@@ -1,0 +1,25 @@
+{
+  "name": "js-capstone-shopping-admin",
+  "version": "1.0.0",
+  "description": "An e-commerce project consisting of two main modules: a Customer Shopping Interface and a Product Admin Dashboard, built with a focus on Object-Oriented Programming (OOP) and API integration.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev" : "npx tailwindcss -i ./src/input.css -o ./dist/output.css --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DucNguyen1402-dev/js-capstone-shopping-admin.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/DucNguyen1402-dev/js-capstone-shopping-admin/issues"
+  },
+  "homepage": "https://github.com/DucNguyen1402-dev/js-capstone-shopping-admin#readme",
+  "dependencies": {
+    "@tailwindcss/cli": "^4.2.2"
+  }
+}
