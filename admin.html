@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin Dashboard</title>
+    <title>CyberPhone Admin</title>
     <link rel="icon" href="./src/assets/icon/admin-favicon.png" />
     <meta name="robots" content="noindex, nofollow" />
 
@@ -16,127 +16,351 @@
       rel="stylesheet"
     />
 
-   <!-- font Awsome link -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- font Awsome link -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+      integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
 
     <!-- App CSS -->
     <link rel="stylesheet" href="./dist/output.css" />
 
     <!-- App Scripts -->
-    <script type="module" src="./src/js/customer/controller.js"></script>
+    <script type="module" src="./src/js/admin/controller.js"></script>
   </head>
-  <body>
-    <header class="bg-white border-b border-gray-200 sticky top-0 z-10">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center h-16">
+  <body class="relative">
+    <header class="sticky top-0 z-10 bg-white shadow-sm">
+      <div class="relative mx-auto max-w-7xl px-4 py-6 lg:px-8 lg:py-0">
+        <div
+          class="flex gap-6 lg:h-20 items-center justify-between"
+        >
           <div class="flex items-center gap-2">
-            <span class="text-2xl font-bold tracking-tight text-blue-600"
+            <span class="text-2xl lg:text-3xl font-bold tracking-tight text-blue-600"
               >CyberPhone</span
             >
             <span
-              class="bg-gray-100 text-gray-600 text-xs font-medium px-2 py-1 rounded"
+              class="rounded bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600"
               >Admin</span
             >
           </div>
-          <nav class="flex items-center gap-4">
+          <div class="md:hidden">
+            <div data-open-icon >
+              <span class="fa-solid fa-bars text-gray-600 font-medium text-lg" ></span>
+            </div>
+            <div class="hidden" data-close-icon>
+              <span class="fa-solid fa-x  text-gray-600 font-medium text-lg" ></span>
+            </div>
+          </div>
+          <div class="absolute left-0 top-full md:static w-full md:w-auto ">
+            <nav
+            class="flex flex-col md:flex-row p-4 bg-slate-100 md:bg-transparent shadow-sm md:shadow-none z-10 md:z-0 md:py-0 gap-4 md:items-center md:gap-10 lg:gap-16 text-xs md:text-sm "
+          >
             <a
               href="./index.html"
-              class="text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors duration-300"
-              >View Site</a
+              target="_blank"
+              class="flex items-center gap-0.5 font-medium text-gray-500 transition-colors duration-300 hover:text-blue-500"
             >
-            <button
-              id="btnLogout"
-              class="text-sm font-medium text-red-500 hover:text-red-600"
+              <span class="fa-solid fa-store"></span>
+              <span>View Site</span>
+            </a>
+            <a
+              class="flex cursor-pointer items-center gap-0.5 font-medium text-gray-500 transition-colors duration-300 hover:text-rose-600"
             >
-              Logout
-            </button>
+              <span class="fa-solid fa-arrow-right-from-bracket"></span>
+              <span>Logout</span>
+            </a>
           </nav>
+          </div>
+          
         </div>
       </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div
-        class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8"
-      >
-        <div>
-          <h1 class="text-2xl font-semibold">Product Inventory</h1>
-          <p class="text-sm text-gray-500">
-            Manage your phone stock, prices and specifications.
-          </p>
-        </div>
-        <div class="flex gap-3">
-          <div class="relative">
-            <input
-              type="text"
-              id="searchInput"
-              placeholder="Search product..."
-              class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none w-full md:w-64 transition-all"
-            />
-            <span class="absolute left-3 top-2.5 text-gray-400">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-            </span>
-          </div>
-          <button
-            id="btnOpenModal"
-            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2"
+    <main class="mx-auto max-w-7xl  mt-14 xl:mt-16">
+      <div class="mb-12 flex flex-col lg:flex-row gap-10 items-start lg:gap-0 lg:items-center lg:justify-between
+      px-4 lg:px-8
+      ">
+        <div class="flex items-start gap-4">
+          <div
+            class="w-16 h-10 lg:h-12 lg:w-12 items-center justify-center rounded-md bg-blue-50 text-xl text-blue-600 flex "
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                clip-rule="evenodd"
-              />
-            </svg>
-            Add Product
-          </button>
+            <span class="fa-solid fa-dolly"></span>
+          </div>
+
+          <div>
+            <div class="flex items-center gap-3">
+              <h1 class="text-2xl font-bold tracking-tight text-gray-900">
+                Inventory
+              </h1>
+              <span
+                class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.75 text-xs font-medium text-green-800"
+              >
+                <span
+                  class="mr-1.5 h-1.5 w-1.5 rounded-full bg-green-500"
+                ></span>
+                Live System
+              </span>
+            </div>
+            <p class="mt-1 max-w-md text-sm leading-relaxed text-gray-500">
+              Good morning,
+              <span class="font-medium text-gray-700">Duc Nguyen</span>! Which
+              product line are we updating today?
+            </p>
+          </div>
         </div>
+
+        <button
+          type="button"
+          class="flex cursor-pointer items-center gap-1 rounded-md bg-green-500 px-3 py-2 text-sm font-medium text-white transition-colors duration-400 hover:bg-green-600"
+        >
+          <span class="fa-solid fa-plus"></span>
+          <span>Add Product</span>
+        </button>
+      </div>
+
+      <div class="fixed inset-0 flex items-center justify-center z-50 hidden" data-modal-container >
+        <div
+          class="relative scrollbar z-50 w-[95%] h-180 lg:h-160 md:w-120 overflow-y-scroll rounded-xl border border-gray-300 bg-white px-3 py-4 lg:p-8 shadow-sm "
+        >
+          <div
+            class="absolute top-2 right-2 cursor-pointer text-sm text-gray-500 transition-colors duration-300 hover:text-gray-700"
+            data-modal-close
+          >
+            <span class="fa-solid fa-x"></span>
+          </div>
+          <div data-modal-content>
+            <h2
+              class="mb-8 text-center text-lg font-semibold tracking-wide text-slate-800"
+            >
+              PHONE PRODUCT FORM
+            </h2>
+            <form id="productForm" spellcheck="false">
+              <div class="flex flex-col gap-6">
+                <div class="flex flex-col gap-1">
+                  <label for="name" class="pl-1 text-sm text-gray-500"
+                    >Phone name:</label
+                  >
+                  <input
+                    id="name"
+                    type="text"
+                    placeholder="e.g. iPhone 11 Pro Max"
+                    class="w-full rounded-sm border border-gray-300 px-3 py-2 outline-none placeholder:text-sm focus:ring-1 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div class="flex flex-col gap-2">
+                  <label for="price" class="pl-1 text-sm text-gray-500"
+                    >Phone price:</label
+                  >
+                  <input
+                    id="price"
+                    type="number"
+                    min="0"
+                    placeholder="e.g. 39.400.000đ"
+                    class="w-full rounded-sm border border-gray-300 px-3 py-2 outline-none placeholder:text-sm focus:ring-1 focus:ring-blue-500"
+                  />
+                  <p
+                    class="px-2 py-1 text-white rounded-sm text-sm hidden"
+                    data-role="warning"
+                  ></p>
+                </div>
+
+                <div class="flex flex-col gap-2">
+                  <label for="img" class="pl-1 text-sm text-gray-500"
+                    >Image link:</label
+                  >
+                  <input
+                    id="img"
+                    type="text"
+                    placeholder="e.g. https://placehold.us/300x300"
+                    class="w-full rounded-sm border border-gray-300 px-3 py-2 outline-none placeholder:text-sm focus:ring-1 focus:ring-blue-500"
+                  />
+                  <p
+                    class="px-2 py-1 text-white rounded-sm text-sm hidden"
+                    data-role="warning"
+                  ></p>
+                </div>
+
+                <div class="flex flex-col gap-2">
+                  <label for="screen" class="pl-1 text-sm text-gray-500"
+                    >Phone screen:</label
+                  >
+                  <input
+                    id="screen"
+                    type="text"
+                    placeholder="e.g. 6.7', OLED, 120Hz"
+                    class="w-full rounded-sm border border-gray-300 px-3 py-2 outline-none placeholder:text-sm focus:ring-1 focus:ring-blue-500"
+                  />
+                  <p
+                    class="px-2 py-1 text-white rounded-sm text-sm hidden"
+                    data-role="warning"
+                  ></p>
+                </div>
+
+                <div class="flex flex-col gap-2">
+                  <label for="backCamera" class="pl-1 text-sm text-gray-500"
+                    >Back camera:</label
+                  >
+                  <input
+                    id="backCamera"
+                    type="text"
+                    placeholder="e.g. 48MP triple camera"
+                    class="w-full rounded-sm border border-gray-300 px-3 py-2 outline-none placeholder:text-sm focus:ring-1 focus:ring-blue-500"
+                  />
+                  <p
+                    class="px-2 py-1 text-white rounded-sm text-sm hidden"
+                    data-role="warning"
+                  ></p>
+                </div>
+
+                <div class="flex flex-col gap-2">
+                  <label for="frontCamera" class="pl-1 text-sm text-gray-500"
+                    >Front camera:</label
+                  >
+                  <input
+                    id="frontCamera"
+                    type="text"
+                    placeholder="e.g. 12MP selfie"
+                    class="w-full rounded-sm border border-gray-300 px-3 py-2 outline-none placeholder:text-sm focus:ring-1 focus:ring-blue-500"
+                  />
+                  <p
+                    class="px-2 py-1 text-white rounded-sm text-sm hidden"
+                    data-role="warning"
+                  ></p>
+                </div>
+
+                <div class="flex flex-col gap-2">
+                  <label for="decs" class="pl-1 text-sm text-gray-500"
+                    >Description:</label
+                  >
+                  <input
+                    id="desc"
+                    type="text"
+                    placeholder="Enter phone description..."
+                    class="w-full rounded-sm border border-gray-300 px-3 py-2 outline-none placeholder:text-sm focus:ring-1 focus:ring-blue-500"
+                  />
+                  <p
+                    class="px-2 py-1 text-white rounded-sm text-sm hidden"
+                    data-role="warning"
+                  ></p>
+                </div>
+
+                <div class="flex flex-col gap-2">
+                  <label for="decs" class="pl-1 text-sm text-gray-500"
+                    >Phone Type:</label
+                  >
+                  <select
+                    id="type"
+                    class="w-full cursor-pointer rounded-sm border border-gray-300 px-3 py-2 text-sm outline-none invalid:text-gray-500 focus:ring-1 focus:ring-blue-500"
+                    required
+                  >
+                    <option value="" disable selected hidden>
+                      Select type
+                    </option>
+                    <option value="iphone" class="text-gray-700">iPhone</option>
+                    <option value="Samsung" class="text-gray-700">
+                      Samsung
+                    </option>
+                    <option value="Samsung" class="text-gray-700">
+                      Xiaomi
+                    </option>
+                    <option value="Samsung" class="text-gray-700">Oppo</option>
+                  </select>
+                  <p
+                    class="px-2 py-1 text-white rounded-sm text-sm hidden"
+                    data-role="warning"
+                  ></p>
+                </div>
+              </div>
+
+              <div class="mt-16 flex gap-2" data-modal-submit>
+                <button
+                  type="submit"
+                  id="btnSave"
+                  class="flex-1 cursor-pointer rounded-lg bg-blue-500 py-2 text-sm text-white transition-colors duration-300 hover:bg-blue-600"
+                  data-button="save"
+                >
+                  Create new
+                </button>
+                <button
+                  type="button"
+                  class="hidden flex-1 cursor-pointer rounded-lg bg-amber-500 py-2 text-sm text-white hover:bg-amber-600"
+                  data-button="update"
+                >
+                  Update
+                </button>
+                <button
+                  type="button"
+                  class="cursor-pointer rounded-lg bg-rose-500 px-4 py-2 text-sm text-white hover:bg-rose-600"
+                  data-button="reset"
+                >
+                  Reset
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div
+          class="fixed inset-0 z-40 bg-black/60 backdrop-blur-md"
+          data-modal-backdrop
+        ></div>
       </div>
 
       <div
-        class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm"
+        class="overflow-hidden rounded-md border border-gray-200 bg-white shadow-sm px-1 lg:px-2 xl:px-0"
       >
+        <div class="bg-blue-500 px-2 py-3 md:px-8 md:py-5 gap-6 flex flex-col md:flex-row md:items-center md:justify-between">
+          <h2 class="text-lg lg:text-xl text-white font-medium tracking-wider">
+            PRODUCT LIST
+          </h2>
+          <div class="flex gap-3 w-full md:w-2/5 lg:w-1/4">
+            <div class="relative">
+              <input
+                type="text"
+                placeholder="Search product..."
+                class="w-full rounded-sm border border-gray-300 py-2 pr-3 pl-10 outline-none placeholder:text-sm focus:ring-2 focus:ring-blue-500 bg-white text-gray-600"
+                spellcheck="false"
+              />
+              <div class="absolute top-1/2 left-3 -translate-y-1/2">
+                <span
+                  class="fa-solid fa-magnifying-glass bg-linear-to-br from-indigo-500 to-cyan-500 bg-clip-text text-transparent"
+                ></span>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse">
+          <table class="w-full border-collapse text-left">
             <thead
-              class="bg-gray-50 border-b border-gray-200 text-xs uppercase font-semibold text-gray-600"
+              class="border-b border-gray-200 bg-gray-50 tracking-wider text-sm font-semibold text-gray-600 uppercase"
             >
               <tr>
                 <th class="px-6 py-4">ID</th>
                 <th class="px-6 py-4">Product</th>
-                <th
-                  class="px-6 py-4 text-right cursor-pointer hover:text-blue-600"
-                  id="sortPrice"
-                >
-                  Price <span id="sortIcon">↕</span>
+                <th class="cursor-pointer px-6 py-4">
+                  <div
+                    class="flex gap-1 transition-colors duration-300 hover:text-orange-500"
+                  >
+                    <span>Price</span>
+                    <span
+                      class="fa-solid fa-sort-down"
+                      data-role="sort-down"
+                    ></span>
+                  </div>
                 </th>
                 <th class="px-6 py-4">Type</th>
                 <th class="px-6 py-4">Description</th>
                 <th class="px-6 py-4 text-center">Actions</th>
               </tr>
             </thead>
-            <tbody id="tblProductList" class="divide-y divide-gray-100"></tbody>
+            <tbody class="divide-y divide-gray-100"></tbody>
           </table>
         </div>
       </div>
     </main>
+
   </body>
 </html>
