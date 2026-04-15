@@ -20,7 +20,9 @@
   },
   "homepage": "https://github.com/DucNguyen1402-dev/js-capstone-shopping-admin#readme",
   "dependencies": {
-    "@tailwindcss/cli": "^4.2.2",
-    "prettier-plugin-tailwindcss": "^0.7.2"
+    "@tailwindcss/cli": "^4.2.2"
+  },
+  "devDependencies": {
+    "prettier": "^3.8.3"
   }
 }
