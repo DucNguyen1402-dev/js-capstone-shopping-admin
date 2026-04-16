@@ -34,11 +34,10 @@
   <body class="relative">
     <header class="sticky top-0 z-10 bg-white shadow-sm">
       <div class="relative mx-auto max-w-7xl px-4 py-6 lg:px-8 lg:py-0">
-        <div
-          class="flex gap-6 lg:h-20 items-center justify-between"
-        >
+        <div class="flex items-center justify-between gap-6 lg:h-20">
           <div class="flex items-center gap-2">
-            <span class="text-2xl lg:text-3xl font-bold tracking-tight text-blue-600"
+            <span
+              class="text-2xl font-bold tracking-tight text-blue-600 lg:text-3xl"
               >CyberPhone</span
             >
             <span
@@ -47,45 +46,48 @@
             >
           </div>
           <div class="md:hidden">
-            <div data-open-icon >
-              <span class="fa-solid fa-bars text-gray-600 font-medium text-lg" ></span>
+            <div data-open-icon>
+              <span
+                class="fa-solid fa-bars text-lg font-medium text-gray-600"
+              ></span>
             </div>
             <div class="hidden" data-close-icon>
-              <span class="fa-solid fa-x  text-gray-600 font-medium text-lg" ></span>
+              <span
+                class="fa-solid fa-x text-lg font-medium text-gray-600"
+              ></span>
             </div>
           </div>
-          <div class="absolute left-0 top-full md:static w-full md:w-auto ">
+          <div class="absolute top-full left-0 w-full md:static md:w-auto">
             <nav
-            class="flex flex-col md:flex-row p-4 bg-slate-100 md:bg-transparent shadow-sm md:shadow-none z-10 md:z-0 md:py-0 gap-4 md:items-center md:gap-10 lg:gap-16 text-xs md:text-sm "
-          >
-            <a
-              href="./index.html"
-              target="_blank"
-              class="flex items-center gap-0.5 font-medium text-gray-500 transition-colors duration-300 hover:text-blue-500"
+              class="z-10 flex flex-col gap-4 bg-slate-100 p-4 text-xs shadow-sm md:z-0 md:flex-row md:items-center md:gap-10 md:bg-transparent md:py-0 md:text-sm md:shadow-none lg:gap-16"
             >
-              <span class="fa-solid fa-store"></span>
-              <span>View Site</span>
-            </a>
-            <a
-              class="flex cursor-pointer items-center gap-0.5 font-medium text-gray-500 transition-colors duration-300 hover:text-rose-600"
-            >
-              <span class="fa-solid fa-arrow-right-from-bracket"></span>
-              <span>Logout</span>
-            </a>
-          </nav>
+              <a
+                href="./index.html"
+                target="_blank"
+                class="flex items-center gap-0.5 font-medium text-gray-500 transition-colors duration-300 hover:text-blue-500"
+              >
+                <span class="fa-solid fa-store"></span>
+                <span>View Site</span>
+              </a>
+              <a
+                class="flex cursor-pointer items-center gap-0.5 font-medium text-gray-500 transition-colors duration-300 hover:text-rose-600"
+              >
+                <span class="fa-solid fa-arrow-right-from-bracket"></span>
+                <span>Logout</span>
+              </a>
+            </nav>
           </div>
-          
         </div>
       </div>
     </header>
 
-    <main class="mx-auto max-w-7xl  mt-14 xl:mt-16">
-      <div class="mb-12 flex flex-col lg:flex-row gap-10 items-start lg:gap-0 lg:items-center lg:justify-between
-      px-4 lg:px-8
-      ">
+    <main class="mx-auto mt-14 max-w-7xl xl:mt-16">
+      <div
+        class="mb-12 flex flex-col items-start gap-10 px-4 lg:flex-row lg:items-center lg:justify-between lg:gap-0 lg:px-8"
+      >
         <div class="flex items-start gap-4">
           <div
-            class="w-16 h-10 lg:h-12 lg:w-12 items-center justify-center rounded-md bg-blue-50 text-xl text-blue-600 flex "
+            class="flex h-10 w-16 items-center justify-center rounded-md bg-blue-50 text-xl text-blue-600 lg:h-12 lg:w-12"
           >
             <span class="fa-solid fa-dolly"></span>
           </div>
@@ -121,9 +123,12 @@
         </button>
       </div>
 
-      <div class="fixed inset-0 flex items-center justify-center z-50 hidden" data-modal-container >
+      <div
+        class="fixed inset-0 z-50 flex hidden items-center justify-center"
+        data-modal-container
+      >
         <div
-          class="relative scrollbar z-50 w-[95%] h-180 lg:h-160 md:w-120 overflow-y-scroll rounded-xl border border-gray-300 bg-white px-3 py-4 lg:p-8 shadow-sm "
+          class="scrollbar relative z-50 h-180 w-[95%] overflow-y-scroll rounded-xl border border-gray-300 bg-white px-3 py-4 shadow-sm md:w-120 lg:h-160 lg:p-8"
         >
           <div
             class="absolute top-2 right-2 cursor-pointer text-sm text-gray-500 transition-colors duration-300 hover:text-gray-700"
@@ -163,7 +168,7 @@
                     class="w-full rounded-sm border border-gray-300 px-3 py-2 outline-none placeholder:text-sm focus:ring-1 focus:ring-blue-500"
                   />
                   <p
-                    class="px-2 py-1 text-white rounded-sm text-sm hidden"
+                    class="hidden rounded-sm px-2 py-1 text-sm text-white"
                     data-role="warning"
                   ></p>
                 </div>
@@ -179,7 +184,7 @@
                     class="w-full rounded-sm border border-gray-300 px-3 py-2 outline-none placeholder:text-sm focus:ring-1 focus:ring-blue-500"
                   />
                   <p
-                    class="px-2 py-1 text-white rounded-sm text-sm hidden"
+                    class="hidden rounded-sm px-2 py-1 text-sm text-white"
                     data-role="warning"
                   ></p>
                 </div>
@@ -195,7 +200,7 @@
                     class="w-full rounded-sm border border-gray-300 px-3 py-2 outline-none placeholder:text-sm focus:ring-1 focus:ring-blue-500"
                   />
                   <p
-                    class="px-2 py-1 text-white rounded-sm text-sm hidden"
+                    class="hidden rounded-sm px-2 py-1 text-sm text-white"
                     data-role="warning"
                   ></p>
                 </div>
@@ -211,7 +216,7 @@
                     class="w-full rounded-sm border border-gray-300 px-3 py-2 outline-none placeholder:text-sm focus:ring-1 focus:ring-blue-500"
                   />
                   <p
-                    class="px-2 py-1 text-white rounded-sm text-sm hidden"
+                    class="hidden rounded-sm px-2 py-1 text-sm text-white"
                     data-role="warning"
                   ></p>
                 </div>
@@ -227,7 +232,7 @@
                     class="w-full rounded-sm border border-gray-300 px-3 py-2 outline-none placeholder:text-sm focus:ring-1 focus:ring-blue-500"
                   />
                   <p
-                    class="px-2 py-1 text-white rounded-sm text-sm hidden"
+                    class="hidden rounded-sm px-2 py-1 text-sm text-white"
                     data-role="warning"
                   ></p>
                 </div>
@@ -243,7 +248,7 @@
                     class="w-full rounded-sm border border-gray-300 px-3 py-2 outline-none placeholder:text-sm focus:ring-1 focus:ring-blue-500"
                   />
                   <p
-                    class="px-2 py-1 text-white rounded-sm text-sm hidden"
+                    class="hidden rounded-sm px-2 py-1 text-sm text-white"
                     data-role="warning"
                   ></p>
                 </div>
@@ -270,7 +275,7 @@
                     <option value="Samsung" class="text-gray-700">Oppo</option>
                   </select>
                   <p
-                    class="px-2 py-1 text-white rounded-sm text-sm hidden"
+                    class="hidden rounded-sm px-2 py-1 text-sm text-white"
                     data-role="warning"
                   ></p>
                 </div>
@@ -310,18 +315,20 @@
       </div>
 
       <div
-        class="overflow-hidden rounded-md border border-gray-200 bg-white shadow-sm px-1 lg:px-2 xl:px-0"
+        class="overflow-hidden rounded-md border border-gray-200 bg-white px-1 shadow-sm lg:px-2 xl:px-0"
       >
-        <div class="bg-blue-500 px-2 py-3 md:px-8 md:py-5 gap-6 flex flex-col md:flex-row md:items-center md:justify-between">
-          <h2 class="text-lg lg:text-xl text-white font-medium tracking-wider">
+        <div
+          class="flex flex-col gap-6 bg-blue-500 px-2 py-3 md:flex-row md:items-center md:justify-between md:px-8 md:py-5"
+        >
+          <h2 class="text-lg font-medium tracking-wider text-white lg:text-xl">
             PRODUCT LIST
           </h2>
-          <div class="flex gap-3 w-full md:w-2/5 lg:w-1/4">
+          <div class="flex w-full gap-3 md:w-2/5 lg:w-1/4">
             <div class="relative">
               <input
                 type="text"
                 placeholder="Search product..."
-                class="w-full rounded-sm border border-gray-300 py-2 pr-3 pl-10 outline-none placeholder:text-sm focus:ring-2 focus:ring-blue-500 bg-white text-gray-600"
+                class="w-full rounded-sm border border-gray-300 bg-white py-2 pr-3 pl-10 text-gray-600 outline-none placeholder:text-sm focus:ring-2 focus:ring-blue-500"
                 spellcheck="false"
               />
               <div class="absolute top-1/2 left-3 -translate-y-1/2">
@@ -335,7 +342,7 @@
         <div class="overflow-x-auto">
           <table class="w-full border-collapse text-left">
             <thead
-              class="border-b border-gray-200 bg-gray-50 tracking-wider text-sm font-semibold text-gray-600 uppercase"
+              class="border-b border-gray-200 bg-gray-50 text-sm font-semibold tracking-wider text-gray-600 uppercase"
             >
               <tr>
                 <th class="px-6 py-4">ID</th>
@@ -361,6 +368,5 @@
         </div>
       </div>
     </main>
-
   </body>
 </html>
