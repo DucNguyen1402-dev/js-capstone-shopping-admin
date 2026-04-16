@@ -14,10 +14,10 @@
         class="w-full max-w-md rounded-sm md:rounded-xl border border-gray-200 bg-white p-2 md:p-8 shadow-sm"
       >
         <div class="mb-8 space-y-4 text-center">
-          <h2 class="text-2xl font-bold tracking-wide text-gray-800">
+          <h2 class="js-signin-title text-2xl font-bold tracking-wide text-gray-800">
             Sign In
           </h2>
-          <p class="text-sm text-gray-500">
+          <p class="js-signin-subtitle text-sm text-gray-500">
             Please enter your details to access your account.
           </p>
         </div>
@@ -25,25 +25,25 @@
         <form id="loginForm" class="space-y-4" spellcheck="false">
           <div>
             <label
-              class="mb-1 block cursor-pointer text-xs font-semibold tracking-wider text-gray-400"
+              class="js-email-label mb-1 block cursor-pointer text-xs font-semibold tracking-wider text-gray-400"
               >EMAIL</label
             >
             <input
               type="email"
               placeholder="e.g. alice@gmail.com"
-              class="w-full rounded-sm border border-gray-300 px-4 py-2.5 text-sm transition-all outline-none focus:ring-2 focus:ring-blue-500"
+              class="js-email-input w-full rounded-sm border border-gray-300 px-4 py-2.5 text-sm transition-all outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
           <div>
             <label
-              class="mb-1 block cursor-pointer text-xs font-semibold tracking-wider text-gray-400"
+              class="js-password-label mb-1 block cursor-pointer text-xs font-semibold tracking-wider text-gray-400"
               >PASSWORD</label
             >
             <input
               type="password"
               placeholder="••••••••"
-              class="w-full rounded-sm border border-gray-300 px-4 py-2.5 text-sm transition-all outline-none focus:ring-2 focus:ring-blue-500"
+              class="js-password-input w-full rounded-sm border border-gray-300 px-4 py-2.5 text-sm transition-all outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
@@ -53,7 +53,7 @@
             >
               <input
                 type="checkbox"
-                class="mr-2 rounded border-gray-300 text-gray-900"
+                class="js-remember-checkbox mr-2 rounded border-gray-300 text-gray-900"
               />
               Remember me
             </label>
@@ -61,7 +61,7 @@
 
           <button
             type="submit"
-            class="mt-6 w-full cursor-pointer rounded-lg bg-blue-500 py-2.5 text-sm font-medium text-white shadow-sm transition-colors duration-400 hover:bg-blue-600"
+            class="js-submit-btn mt-6 w-full cursor-pointer rounded-lg bg-blue-500 py-2.5 text-sm font-medium text-white shadow-sm transition-colors duration-400 hover:bg-blue-600"
           >
             SIGN IN
           </button>
@@ -71,7 +71,7 @@
           <button id="adminAccess" class="text-xs text-gray-400">
             System Management?
             <span
-              class="cursor-pointer underline transition-colors duration-300 hover:text-gray-600"
+              class="js-admin-login cursor-pointer underline transition-colors duration-300 hover:text-gray-600"
               >Admin Login</span
             >
           </button>
