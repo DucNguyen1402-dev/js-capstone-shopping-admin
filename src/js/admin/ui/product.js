@@ -26,3 +26,40 @@ export function renderProductList(productList) {
     .join("");
 }
 
+
+export function renderSkeleton() {
+  const { productListTable } = getProductListTableDOM();
+  productListTable.innerHTML = `
+   <tr class="animate-pulse border-b border-gray-100 last:border-none">
+      <td class="px-6 py-4">
+        <div class="h-4 bg-gray-200 rounded w-8"></div>
+      </td>
+
+      <td class="px-6 py-4">
+        <div class="h-4 bg-gray-200 rounded w-40"></div>
+      </td>
+
+      <td class="px-6 py-4">
+        <div class="h-4 bg-gray-200 rounded w-20"></div>
+      </td>
+
+      <td class="px-6 py-4">
+        <div class="h-6 bg-gray-100 rounded-full w-24"></div>
+      </td>
+
+      <td class="px-6 py-4 max-w-50">
+        <div class="space-y-2">
+          <div class="h-4 bg-gray-200 rounded w-full"></div>
+          <div class="h-4 bg-gray-100 rounded w-3/4"></div>
+        </div>
+      </td>
+
+      <td class="px-6 py-4 text-right">
+        <div class="flex items-center justify-end gap-2">
+          <div class="w-9 h-9 bg-gray-100 rounded-lg"></div>
+          <div class="w-9 h-9 bg-gray-100 rounded-lg"></div>
+        </div>
+      </td>
+    </tr>
+  `.repeat(5);
+}
