@@ -1,5 +1,5 @@
 import { ProductModel } from "../models/product.js";
-import { productState } from "../store/productStore.js";
+import { productState } from "../store/product.js";
 const URL = "https://69ca67a6ba5984c44bf31972.mockapi.io/api/v1/phone";
 
 const toProductModel = (item) =>
@@ -17,16 +17,16 @@ const toProductModel = (item) =>
     item.status,
   );
 
-async function fetchProductList() {
+export async function fetchProducts() {
   try {
     const { data } = await axios.get(URL);
 
     productState.list = data.map(toProductModel);
-
-    return productState;
+    return productState.list;
+    
   } catch (error) {
     console.error("Failed to fetch product list:", error);
   }
 }
 
-fetchProductList();
+

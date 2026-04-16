@@ -4,7 +4,13 @@ export function getDropdownButtonDOM(){
     return {
         dropDownOpen : $(".js-open-btn"),
         dropDownClose: $(".js-close-btn"),
-        dropDownMenu: $(".js-dropdown-mobile")
+        dropDownMenu: $(".js-dropdown-mobile"),
     };
 }
 
+
+export function getProductListTableDOM(){
+   return{
+    productListTable: $(".js-products-list-table")
+   }
+};
