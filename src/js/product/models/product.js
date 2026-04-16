@@ -2,7 +2,7 @@
  * Represents a product (specifically a smartphone) in the inventory.
  * Used for managing product details across the store's dashboard and catalog.
  */
-export class Product {
+export class ProductModel {
     /**
    * @param {string} name - Product name (e.g., "iPhone 15 Pro").
    * @param {number|string} price - Selling price.
@@ -14,7 +14,8 @@ export class Product {
    * @param {string} type - Category or brand (e.g., "iPhone", "Samsung", "Pixel").
    */
   
-  constructor(name, price, screen, backCam, frontCam, img, desc, type) {
+  constructor(id, name, price, screen, backCam, frontCam, img, desc, type, stock, status) {
+    this.id = id;
     this.name = name;
     this.price = price;
     this.screen = screen;
@@ -23,5 +24,10 @@ export class Product {
     this.img = img;
     this.desc = desc;
     this.type = type; // iPhone, Samsung, Pixel, v.v.
+    this.stock = stock;
+    this.status = status;
   }
 }
+
+
+

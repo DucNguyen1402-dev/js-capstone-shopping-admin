@@ -1,3 +1,7 @@
-import {initDropdownMobileButton} from "./ui/dropdown-mobile-ui.js";
+import {fetchProductList} from "../product/services/product.js";
+import {productState} from "../product/store/product.js"
 
-initDropdownMobileButton();
+async function initProducts() {
+  const products = await fetchProducts();
+ 
+}
