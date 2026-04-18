@@ -14,16 +14,16 @@ export class ProductModel {
    * @param {string} type - Category or brand (e.g., "iPhone", "Samsung", "Pixel").
    */
   
-  constructor(id, name, price, screen, backCam, frontCam, img, desc, type, stock, status) {
+  constructor(id, name, price, screen, backCamera, frontCamera, image, desc, type, stock, status) {
     this.id = id;
     this.name = name;
     this.price = price;
     this.screen = screen;
-    this.backCam = backCam;
-    this.frontCam = frontCam;
-    this.img = img;
+    this.backCamera = backCamera;
+    this.frontCamera = frontCamera;
+    this.image = image;
     this.desc = desc;
-    this.type = type; // iPhone, Samsung, Pixel, v.v.
+    this.type = type; 
     this.stock = stock;
     this.status = status;
   }

@@ -1,5 +1,5 @@
 import { ProductModel } from "../models/product.js";
-import { productState } from "../store/product.js";
+import { productState } from "../store/product-state.js";
 const URL = "https://69ca67a6ba5984c44bf31972.mockapi.io/api/v1/phone";
 
 const toProductModel = (item) =>
