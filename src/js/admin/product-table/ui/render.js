@@ -6,18 +6,14 @@ const STATUS_CLASSES = {
   outOfStock: "bg-red-500 animate-pulse",
 };
 
- function getStatusClasses(stockValue) {
+function getStatusClasses(stockValue) {
   if (stockValue <= 0) return STATUS_CLASSES.outOfStock;
   if (stockValue <= 8) return STATUS_CLASSES.lowStock;
   return STATUS_CLASSES.inStock;
 }
-export function renderProductList(productList) {
-  const { productListTable } = getProductListTableDOM();
 
-  productListTable.innerHTML = productList
-    .map(
-      (item) => `
-   <tr class="product-row transition-colors duration-200 hover:bg-gray-50" data-product-id="${item.id}">
+const ProductRow = (item) => `
+   <tr class="product-item transition-colors duration-200 hover:bg-gray-50" data-product-id="${item.id}">
     <td class="product-id px-6 py-4 text-sm text-gray-700">${item.id}</td>
     <td class="px-6 py-4 text-sm font-medium text-gray-900">${item.name}</td>
     <td class="px-6 py-4 text-left text-sm text-gray-700">${item.price}</td>
@@ -47,14 +43,17 @@ export function renderProductList(productList) {
       </button>
     </td>
   </tr>
-  `,
-    )
+  `;
+
+export function renderProductList(productList) {
+  const { productListTable } = getProductListTableDOM();
+
+  productListTable.innerHTML = productList
+    .map((item) => ProductRow(item))
     .join("");
 }
 
-export function renderSkeleton() {
-  const { productListTable } = getProductListTableDOM();
-  productListTable.innerHTML = `
+const SkeletonRow = () => `
    <tr class="animate-pulse border-b border-gray-100 last:border-none">
       <td class="px-6 py-4">
         <div class="h-4 bg-gray-200 rounded w-8"></div>
@@ -83,5 +82,10 @@ export function renderSkeleton() {
         </div>
       </td>
     </tr>
-  `.repeat(5);
+  `;
+
+export function renderSkeleton(preCount = 8) {
+  const { productListTable } = getProductListTableDOM();
+
+  productListTable.innerHTML = SkeletonRow().repeat(preCount);
 }

@@ -1,12 +1,12 @@
 // import {initProductListTableEvent} from "./event.js";
 import {renderProductList, renderSkeleton} from "./ui/render.js";
-import {triggerEditEvent, initProductListTableEvent} from "./event.js";
+import { initProductListTableEvent, initDeleteModelEvent} from "./event.js";
 
 export const productTable = {
   showSkeleton: renderSkeleton,
   render: renderProductList,
   bindProductListTableEvent: initProductListTableEvent,
-  event: triggerEditEvent
+  bindDeleteModelEvent: initDeleteModelEvent
 };
 
 

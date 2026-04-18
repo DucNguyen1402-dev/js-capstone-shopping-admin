@@ -24,3 +24,14 @@ export function setProductFormStateForUpdate({
   setProductFormUpdateBtnToHidden(updateBtn, false);
   title.textContent = "Update Product";
 }
+
+
+
+
+export function fillForm(form, formData) {
+  Object.entries(formData).forEach(([k, v]) => {
+    form[k].value = v ?? "";
+  });
+
+  form.stock?.dispatchEvent(new Event("change"));
+}

@@ -30,3 +30,14 @@ export async function fetchProducts() {
 }
 
 
+
+export async function deleteData(id) {
+  try {
+    const res = await axios.delete(
+      `https://69ca67a6ba5984c44bf31972.mockapi.io/api/v1/phone/${id}`
+    );
+    return res.data; 
+  } catch (err) {
+    throw err; 
+  }
+}

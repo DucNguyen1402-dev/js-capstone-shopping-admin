@@ -1,4 +1,4 @@
 import {initPage} from "./controller.js";
 
 
-initPage();
+await initPage();

@@ -1,6 +1,3 @@
-
-
-
 const MODAL_STATES = Object.freeze({
   VISIBLE: "visible",
   HIDDEN: "hidden",
@@ -26,4 +23,13 @@ export function hideModelState(el) {
 
 export function showModelState(el) {
   setModalState(el, MODAL_STATES.VISIBLE);
+}
+
+
+
+
+
+export function getProductId(actionEl) {
+  const productRowEl = actionEl.closest(".product-item");
+  return productRowEl.dataset.productId;
 }
