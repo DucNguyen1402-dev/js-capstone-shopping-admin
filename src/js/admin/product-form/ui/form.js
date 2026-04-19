@@ -35,12 +35,10 @@ function setProductFormUpdateBtnToVisible(updateBtn, visible = true) {
  * @param {HTMLElement} elements.title - The form heading element.
  */
 export function setProductFormStateForUpdate({
-  productForm,
   submitBtn,
   updateBtn,
   title,
 }) {
-  setProductFormToVisible(productForm, true);
   setProductFormSubmitBtnToVisible(submitBtn, false);
   setProductFormUpdateBtnToVisible(updateBtn, true);
   title.textContent = "Update Product";
@@ -55,12 +53,10 @@ export function setProductFormStateForUpdate({
  * @param {HTMLElement} elements.title - The form heading element.
  */
 export function setProductFormStateForAdd({
-  productForm,
   submitBtn,
   updateBtn,
   title,
 }) {
-  setProductFormToVisible(productForm, true);
   setProductFormSubmitBtnToVisible(submitBtn, true);
   setProductFormUpdateBtnToVisible(updateBtn, false);
   title.textContent = "Add New Product";
@@ -78,3 +74,4 @@ export function fillForm(form, formData) {
 
   form.stock?.dispatchEvent(new Event("change"));
 }
+

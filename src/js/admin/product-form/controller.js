@@ -5,6 +5,12 @@ import {
   setProductFormStateForAdd,
   setProductFormToVisible,
 } from "./ui/form.js";
+
+import {
+  setToastLoadingToVisible,
+  setUpdatePopUpToVisible,
+} from "./ui/toast-notification.js";
+
 import {
   productFormUI,
   productFormInputUI,
@@ -44,8 +50,9 @@ function productToFormModel(p) {
  * * @param {Object} product - The product object to be edited.
  */
 function initProductFormUpdateVersion(product) {
+  const { productForm } = productFormUI;
+  setProductFormToVisible(productForm, true);
   setProductFormStateForUpdate(productFormUI);
-
   const formData = productToFormModel(product);
 
   fillForm(productFormInputUI, formData);
@@ -55,73 +62,38 @@ function initProductFormUpdateVersion(product) {
  * Prepares the product form state for adding a new product.
  * * @param {Object} [product] - Optional initial data for the new product.
  */
-function initProductFormAddVersion(product) {
+function initProductFormAddVersion() {
+  const { productForm } = productFormUI;
+  setProductFormToVisible(productForm, true);
   setProductFormStateForAdd(productFormUI);
 }
 
-export function getProductFormInput() {
-  return {
-    name: $(".js-product-name-input"),
-    price: $(".js-price-input"),
-    image: $(".js-product-image-input"),
-    screen: $(".js-product-screen-input"),
-    backCamera: $(".js-product-back-camera-input"),
-    frontCamera: $(".js-product-front-camera-input"),
-    decs: $(".js-product-desc-input"),
-    type: $(".js-product-type"),
-    stock: $(".js-stock-input"),
-    status: $(".js-product-status"),
-  };
+const PRODUCT_FIELDS = [
+  "name",
+  "price",
+  "image",
+  "screen",
+  "backCamera",
+  "frontCamera",
+  "decs",
+  "type",
+  "stock",
+  "status",
+];
+
+function getUpdateProduct() {
+  return PRODUCT_FIELDS.reduce((acc, key) => {
+    acc[key] = productFormInputUI[key].value;
+    productFormInputUI[key].value = "";
+    return acc;
+  }, {});
 }
 
-function getupdateProduct() {
-  const {
-    name,
-    price,
-    image,
-    screen,
-    backCamera,
-    frontCamera,
-    decs,
-    type,
-    stock,
-    status,
-  } = productFormInputUI;
-  return {
-    name: name.value,
-    price: price.value,
-    image: image.value,
-    screen: screen.value,
-    backCamera: backCamera.value,
-    frontCamera: frontCamera.value,
-    decs: decs.value,
-    type: type.value,
-    stock: stock.value,
-    status: status.value,
-  };
-}
-
-function setLoadingStateToVisible() {
-  const { loading } = toastNotificationUI;
-  loading.classList.remove("hidden");
-}
-
-function setLoadingStateToHidden() {
-  const { loading } = toastNotificationUI;
-  loading.classList.add("hidden");
-}
 function setProductFormtoHidden() {
   const { productForm } = productFormUI;
   setProductFormToVisible(productForm, false);
 }
 
-function showUpdatePopup(){
-  const {update} = toastNotificationUI;
-  update.classList.remove("opacity-0");
-  setTimeout(()=>{
-     update.classList.add("opacity-0");
-  },3000);
-}
 /**
  * Controller object for managing product form actions.
  * * @type {Object}
@@ -130,12 +102,35 @@ function showUpdatePopup(){
  * @property {Function} handleAdd - Method to trigger addition mode.
  */
 export const productForm = {
-  bindEvent: bindProductFormEvents,
+  bindEvents: bindProductFormEvents,
   showFormEdit: initProductFormUpdateVersion,
   showFormAdd: initProductFormAddVersion,
-  getUpdateProduct: getupdateProduct,
-  showToastLoading: setLoadingStateToVisible,
-  hideToastLoading: setLoadingStateToHidden,
-  setProductFormToHidden: setProductFormtoHidden,
-  showUpdatePopup: showUpdatePopup
+  getUpdateProduct: getUpdateProduct,
+  hideProductForm: setProductFormtoHidden,
+};
+
+function showToastLoading() {
+  const { loading } = toastNotificationUI;
+  setToastLoadingToVisible(loading, true);
+}
+
+function hideToastLoading() {
+  const { loading } = toastNotificationUI;
+  setToastLoadingToVisible(loading, false);
+}
+
+
+function showUpdatePopup() {
+  const { update } = toastNotificationUI;
+  setUpdatePopUpToVisible(update, true);
+
+  setTimeout(() => {
+    setUpdatePopUpToVisible(update, true);
+  }, 2500);
+}
+
+export const toastNotification = {
+  showUpdatePopup: showUpdatePopup,
+  showToastLoading: showToastLoading,
+  hideToastLoading: hideToastLoading,
 };

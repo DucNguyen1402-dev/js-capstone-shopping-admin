@@ -1,17 +1,10 @@
-import {productFormUI} from "../../dom.js";
+import { productFormUI } from "../../dom.js";
 
-
-
-
-function handleUpdateBtnOnClick(dispatch){
+export function initUpdateBtnEvents(dispatch) {
+  const { updateBtn } = productFormUI;
+  updateBtn.addEventListener("click", () => {
     dispatch({
-        type: "UPDATE"
+      type: "UPDATE",
     });
-}
-
-export function initUpdateBtnEvents(dispatch){
-    const {updateBtn} = productFormUI;
-    updateBtn.addEventListener("click", ()=>{
-        handleUpdateBtnOnClick(dispatch);
-    })
+  });
 }

@@ -25,8 +25,8 @@ function handleRemoveAction(actionEl, deleteModal, dispatch) {
  * @param {Array<Object>} productList - The array of product data objects.
  * @returns {Object|undefined} The matched product object or undefined if not found.
  */
-function getMatchedProductFromState(productId, productList) {
-  const matchedProduct = productList.find(
+function getMatchedProductFromState(productId, productState) {
+  const matchedProduct = productState.list.find(
     (product) => Number(product.id) === Number(productId),
   );
   return matchedProduct;
@@ -39,9 +39,9 @@ function getMatchedProductFromState(productId, productList) {
  * @param {Array<Object>} productList - The current list of products.
  * @param {Function} dispatch - The dispatcher function to trigger the edit mode.
  */
-export function handleEditAction(actionEl, productList, dispatch) {
+export function handleEditAction(actionEl, productState, dispatch) {
   const productId = getProductId(actionEl);
-  const matchedProduct = getMatchedProductFromState(productId, productList);
+  const matchedProduct = getMatchedProductFromState(productId, productState);
   dispatch({
     type: "EDIT",
     payload: { product: matchedProduct, id: productId },
@@ -58,13 +58,14 @@ const ALLOWED_ACTIONS = ["edit", "delete"];
  * Initializes event delegation for product item actions (Edit/Delete) within the table.
  * * @description Listens for clicks on the table body, filters for buttons with
  * valid 'data-action' attributes, and triggers the appropriate handler.
- * * @param {Array<Object>} productList - The current product data to be used for lookups.
+ * * @param {Array<Object>} productState
  * @param {Function} dispatch - The dispatcher function for state communication.
  */
-export function initProductActionEvents(productList, dispatch) {
+export function initProductActionEvents(productState, dispatch) {
   const { productListTable, deleteModal } = productListTableUI;
 
   productListTable.addEventListener("click", (e) => {
+
     const actionEl = e.target.closest("button");
     if (!actionEl) return;
     const action = actionEl.dataset.action;
@@ -73,7 +74,7 @@ export function initProductActionEvents(productList, dispatch) {
     if (action === "delete") {
       handleRemoveAction(actionEl, deleteModal, dispatch);
     } else if (action === "edit") {
-      handleEditAction(actionEl, productList, dispatch);
+      handleEditAction(actionEl, productState, dispatch);
     }
   });
 }

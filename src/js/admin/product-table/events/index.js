@@ -4,12 +4,12 @@ import { initProductActionEvents } from "./item-actions.js";
 
 /**
  * Initializes all event listeners related to the product table and its interactions.
- * * @param {Array<Object>} productList - The list of product data objects.
+ * * @param {Array<Object>} productState 
  * @param {Function} dispatch - The dispatcher function for handling state or actions.
  */
 
-export function initProductTableEvents(productList, dispatch) {
+export function initProductTableEvents(productState, dispatch) {
   initSortPriceBtn(dispatch);
   initDeleteModalEvents(dispatch);
-  initProductActionEvents(productList, dispatch);
+  initProductActionEvents(productState, dispatch);
 }

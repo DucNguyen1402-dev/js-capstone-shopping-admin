@@ -42,7 +42,9 @@ export function handleProductSorting(state, productState) {
   const sorter =  PRODUCT_SORT_STRATEGIES[state.payload.sortStrategy];
 
   if (!sorter) return;
-  const sortedList = [...productState.list].sort(sorter);
+  const sortedList ={
+    list : [...productState.list].sort(sorter)
+  }
 
   renderProductList(sortedList);
 }

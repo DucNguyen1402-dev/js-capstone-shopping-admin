@@ -1,7 +1,12 @@
 import { initDropdownMobile } from "./mobile-nav/controller.js";
-import { productForm } from "./product-form/controller.js";
+import { productForm ,toastNotification } from "./product-form/controller.js";
 import { productTable } from "./product-table/controller.js";
-import { fetchProducts, deleteData } from "../product/services/product.js";
+
+import {
+  fetchProducts,
+  deleteData,
+  updateProduct,
+} from "../product/services/product.js";
 import {
   productState,
   getCurrentLength,
@@ -14,7 +19,7 @@ import {
 const state = {
   /** @type {number|null} - ID waiting for delete confirmation */
   pendingDeleteId: null,
-  pendingEditId: null
+  pendingEditId: null,
 };
 
 /* ======================================================
@@ -27,10 +32,10 @@ const state = {
  * Re-fetch and re-render product data
  * @param {number} expectedCount - Expected number of items after update (for skeleton UI)
  */
-async function updateData(expectedCount) {
+async function updateData(expectedCount = 8) {
   productTable.showSkeleton(expectedCount);
-  const productList = await fetchProducts();
-  productTable.render(productList);
+  await fetchProducts();
+  productTable.render(productState);
 }
 
 /**
@@ -39,10 +44,10 @@ async function updateData(expectedCount) {
  * @param {number|null} state.pendingDeleteId - ID waiting for deletion
  */
 async function handleDeleteAndUpdate(state) {
-    const res = await deleteData(state.pendingDeleteId);
-    const prevCount = getCurrentLength(productState);
-    await updateData(prevCount - 1);
-    state.pendingDeleteId = null;
+  const res = await deleteData(state.pendingDeleteId);
+  const prevCount = getCurrentLength(productState);
+  await updateData(prevCount - 1);
+  state.pendingDeleteId = null;
 }
 
 /**
@@ -56,48 +61,39 @@ async function dispatch(action) {
     case "DELETE_PREPARE":
       state.pendingDeleteId = action.payload.id;
       break;
-
     case "DELETE_CONFIRM":
       await handleDeleteAndUpdate(state, productState);
       break;
-
     case "EDIT":
       productForm.showFormEdit(action.payload.product);
       state.pendingEditId = action.payload.id;
       break;
+
     case "SORT":
       productTable.handleSorting(action, productState);
       break;
+
     case "UPDATE":
-      handleProductUpdate(state.pendingEditId);
+      await handleProductUpdate(state.pendingEditId, productState);
       break;
-      
   }
 }
 
 
-async function handleProductUpdate(id){
-  const updateProduct = productForm.getUpdateProduct();
-   productForm.showToastLoading();
-   try {
-    const res = await axios.put(
-      `https://69ca67a6ba5984c44bf31972.mockapi.io/api/v1/phone/${id}`,
-      updateProduct
-    );
-
-  } catch (err) {
-    throw err;
-  }
-   productForm.hideToastLoading();
-  productForm.setProductFormToHidden();
-  
-  productTable.showSkeleton();
-
-  const productList = await fetchProducts();
-  productTable.render(productList);
-  productForm.showUpdatePopup();
+async function handleAfterUpdate(productForm, toastNotification, productState, updateData) {
+  productForm.hideProductForm();
+  const currentCount = getCurrentLength(productState);
+  await updateData(currentCount);
+  toastNotification.showUpdatePopup();
 }
 
+async function handleProductUpdate(id, produtState) {
+  const data = productForm.getUpdateProduct();
+  toastNotification.showToastLoading();
+  await updateProduct(id, data);
+  toastNotification.hideToastLoading();
+  handleAfterUpdate(productForm, toastNotification, produtState, updateData);
+}
 
 /* ======================================================
    3. INIT
@@ -110,7 +106,7 @@ async function handleProductUpdate(id){
  */
 function initPageInteractions() {
   initDropdownMobile();
-  productForm.bindEvent(dispatch);
+  productForm.bindEvents(dispatch);
 }
 
 /**
@@ -121,9 +117,9 @@ function initPageInteractions() {
  */
 async function initProductTablePage() {
   productTable.showSkeleton();
-  const productList = await fetchProducts();
-  productTable.render(productList);
-  productTable.initProductTable(productList, dispatch);
+   await fetchProducts();
+  productTable.render(productState);
+  productTable.initProductTable(productState, dispatch);
 }
 
 /**

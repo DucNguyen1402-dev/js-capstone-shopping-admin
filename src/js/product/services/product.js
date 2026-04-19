@@ -20,24 +20,30 @@ const toProductModel = (item) =>
 export async function fetchProducts() {
   try {
     const { data } = await axios.get(URL);
-
     productState.list = data.map(toProductModel);
-    return productState.list;
-    
   } catch (error) {
     console.error("Failed to fetch product list:", error);
   }
 }
 
-
-
 export async function deleteData(id) {
   try {
     const res = await axios.delete(
-      `https://69ca67a6ba5984c44bf31972.mockapi.io/api/v1/phone/${id}`
+      `https://69ca67a6ba5984c44bf31972.mockapi.io/api/v1/phone/${id}`,
     );
-    return res.data; 
+    return res.data;
   } catch (err) {
-    throw err; 
+    throw err;
+  }
+}
+
+export async function updateProduct(id, data) {
+  try {
+    const res = await axios.put(
+      `https://69ca67a6ba5984c44bf31972.mockapi.io/api/v1/phone/${id}`,
+      data,
+    );
+  } catch (err) {
+    console.error("Something went wrong: ", err);
   }
 }

@@ -68,10 +68,10 @@ const ProductRow = (item) => `
  * - Injects the joined string into the DOM container.
  * * @param {Array<Object>} productList - The array of product objects to display.
  */
-export function renderProductList(productList) {
+export function renderProductList(productState) {
   const { productListTable } = getProductListTableDOM();
 
-  productListTable.innerHTML = productList
+  productListTable.innerHTML = productState.list
     .map((item) => ProductRow(item))
     .join("");
 }
