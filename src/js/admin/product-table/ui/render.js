@@ -1,17 +1,32 @@
-import { getProductListTableDOM } from "../../dom.js";
+import { getProductListTableDOM } from "../../dom-factory.js";
 
+/**
+ * CSS classes for product status badges based on inventory levels.
+ * @type {Object.<string, string>}
+ */
 const STATUS_CLASSES = {
   inStock: "bg-green-500",
   lowStock: "bg-yellow-500",
   outOfStock: "bg-red-500 animate-pulse",
 };
 
+/**
+ * Determines the CSS classes for a product based on its stock value.
+ * * @param {number} stockValue - The current quantity in stock.
+ * @returns {string} A string of Tailwind CSS classes.
+ */
 function getStatusClasses(stockValue) {
   if (stockValue <= 0) return STATUS_CLASSES.outOfStock;
   if (stockValue <= 8) return STATUS_CLASSES.lowStock;
   return STATUS_CLASSES.inStock;
 }
 
+/**
+ * Generates the HTML string for a single table row.
+ * * @param {Object} item - The product data object.
+ * @param {string|number} item.id - The unique identifier for the product.
+ * @returns {string} The HTML representative of a table row.
+ */
 const ProductRow = (item) => `
    <tr class="product-item transition-colors duration-200 hover:bg-gray-50" data-product-id="${item.id}">
     <td class="product-id px-6 py-4 text-sm text-gray-700">${item.id}</td>
@@ -45,6 +60,14 @@ const ProductRow = (item) => `
   </tr>
   `;
 
+  /**
+ * Renders the entire product list into the table body.
+ * * @description 
+ * - Clears existing content.
+ * - Maps the product array to HTML row strings.
+ * - Injects the joined string into the DOM container.
+ * * @param {Array<Object>} productList - The array of product objects to display.
+ */
 export function renderProductList(productList) {
   const { productListTable } = getProductListTableDOM();
 
@@ -53,6 +76,11 @@ export function renderProductList(productList) {
     .join("");
 }
 
+
+/**
+ * Generates the HTML string for a skeleton loading row.
+ * * @returns {string} The HTML representative of a table row placeholder.
+ */
 const SkeletonRow = () => `
    <tr class="animate-pulse border-b border-gray-100 last:border-none">
       <td class="px-6 py-4">
@@ -84,6 +112,13 @@ const SkeletonRow = () => `
     </tr>
   `;
 
+  /**
+ * Renders skeleton placeholders in the product table to indicate a loading state.
+ * * @description 
+ * Replaces the current table content with a specified number of pulse-animated 
+ * skeleton rows to improve perceived performance during data fetching.
+ * * @param {number} [preCount=8] - The number of skeleton rows to display.
+ */
 export function renderSkeleton(preCount = 8) {
   const { productListTable } = getProductListTableDOM();
 

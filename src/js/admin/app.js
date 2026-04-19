@@ -1,4 +1,4 @@
-import { initDropdownMobile } from "./dropdown-mobile/controller.js";
+import { initDropdownMobile } from "./mobile-nav/controller.js";
 import { productForm } from "./product-form/controller.js";
 import { productTable } from "./product-table/controller.js";
 import { fetchProducts, deleteData } from "../product/services/product.js";
@@ -8,7 +8,7 @@ import {
 } from "../product/store/product-state.js";
 
 /* ==============================
-      1. CONTROLLER STATE
+   1. CONTROLLER STATE
 ================================== */
 
 const state = {
@@ -38,15 +38,10 @@ async function updateData(expectedCount) {
  * @param {number|null} state.pendingDeleteId - ID waiting for deletion
  */
 async function handleDeleteAndUpdate(state) {
-  try {
     const res = await deleteData(state.pendingDeleteId);
-      const prevCount = getCurrentLength(productState);
-      await updateData(prevCount - 1);
-      state.pendingDeleteId = null;
-    
-  } catch (error) {
-    console.error(error);
-  }
+    const prevCount = getCurrentLength(productState);
+    await updateData(prevCount - 1);
+    state.pendingDeleteId = null;
 }
 
 /**
@@ -62,12 +57,14 @@ async function dispatch(action) {
       break;
 
     case "DELETE_CONFIRM":
-      await handleDeleteAndUpdate(state,productState );
+      await handleDeleteAndUpdate(state, productState);
       break;
 
     case "EDIT":
       productForm.handleEdit(action.payload.product);
       break;
+    case "SORT":
+      
   }
 }
 
@@ -95,14 +92,18 @@ async function initProductTablePage() {
   productTable.showSkeleton();
   const productList = await fetchProducts();
   productTable.render(productList);
-  productTable.bindProductListTableEvent(productList, dispatch);
-  productTable.bindDeleteModelEvent(dispatch);
+  productTable.initProductTable(productList, dispatch);
 }
 
 /**
- * Main entry point of the page
+ * Initializes the application.
+ * Runs initial data setup and binds global page interactions.
+ * This is the entry flow of the app.
  */
-export async function initPage() {
+
+async function initApp() {
   await initProductTablePage();
   initPageInteractions();
 }
+
+initApp();

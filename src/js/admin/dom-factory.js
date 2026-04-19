@@ -1,4 +1,4 @@
-import { $, ElementNotFoundError } from "../shared/dom-core.js";
+import { $ } from "../shared/dom-utils.js";
 
 export function getDropdownButtonDOM() {
   return {
@@ -11,9 +11,11 @@ export function getDropdownButtonDOM() {
 export function getProductListTableDOM() {
   return {
     productListTable: $(".js-products-list-table"),
-    deleteModel: $(".js-delete-modal"),
+    deleteModal: $(".js-delete-modal"),
     confirmBtn: $(".js-delete-modal").querySelector('[data-action="confirm"]'),
     cancelBtn: $(".js-delete-modal").querySelector('[data-action="cancel"]'),
+    sortPriceBtn: $(".js-sort-price-btn"),
+    sortPriceIcon: $(".js-sort-icon")
   };
 }
 
