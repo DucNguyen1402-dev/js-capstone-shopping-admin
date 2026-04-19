@@ -44,7 +44,7 @@ export function handleEditAction(actionEl, productList, dispatch) {
   const matchedProduct = getMatchedProductFromState(productId, productList);
   dispatch({
     type: "EDIT",
-    payload: { product: matchedProduct },
+    payload: { product: matchedProduct, id: productId },
   });
 }
 

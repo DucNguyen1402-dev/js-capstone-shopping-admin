@@ -3,8 +3,13 @@ import {
   setProductFormStateForUpdate,
   fillForm,
   setProductFormStateForAdd,
+  setProductFormToVisible,
 } from "./ui/form.js";
-import { productFormUI, productFormInputUI } from "./dom.js";
+import {
+  productFormUI,
+  productFormInputUI,
+  toastNotificationUI,
+} from "./dom.js";
 
 /**
  * Transforms a raw product object into a data model suitable for form inputs.
@@ -54,6 +59,69 @@ function initProductFormAddVersion(product) {
   setProductFormStateForAdd(productFormUI);
 }
 
+export function getProductFormInput() {
+  return {
+    name: $(".js-product-name-input"),
+    price: $(".js-price-input"),
+    image: $(".js-product-image-input"),
+    screen: $(".js-product-screen-input"),
+    backCamera: $(".js-product-back-camera-input"),
+    frontCamera: $(".js-product-front-camera-input"),
+    decs: $(".js-product-desc-input"),
+    type: $(".js-product-type"),
+    stock: $(".js-stock-input"),
+    status: $(".js-product-status"),
+  };
+}
+
+function getupdateProduct() {
+  const {
+    name,
+    price,
+    image,
+    screen,
+    backCamera,
+    frontCamera,
+    decs,
+    type,
+    stock,
+    status,
+  } = productFormInputUI;
+  return {
+    name: name.value,
+    price: price.value,
+    image: image.value,
+    screen: screen.value,
+    backCamera: backCamera.value,
+    frontCamera: frontCamera.value,
+    decs: decs.value,
+    type: type.value,
+    stock: stock.value,
+    status: status.value,
+  };
+}
+
+function setLoadingStateToVisible() {
+  const { loading } = toastNotificationUI;
+  loading.classList.remove("hidden");
+}
+
+function setLoadingStateToHidden() {
+  const { loading } = toastNotificationUI;
+  loading.classList.add("hidden");
+}
+function setProductFormtoHidden() {
+  const { productForm } = productFormUI;
+  setProductFormToVisible(productForm, false);
+}
+
+function showUpdatePopup(){
+  const {update} = toastNotificationUI;
+  update.classList.remove("opacity-0");
+  setTimeout(()=>{
+     update.classList.add("opacity-0");
+  },3000);
+}
 /**
  * Controller object for managing product form actions.
  * * @type {Object}
@@ -63,6 +131,11 @@ function initProductFormAddVersion(product) {
  */
 export const productForm = {
   bindEvent: bindProductFormEvents,
-  handleEdit: initProductFormUpdateVersion,
-  handleAdd: initProductFormAddVersion,
+  showFormEdit: initProductFormUpdateVersion,
+  showFormAdd: initProductFormAddVersion,
+  getUpdateProduct: getupdateProduct,
+  showToastLoading: setLoadingStateToVisible,
+  hideToastLoading: setLoadingStateToHidden,
+  setProductFormToHidden: setProductFormtoHidden,
+  showUpdatePopup: showUpdatePopup
 };

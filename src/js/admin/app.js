@@ -14,6 +14,7 @@ import {
 const state = {
   /** @type {number|null} - ID waiting for delete confirmation */
   pendingDeleteId: null,
+  pendingEditId: null
 };
 
 /* ======================================================
@@ -61,12 +62,42 @@ async function dispatch(action) {
       break;
 
     case "EDIT":
-      productForm.handleEdit(action.payload.product);
+      productForm.showFormEdit(action.payload.product);
+      state.pendingEditId = action.payload.id;
       break;
     case "SORT":
+      productTable.handleSorting(action, productState);
+      break;
+    case "UPDATE":
+      handleProductUpdate(state.pendingEditId);
+      break;
       
   }
 }
+
+
+async function handleProductUpdate(id){
+  const updateProduct = productForm.getUpdateProduct();
+   productForm.showToastLoading();
+   try {
+    const res = await axios.put(
+      `https://69ca67a6ba5984c44bf31972.mockapi.io/api/v1/phone/${id}`,
+      updateProduct
+    );
+
+  } catch (err) {
+    throw err;
+  }
+   productForm.hideToastLoading();
+  productForm.setProductFormToHidden();
+  
+  productTable.showSkeleton();
+
+  const productList = await fetchProducts();
+  productTable.render(productList);
+  productForm.showUpdatePopup();
+}
+
 
 /* ======================================================
    3. INIT
@@ -79,7 +110,7 @@ async function dispatch(action) {
  */
 function initPageInteractions() {
   initDropdownMobile();
-  productForm.bindEvent();
+  productForm.bindEvent(dispatch);
 }
 
 /**

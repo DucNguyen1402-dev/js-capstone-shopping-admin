@@ -1,4 +1,6 @@
 import { bindProductFormCloseEvent } from "./form-btn/close-btn.js";
+import { initUpdateBtnEvents } from "./form-btn/update-btn.js";
+
 import { bindProductFormStatusInputEvent } from "./form-input/status.js";
 import {bindStockInputEvent} from "./form-input/stock.js";
 
@@ -12,11 +14,12 @@ import {bindStockInputEvent} from "./form-input/stock.js";
  * - Dynamic status styling based on selection.
  * - Automatic status updates triggered by stock quantity changes.
  */
-export function bindProductFormEvents() {
+export function bindProductFormEvents(dispatch) {
   
   bindProductFormCloseEvent();
   bindProductFormStatusInputEvent();
   bindStockInputEvent();
+  initUpdateBtnEvents(dispatch)
 }
 
 

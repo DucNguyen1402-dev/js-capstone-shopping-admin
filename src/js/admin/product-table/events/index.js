@@ -8,8 +8,8 @@ import { initProductActionEvents } from "./item-actions.js";
  * @param {Function} dispatch - The dispatcher function for handling state or actions.
  */
 
-export function initProductTableEvents(dispatch) {
+export function initProductTableEvents(productList, dispatch) {
   initSortPriceBtn(dispatch);
-  initDeleteModalEvents();
-  initProductActionEvents();
+  initDeleteModalEvents(dispatch);
+  initProductActionEvents(productList, dispatch);
 }

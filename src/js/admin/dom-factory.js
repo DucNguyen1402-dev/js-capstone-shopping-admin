@@ -30,6 +30,15 @@ export function getProductFormDOM() {
   };
 }
 
+export function getToastNotificationDOM() {
+  return {
+    container: $("[data-toast-container]"),
+    loading: $("[data-toast='loading']"),
+    add: $("[data-toast='add']"),
+    update: $("[data-toast='update']"),
+  };
+}
+
 export function getProductFormInput() {
   return {
     name: $(".js-product-name-input"),

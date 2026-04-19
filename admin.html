@@ -38,7 +38,6 @@
 
     <!-- App Scripts -->
     <script type="module" src="./src/js/admin/app.js"></script>
-
   </head>
 
   <body class="relative">
@@ -135,8 +134,59 @@
         </button>
       </div>
 
-      <div class="js-product-form hidden">
+       <div data-toast-container>
+            <div class="hidden" data-toast="loading">
+              <div
+                class="absolute inset-0 z-80 flex items-center justify-center bg-slate-500/50"
+              >
+                <svg
+                  width="30"
+                  height="30"
+                  viewBox="0 0 50 50"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="animate-spin [animation-duration:1.5s]"
+                >
+                  <circle
+                    cx="25"
+                    cy="25"
+                    r="20"
+                    fill="none"
+                    stroke="#f1f5f9"
+                    stroke-width="5"
+                  />
+
+                  <circle
+                    cx="25"
+                    cy="25"
+                    r="20"
+                    fill="none"
+                    stroke="#64748b"
+                    stroke-width="5"
+                    stroke-linecap="round"
+                    stroke-dasharray="60 125"
+                  ></circle>
+                </svg>
+              </div>
+            </div>
+
+            <div
+              class="fixed top-0 right-20 z-20 opacity-0 -translate-y-full rounded-sm bg-emerald-500 p-4 text-sm text-white shadow-md transition-opacity duration-200"
+              data-toast="add"
+            >
+              Item added successfully
+            </div>
+            <div
+              class="fixed top-0 right-20 z-20 opacity-0 rounded-sm bg-indigo-500 p-4 text-sm text-white shadow-md transition-opacity duration-200"
+              data-toast="update"
+            >
+              Updated successfully
+            </div>
+          </div>
+
+
+      <div class="js-product-form relative hidden">
         <div class="fixed inset-0 z-50 flex items-center justify-center">
+      
           <div
             class="scrollbar relative z-50 h-180 w-[95%] overflow-y-scroll rounded-xl border border-gray-300 bg-white px-3 py-4 shadow-sm md:w-120 lg:h-160 lg:p-8"
           >
@@ -280,9 +330,7 @@
                       <option value="xiaomi" class="text-gray-700">
                         Xiaomi
                       </option>
-                      <option value="oppo" class="text-gray-700">
-                        Oppo
-                      </option>
+                      <option value="oppo" class="text-gray-700">Oppo</option>
                     </select>
                     <p
                       class="js-input-warning hidden rounded-sm px-2 py-1 text-sm text-white"
@@ -365,7 +413,7 @@
       </div>
 
       <div
-        class="overflow-hidden rounded-md border border-gray-200 bg-white px-1 shadow-sm lg:px-2 xl:px-0"
+        class="mb-25 overflow-hidden rounded-md border border-gray-200 bg-white px-1 shadow-sm lg:px-2 xl:px-0"
       >
         <div
           class="flex flex-col gap-6 bg-blue-500 px-2 py-3 md:flex-row md:items-center md:justify-between md:px-8 md:py-5"
@@ -404,7 +452,8 @@
                   >
                     <span>PRICE ($)</span>
                     <span
-                      class="js-sort-icon fa-solid fa-sort-down transition-transform duration-400 inline-block"
+                      class="js-sort-icon fa-solid fa-sort-down inline-block transition-transform duration-300 ease-linear"
+                      data-sort-type="price_desc"
                     ></span>
                   </div>
                 </th>
