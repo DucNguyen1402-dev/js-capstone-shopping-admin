@@ -7,19 +7,9 @@ import { getProductListTableDOM } from "../../dom-factory.js";
 const STATUS_CLASSES = {
   inStock: "bg-green-500",
   lowStock: "bg-yellow-500",
-  outOfStock: "bg-red-500 animate-pulse",
+  outOfStock: "bg-rose-500",
+  discontinuted: "bg-gray-500"
 };
-
-/**
- * Determines the CSS classes for a product based on its stock value.
- * * @param {number} stockValue - The current quantity in stock.
- * @returns {string} A string of Tailwind CSS classes.
- */
-function getStatusClasses(stockValue) {
-  if (stockValue <= 0) return STATUS_CLASSES.outOfStock;
-  if (stockValue <= 8) return STATUS_CLASSES.lowStock;
-  return STATUS_CLASSES.inStock;
-}
 
 /**
  * Generates the HTML string for a single table row.
@@ -40,7 +30,7 @@ const ProductRow = (item) => `
     </td>
     <td class="px-6 py-4">
       <div class="flex items-center gap-2">
-        <span class="${getStatusClasses(item.stock)} h-3 w-3 rounded-full"></span>
+  <span class="${STATUS_CLASSES[item.status]} h-3 w-3 rounded-full"></span>
         <span
           class="inline-flex h-6 w-8 items-center justify-center rounded-sm bg-slate-100 text-xs font-medium text-slate-700">
           <span> ${item.stock} </span>

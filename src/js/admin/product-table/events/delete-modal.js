@@ -16,7 +16,7 @@ function handleModelCancelAction(deleteModal) {
  */
 function handleModelConfirmAction(deleteModal, dispatch) {
   dispatch({
-    type: "DELETE_CONFIRM",
+    type: "PRODUCT_DELETE_CONFIRMED",
   });
 
   hideModalState(deleteModal);

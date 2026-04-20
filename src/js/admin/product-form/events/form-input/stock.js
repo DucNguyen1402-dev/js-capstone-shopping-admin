@@ -1,4 +1,3 @@
-import { productFormInputUI } from "../../dom.js";
 
 /**
  * Threshold rules for determining product status based on stock quantity.
@@ -26,7 +25,7 @@ function getStatusFromStock(value) {
  * the status dropdown. It also triggers a 'change' event on the status
  * element to ensure any dependent UI styling is updated.
  */
-export function bindStockInputEvent() {
+export function initStockInputEvent(productFormInputUI) {
   const { stock, status } = productFormInputUI;
 
   stock.addEventListener("change", () => {

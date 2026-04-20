@@ -1,4 +1,3 @@
-import {productFormUI} from "../../dom.js";
 import { setProductFormToVisible } from "../../ui/form.js";
 
 /**
@@ -7,9 +6,9 @@ import { setProductFormToVisible } from "../../ui/form.js";
  * @description Listens for a click on the close button and toggles 
  * the visibility of the form container to hidden.
  */
-export function bindProductFormCloseEvent() {
-  const { closeBtn, productForm } = productFormUI;
+export function initProductFormCloseEvent(productFormUI) {
+  const { closeBtn, productFormContainer } = productFormUI;
   closeBtn.addEventListener("click", () => {
-    setProductFormToVisible(productForm, false);
+    setProductFormToVisible(productFormContainer, false);
   });
 }

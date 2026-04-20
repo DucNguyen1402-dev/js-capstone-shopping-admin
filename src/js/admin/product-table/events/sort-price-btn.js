@@ -27,7 +27,7 @@ function handleSortPriceOnClick(sortPriceIcon, dispatch) {
 
   // Dispatch action with the strategy matching the NEW state
   dispatch({
-    type: "SORT",
+    type: "PRODUCT_SORT_CHANGED",
     payload: { sortStrategy: next },
   });
 }

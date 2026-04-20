@@ -72,6 +72,6 @@ export function fillForm(form, formData) {
     form[k].value = v ?? "";
   });
 
-  form.stock?.dispatchEvent(new Event("change"));
+  form.status.dispatchEvent(new Event("change"));
 }
 

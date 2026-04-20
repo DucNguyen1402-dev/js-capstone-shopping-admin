@@ -15,13 +15,15 @@ export function getProductListTableDOM() {
     confirmBtn: $(".js-delete-modal").querySelector('[data-action="confirm"]'),
     cancelBtn: $(".js-delete-modal").querySelector('[data-action="cancel"]'),
     sortPriceBtn: $(".js-sort-price-btn"),
-    sortPriceIcon: $(".js-sort-icon")
+    sortPriceIcon: $(".js-sort-icon"),
+    searchInput: $(".js-search-product-input")
   };
 }
 
 export function getProductFormDOM() {
   return {
-    productForm: $(".js-product-form"),
+    productFormContainer: $(".js-product-form-container"),
+    form: $(".js-product-form"),
     submitBtn: $(".js-product-submit-btn"),
     updateBtn: $(".js-product-update-btn"),
     resetBtn: $(".js-product-reset-btn"),

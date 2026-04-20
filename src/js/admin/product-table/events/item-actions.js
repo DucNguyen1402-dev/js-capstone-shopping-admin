@@ -14,7 +14,7 @@ function handleRemoveAction(actionEl, deleteModal, dispatch) {
   const productItem = actionEl.closest(".product-item");
   const productId = productItem.dataset.productId;
   dispatch({
-    type: "DELETE_PREPARE",
+    type: "PRODUCT_DELETE_REQUESTED",
     payload: { id: productId },
   });
 }
@@ -43,7 +43,7 @@ export function handleEditAction(actionEl, productState, dispatch) {
   const productId = getProductId(actionEl);
   const matchedProduct = getMatchedProductFromState(productId, productState);
   dispatch({
-    type: "EDIT",
+    type:  "PRODUCT_EDIT_STARTED",
     payload: { product: matchedProduct, id: productId },
   });
 }

@@ -1,27 +1,18 @@
-import { bindProductFormCloseEvent } from "./form-btn/close-btn.js";
-import { initUpdateBtnEvents } from "./form-btn/update-btn.js";
-
-import { bindProductFormStatusInputEvent } from "./form-input/status.js";
-import {bindStockInputEvent} from "./form-input/stock.js";
-
-
+import {initFormBtnEvents} from "./form-btn/index.js";
+import {initFormInputEvents} from "./form-input/index.js"
 
 /**
- * Initializes and binds all event listeners for the Product Form component.
- * * @description 
- * This is the central hub for form-related events. It orchestrates:
- * - Form closing logic.
- * - Dynamic status styling based on selection.
- * - Automatic status updates triggered by stock quantity changes.
+ * Bootstraps the complete interaction layer for the product form.
+ * @description 
+ * Acts as the top-level initializer that aggregates both control-driven 
+ * (buttons) and field-driven (inputs) event sequences.
+ * @param {Function} dispatch - Central action dispatcher.
+ * @param {Object} productFormUI - Mapping for form control elements.
+ * @param {Object} productFormInputUI - Mapping for individual input fields.
  */
-export function bindProductFormEvents(dispatch) {
-  
-  bindProductFormCloseEvent();
-  bindProductFormStatusInputEvent();
-  bindStockInputEvent();
-  initUpdateBtnEvents(dispatch)
+export function initProductFormEvents(dispatch, productFormUI, productFormInputUI) {
+    initFormBtnEvents(dispatch, productFormUI, productFormInputUI);
+   initFormInputEvents(productFormInputUI);
+ 
 }
-
-
-
 

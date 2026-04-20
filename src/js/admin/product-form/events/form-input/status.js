@@ -1,6 +1,3 @@
-import {productFormInputUI} from "../../dom.js";
-
-
 /**
  * CSS class mapping for different product stock statuses.
  * @type {Object.<string, string[]>}
@@ -40,11 +37,11 @@ function applyStatusClasses(el, value) {
 
 /**
  * Binds change and focus events to the status input field to handle dynamic styling.
- * * @description 
+ * * @description
  * - 'change': Updates the background color based on the selected status.
  * - 'focus': Temporarily clears styling for better readability during selection.
  */
-export function bindProductFormStatusInputEvent() {
+export function initProductFormStatusInputEvent(productFormInputUI) {
   const { status } = productFormInputUI;
 
   status.addEventListener("change", () => {
@@ -52,7 +49,7 @@ export function bindProductFormStatusInputEvent() {
     applyStatusClasses(status, status.value);
   });
 
-  status.addEventListener("focus", () => {
+  status.addEventListener("mousedown", () => {
     clearStatusClasses(status);
   });
 }

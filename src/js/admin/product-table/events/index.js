@@ -1,6 +1,7 @@
 import { initSortPriceBtn } from "./sort-price-btn.js";
 import { initDeleteModalEvents } from "./delete-modal.js";
 import { initProductActionEvents } from "./item-actions.js";
+import {initSearchProductInputEvent} from "./search-input.js";
 
 /**
  * Initializes all event listeners related to the product table and its interactions.
@@ -12,4 +13,5 @@ export function initProductTableEvents(productState, dispatch) {
   initSortPriceBtn(dispatch);
   initDeleteModalEvents(dispatch);
   initProductActionEvents(productState, dispatch);
+  initSearchProductInputEvent(dispatch);
 }
