@@ -1,9 +1,10 @@
 export const productState = {
-
-  list: [],        
- 
+  list: [],
 };
 
+export function getCurrentLength(state) {
+  return state.list.length;
+}
 export function setProducts(data) {
   products = data;
 }

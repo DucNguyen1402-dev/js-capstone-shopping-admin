@@ -3,7 +3,7 @@
  * Used for managing product details across the store's dashboard and catalog.
  */
 export class ProductModel {
-    /**
+  /**
    * @param {string} name - Product name (e.g., "iPhone 15 Pro").
    * @param {number|string} price - Selling price.
    * @param {string} screen - Display specifications.
@@ -13,21 +13,31 @@ export class ProductModel {
    * @param {string} desc - Short description of the product.
    * @param {string} type - Category or brand (e.g., "iPhone", "Samsung", "Pixel").
    */
-  
-  constructor(id, name, price, screen, backCam, frontCam, img, desc, type, stock, status) {
+
+  constructor(
+    id,
+    name,
+    price,
+    screen,
+    backCamera,
+    frontCamera,
+    image,
+    desc,
+    type,
+    stock,
+    status,
+  ) {
     this.id = id;
-    this.name = name;
-    this.price = price;
+    this.name = name || "unknown";
+    this.price = price || 0;
     this.screen = screen;
-    this.backCam = backCam;
-    this.frontCam = frontCam;
-    this.img = img;
+    this.backCamera = backCamera;
+    this.frontCamera = frontCamera;
+    this.image = image;
     this.desc = desc;
-    this.type = type; // iPhone, Samsung, Pixel, v.v.
+    this.type = type || "unknown";
     this.stock = stock;
     this.status = status;
+    this.nameLower = name.toLowerCase();
   }
 }
-
-
-
