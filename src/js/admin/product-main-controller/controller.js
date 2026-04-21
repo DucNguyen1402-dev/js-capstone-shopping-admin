@@ -55,14 +55,16 @@ export async function dispatch(action) {
       );
       break;
     case "PRODUCT_SORT_CHANGED":
-      const list = filterState.resolveFilterList(productState.list);
-      productTable.handleSorting(action, list);
+      const listForSort = filterState.resolveFilterList(productState.list);
+      productTable.handleSorting(action, listForSort);
       break;
     case "SEARCH_PRODUCT_REQUEST":
+       const listForSearch = filterState.resolveFilterList(productState.list);
       handleSearchProductOnTable(
         action.payload.inputValue,
         productTable,
-        productState.list,
+        listForSearch,
+        filterState
       );
       break;
     case "TABLE_FILTER_REQUEST":
