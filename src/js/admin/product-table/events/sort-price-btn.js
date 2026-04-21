@@ -36,10 +36,11 @@ function handleSortPriceOnClick(sortPriceIcon, dispatch) {
  * Initializes the click event listener for the price sorting button.
  * * @param {Function} dispatch - The dispatcher function for state communication.
  */
-export function initSortPriceBtn(dispatch) {
+export function initSortPriceBtn(filterState, dispatch) {
   const { sortPriceBtn, sortPriceIcon } = productListTableUI;
 
   sortPriceBtn.addEventListener("click", () => {
+    if(filterState.getFilterList().length === 1) return ;
     handleSortPriceOnClick(sortPriceIcon, dispatch);
   });
 }

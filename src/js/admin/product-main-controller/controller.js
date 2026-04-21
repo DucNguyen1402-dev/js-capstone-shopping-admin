@@ -1,38 +1,27 @@
 import { productFormServices } from "../product-form/services/product-form.js";
-import {toastServices} from "../product-form/services/toast.js";
+import { toastServices } from "../product-form/services/toast.js";
 import { productTable } from "../product-table/controller.js";
 import {
   prepareDelete,
   confirmDeleteAndUpdate,
 } from "./use-cases/delete-flow.js";
 import { startEdit, submitProductUpdate } from "./use-cases/edit-flow.js";
+import { resolveProductSearch } from "./use-cases/search-product.js";
+import { getFilterProducts } from "./use-cases/filter.js";
 import {
   productState,
   getCurrentLength,
   updateProduct,
   fetchProducts,
 } from "../index.js";
-
-/*  ========================================
-    1. PERSISTENT & EPHEMERAL STATE
-  =========================================== */
-
-/**
- * Local state buffer for pending operations.
- * @description 
- * Maintains ephemeral identifiers to track entities during async transitions, 
- * ensuring data integrity and preventing race conditions.
- */
-const pendingActionState = {
-  /** @type {number|null} - ID awaiting deletion confirmation. */
-  deletedId: null,
-
-  /** @type {number|null} - ID currently locked for editing. */
-  editId: null,
-};
+import {
+  deletionState,
+  editingState,
+  filterState,
+} from "../product-interaction-state.js";
 
 /* ======================================================
-    2. CENTRAL DISPATCH & ACTION ORCHESTRATION
+    1. CENTRAL DISPATCH & ACTION ORCHESTRATION
 ====================================================== */
 /**
  * Central action dispatcher for the product module.
@@ -47,38 +36,46 @@ const pendingActionState = {
 export async function dispatch(action) {
   switch (action.type) {
     case "PRODUCT_DELETE_REQUESTED":
-      prepareDelete(pendingActionState, action);
+      prepareDelete(deletionState, action);
       break;
     case "PRODUCT_DELETE_CONFIRMED":
-      await confirmDeleteAndUpdate(pendingActionState);
+      await confirmDeleteAndUpdate(deletionState);
       fetchAndRenderProducts(getCurrentLength(productState) - 1);
       break;
     case "PRODUCT_EDIT_STARTED":
       productFormServices.showFormEdit(action.payload.product);
-      startEdit(pendingActionState, action);
+      startEdit(editingState, action);
       break;
     case "PRODUCT_UPDATE_SUBMITTED":
       handleSubmitProductUpdate(
-        pendingActionState,
+        editingState,
         productState,
         productFormServices,
         toastServices,
       );
       break;
     case "PRODUCT_SORT_CHANGED":
-      productTable.handleSorting(action, productState);
+      const list = filterState.resolveFilterList(productState.list);
+      productTable.handleSorting(action, list);
       break;
     case "SEARCH_PRODUCT_REQUEST":
-      handleSearchProductOnTable(action.payload.inputValue, productTable, productState);
+      handleSearchProductOnTable(
+        action.payload.inputValue,
+        productTable,
+        productState.list,
+      );
       break;
-
+    case "TABLE_FILTER_REQUEST":
+      filterState.onFilterState(action.payload.onFilter);
+      handleProductTableFilter(
+        action.payload.productType,
+        productState.list,
+        productTable,
+        filterState,
+      );
+      break;
   }
 }
-
-function handleSearchProductOnTable(inputValue, productTable,productState ){
-    // const findedProduct = productState.list.filter(product => product.)
-}
-
 
 /* ======================================================
     3. DOMAIN LOGIC & SERVICE HANDLERS
@@ -95,7 +92,7 @@ function handleSearchProductOnTable(inputValue, productTable,productState ){
  * @param {Object} toastServices - Feedback service.
  */
 async function handleSubmitProductUpdate(
-  pendingActionState,
+  interactionStateActions,
   productState,
   productForm,
   toastServices,
@@ -103,7 +100,7 @@ async function handleSubmitProductUpdate(
   const data = productForm.getUpdateProduct();
 
   toastServices.showLoading();
-  await submitProductUpdate(pendingActionState, data);
+  await submitProductUpdate(interactionStateActions, data);
   toastServices.hideLoading();
 
   await runAfterUpdateFlow(productForm, toastServices, productState);
@@ -118,11 +115,7 @@ async function handleSubmitProductUpdate(
  * @param {Object} toastServices - Global feedback service.
  * @param {Object} productState - Application state for sync context.
  */
-async function runAfterUpdateFlow(
-  productForm,
-  toastServices,
-  productState,
-) {
+async function runAfterUpdateFlow(productForm, toastServices, productState) {
   productForm.hideForm();
   await fetchAndRenderProducts(getCurrentLength(productState));
   toastServices.showUpdateSuccess();
@@ -140,5 +133,54 @@ export async function fetchAndRenderProducts(expectedCount) {
 
   await fetchProducts();
 
-  productTable.render(productState);
+  productTable.render(productState.list);
+}
+
+/**
+ * Orchestrates the search result rendering logic.
+ * @description
+ * Evaluates the search state and commands the table UI to display
+ * filtered results, the original list, or a 'Not Found' message.
+ * * @param {string} inputValue - Current search query.
+ * @param {Object} productTable - The Table UI service.
+ * @param {Object} productState - Current application data state.
+ */
+function handleSearchProductOnTable(inputValue, productTable, productList) {
+  const { state, list } = resolveProductSearch(inputValue, productList);
+
+  if (state === "NOT_FOUND") {
+    productTable.showNotFound();
+    return;
+  }
+
+  productTable.render(state === "EMPTY" ? productList : list);
+}
+
+/**
+ * Orchestrates product filtering by category/brand.
+ * @description
+ * Filters the master list based on the selected product type.
+ * If no type is selected, it restores the full table view.
+ * @param {string} productType - The selected brand/category to filter by.
+ * @param {Array} productList - The master list of products.
+ * @param {Object} productTable - The Table UI service.
+ */
+function handleProductTableFilter(
+  productType,
+  productList,
+  productTable,
+  filterState,
+) {
+  if (productType === "all") {
+    filterState.setFilterList([]);
+    productTable.render(productList);
+    filterState.onFilterState(false);
+    return;
+  }
+
+  const filterList = getFilterProducts(productType, productList);
+
+  productTable.render(filterList);
+
+  filterState.setFilterList(filterList);
 }

@@ -8,7 +8,7 @@ const STATUS_CLASSES = {
   inStock: "bg-green-500",
   lowStock: "bg-yellow-500",
   outOfStock: "bg-rose-500",
-  discontinuted: "bg-gray-500"
+  discontinuted: "bg-gray-500",
 };
 
 /**
@@ -50,22 +50,19 @@ const ProductRow = (item) => `
   </tr>
   `;
 
-  /**
+/**
  * Renders the entire product list into the table body.
- * * @description 
+ * * @description
  * - Clears existing content.
  * - Maps the product array to HTML row strings.
  * - Injects the joined string into the DOM container.
  * * @param {Array<Object>} productList - The array of product objects to display.
  */
-export function renderProductList(productState) {
+export function renderProductList(list) {
   const { productListTable } = getProductListTableDOM();
 
-  productListTable.innerHTML = productState.list
-    .map((item) => ProductRow(item))
-    .join("");
+  productListTable.innerHTML = list.map((item) => ProductRow(item)).join("");
 }
-
 
 /**
  * Generates the HTML string for a skeleton loading row.
@@ -102,10 +99,10 @@ const SkeletonRow = () => `
     </tr>
   `;
 
-  /**
+/**
  * Renders skeleton placeholders in the product table to indicate a loading state.
- * * @description 
- * Replaces the current table content with a specified number of pulse-animated 
+ * * @description
+ * Replaces the current table content with a specified number of pulse-animated
  * skeleton rows to improve perceived performance during data fetching.
  * * @param {number} [preCount=8] - The number of skeleton rows to display.
  */
@@ -113,4 +110,19 @@ export function renderSkeleton(preCount = 8) {
   const { productListTable } = getProductListTableDOM();
 
   productListTable.innerHTML = SkeletonRow().repeat(preCount);
+}
+
+export function renderNotFoundProduct() {
+  const { productListTable } = getProductListTableDOM();
+
+  productListTable.innerHTML = `
+    <tr class="not-found-row">
+      <td colspan="100%" style="text-align: center; padding: 40px;">
+        <div class="not-found-container">
+          <i class="fas fa-search" style="font-size: 48px; color: #ccc; margin-bottom: 16px;"></i>
+          <h3 style="color: #555; margin-bottom: 8px;">No products found</h3>
+          <p style="color: #888;">Sorry, we couldn't find any results matching your search.</p>
+      </td>
+    </tr>
+  `;
 }

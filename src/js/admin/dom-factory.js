@@ -16,7 +16,8 @@ export function getProductListTableDOM() {
     cancelBtn: $(".js-delete-modal").querySelector('[data-action="cancel"]'),
     sortPriceBtn: $(".js-sort-price-btn"),
     sortPriceIcon: $(".js-sort-icon"),
-    searchInput: $(".js-search-product-input")
+    searchInput: $(".js-search-product-input"),
+    filterInput: $(".js-filter-product")
   };
 }
 

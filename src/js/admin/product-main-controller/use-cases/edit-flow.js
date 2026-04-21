@@ -5,8 +5,8 @@ import { updateProduct } from "../../index.js";
  * @param {Object} pendingActionState - Local state buffer.
  * @param {Object} action - Action containing target ID.
  */
-export function startEdit(pendingActionState, action) {
-  pendingActionState.editId = action.payload.id;
+export function startEdit(editingState, action) {
+  editingState.setEditId(action.payload.id);
 }
 
 /**
@@ -14,7 +14,7 @@ export function startEdit(pendingActionState, action) {
  * @param {Object} pendingActionState - Local state buffer.
  * @param {Object} data - Validated product data.
  */
-export async function submitProductUpdate(pendingActionState, data) {
-  await updateProduct(pendingActionState.editId, data);
-  pendingActionState.editId = null
+export async function submitProductUpdate(editingState, data) {
+  await updateProduct( editingState.getEditId(), data);
+ editingState.setEditId(null);
 }

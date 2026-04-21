@@ -5,6 +5,7 @@ import { productTable } from "./product-table/controller.js";
 import { fetchProducts, productState } from "./index.js";
 
 import { dispatch } from "./product-main-controller/controller.js";
+import { filterState } from "./product-interaction-state.js";
 
 /* ======================================================
    1. INIT
@@ -29,8 +30,8 @@ function initPageInteractions() {
 async function initProductTablePage() {
   productTable.showSkeleton();
   await fetchProducts();
-  productTable.render(productState);
-  productTable.initProductTable(productState, dispatch);
+  productTable.render(productState.list);
+  productTable.initProductTable(productState,filterState, dispatch );
 }
 
 /**
