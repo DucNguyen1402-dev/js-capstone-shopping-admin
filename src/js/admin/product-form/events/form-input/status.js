@@ -7,6 +7,7 @@ const STATUS_CLASSES = {
   lowStock: ["bg-yellow-500", "text-white"],
   outOfStock: ["bg-rose-500", "text-white"],
   discontinuted: ["bg-gray-500", "text-white"],
+  comingSoon: ["bg-blue-500", "text-white"]
 };
 
 /**

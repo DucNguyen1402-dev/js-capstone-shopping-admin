@@ -1,9 +1,12 @@
 import { productFormServices } from "../product-form/services/product-form.js";
 import { toastServices } from "../product-form/services/toast.js";
-import { productTable } from "../product-table/controller.js";
 import {
-  prepareDelete,
-  confirmDeleteAndUpdate,
+  productTableUI,
+  productTableServices,
+} from "../product-table/index.js";
+import {
+  setDeleteTarget,
+  performDeleteAndUpdate,
 } from "./use-cases/delete-flow.js";
 import { startEdit, submitProductUpdate } from "./use-cases/edit-flow.js";
 import { resolveProductSearch } from "./use-cases/search-product.js";
@@ -18,65 +21,114 @@ import {
   deletionState,
   editingState,
   filterState,
+  filteredList,
+  sortedPriceState,
+  searchState
 } from "../product-interaction-state.js";
 
 /* ======================================================
     1. CENTRAL DISPATCH & ACTION ORCHESTRATION
 ====================================================== */
+
 /**
- * Central action dispatcher for the product module.
- * * @description
- * Acts as the primary orchestrator, mapping disparate UI actions to
- * specialized business logic handlers. It maintains the integrity of the
- * product lifecycle by managing state transitions, asynchronous persistence,
- * and view reconciliation.
- * * @param {Object} action - The intent object containing `type` and optional `payload`.
- * @returns {Promise<void>}
+ * A map of action types to their corresponding use-case handlers.
+ *
+ * Each entry represents a unit of business logic responsible for handling
+ * a specific action. A use-case may perform synchronous state updates,
+ * asynchronous operations (e.g., API calls), and/or trigger UI side effects.
+ *
+ * The handlers are invoked by the central `dispatch` function based on `action.type`.
+ *
+ * @type {Object.<string, (action: Object) => (void | Promise<void>)>}
+ */
+
+const actionUseCases = {
+  
+  PRODUCT_DELETE_REQUESTED: (action) => {
+    setDeleteTarget(deletionState, action.payload.id);
+  },
+  PRODUCT_DELETE_CONFIRMED: async (action) => {
+    await performDeleteAndUpdate(deletionState);
+    fetchAndRenderProducts(getCurrentLength(productState) - 1);
+  },
+  PRODUCT_EDIT_STARTED: (action) => {
+    productFormServices.showFormEdit(action.payload.product);
+    startEdit(editingState, action.payload.id);
+  },
+  PRODUCT_UPDATE_SUBMITTED: (action) => {
+    handleSubmitProductUpdate(
+      editingState,
+      productState,
+      productFormServices,
+      toastServices,
+    );
+  },
+  PRODUCT_SORT_CHANGED: (action) => {
+    sortedPriceState.sortStrategy = action.payload.sortStrategy;
+    const sortedList = resolveSortedProductList(
+      productState.list,
+      filterState,
+      productTableServices,
+      action.payload.sortStrategy,
+    );
+    productTableUI.renderRawOrderOfList(sortedList);
+  },
+  SEARCH_PRODUCT_REQUEST: (action) => {
+    const searchList = resolvedSearchProductList(
+      productState.list,
+      filterState,
+      productTableServices,
+    );
+
+    handleSearchProductOnTable(
+      action.payload.inputValue,
+      productTableUI,
+      searchList,
+      searchState,
+    );
+  },
+  TABLE_FILTER_REQUEST: (action) => {
+    let sortedStateOfList = productTableServices.getSortedProducts(
+      sortedPriceState.sortStrategy,
+      productState.list,
+    );
+    filterState.setFilterType(action.payload.productType);
+    if(searchState.onSearch) sortedStateOfList = searchState.list;
+  
+
+    handleProductTableFilter(
+      action.payload.productType,
+      sortedStateOfList,
+      productTableUI,
+      filterState,
+      filteredList,
+    );
+  },
+};
+
+/**
+ * Dispatches an action to its corresponding use-case handler.
+ *
+ * This function acts as the central coordinator of the application flow:
+ * it looks up the appropriate handler from `actionUseCases` using `action.type`
+ * and executes it.
+ *
+ * All handlers are invoked with the full `action` object. The function supports
+ * both synchronous and asynchronous handlers by always awaiting the result.
+ *
+ * If no matching handler is found, the action is silently ignored.
+ *
+ * @param {Object} action - The action object describing what happened.
+ * @param {string} action.type - The type of action to dispatch.
+ * @param {Object} [action.payload] - Optional data carried by the action.
+ *
+ * @returns {Promise<void>} A promise that resolves when the handler (if any) completes.
  */
 export async function dispatch(action) {
-  switch (action.type) {
-    case "PRODUCT_DELETE_REQUESTED":
-      prepareDelete(deletionState, action);
-      break;
-    case "PRODUCT_DELETE_CONFIRMED":
-      await confirmDeleteAndUpdate(deletionState);
-      fetchAndRenderProducts(getCurrentLength(productState) - 1);
-      break;
-    case "PRODUCT_EDIT_STARTED":
-      productFormServices.showFormEdit(action.payload.product);
-      startEdit(editingState, action);
-      break;
-    case "PRODUCT_UPDATE_SUBMITTED":
-      handleSubmitProductUpdate(
-        editingState,
-        productState,
-        productFormServices,
-        toastServices,
-      );
-      break;
-    case "PRODUCT_SORT_CHANGED":
-      const listForSort = filterState.resolveFilterList(productState.list);
-      productTable.handleSorting(action, listForSort);
-      break;
-    case "SEARCH_PRODUCT_REQUEST":
-       const listForSearch = filterState.resolveFilterList(productState.list);
-      handleSearchProductOnTable(
-        action.payload.inputValue,
-        productTable,
-        listForSearch,
-        filterState
-      );
-      break;
-    case "TABLE_FILTER_REQUEST":
-      filterState.onFilterState(action.payload.onFilter);
-      handleProductTableFilter(
-        action.payload.productType,
-        productState.list,
-        productTable,
-        filterState,
-      );
-      break;
-  }
+  const useCase = actionUseCases[action.type];
+  if (!useCase) return;
+
+  await useCase(action);
 }
 
 /* ======================================================
@@ -131,11 +183,11 @@ async function runAfterUpdateFlow(productForm, toastServices, productState) {
  * @param {number} expectedCount - Record count for skeleton sizing.
  */
 export async function fetchAndRenderProducts(expectedCount) {
-  productTable.showSkeleton(expectedCount);
+  productTableUI.renderSkeleton(expectedCount);
 
   await fetchProducts();
 
-  productTable.render(productState.list);
+  productTableUI.renderDefaultTableOrder(productState.list);
 }
 
 /**
@@ -144,18 +196,22 @@ export async function fetchAndRenderProducts(expectedCount) {
  * Evaluates the search state and commands the table UI to display
  * filtered results, the original list, or a 'Not Found' message.
  * * @param {string} inputValue - Current search query.
- * @param {Object} productTable - The Table UI service.
+ * @param {Object} productTableUI - The Table UI service.
  * @param {Object} productState - Current application data state.
  */
-function handleSearchProductOnTable(inputValue, productTable, productList) {
+function handleSearchProductOnTable(inputValue, productTableUI, productList) {
   const { state, list } = resolveProductSearch(inputValue, productList);
-
+    searchState.onSearch = true;
   if (state === "NOT_FOUND") {
-    productTable.showNotFound();
+    productTableUI.renderNotFoundState();
+    searchState.list =[];
     return;
   }
 
-  productTable.render(state === "EMPTY" ? productList : list);
+   searchState.list =  state === "EMPTY" ? productList : list,
+  productTableUI.renderDefaultTableOrder(
+    state === "EMPTY" ? productList : list,
+  );
 }
 
 /**
@@ -165,24 +221,63 @@ function handleSearchProductOnTable(inputValue, productTable, productList) {
  * If no type is selected, it restores the full table view.
  * @param {string} productType - The selected brand/category to filter by.
  * @param {Array} productList - The master list of products.
- * @param {Object} productTable - The Table UI service.
+ * @param {Object} productTableUI - The Table UI service.
  */
 function handleProductTableFilter(
   productType,
   productList,
-  productTable,
+  productTableUI,
   filterState,
+  filteredList,
 ) {
   if (productType === "all") {
-    filterState.setFilterList([]);
-    productTable.render(productList);
-    filterState.onFilterState(false);
+    productTableUI.renderRawOrderOfList(productList);
+    filterState.setFilterType("all");
+    filteredList.length = productList.length;
     return;
   }
-
   const filterList = getFilterProducts(productType, productList);
 
-  productTable.render(filterList);
+  productTableUI.renderRawOrderOfList(filterList);
+  filteredList.length = filterList.length;
 
-  filterState.setFilterList(filterList);
+  filterState.setFilterType(productType);
+}
+
+/**
+ * Processes the product list through a filtering and sorting pipeline.
+ * @description
+ * Synchronizes the current filter state with the requested sort action
+ * to ensure consistency between UI view and data results.
+ * @param {Array} productList - The raw master data.
+ * @param {Object} filterState - State manager for the active filter type.
+ * @param {Object} services - Collection of logic utilities (filter/sort).
+ * @param {Object} sortStrategy - The sort stategy for sorted list production
+ * @returns {Array} The final processed list ready for rendering.
+ */
+function resolveSortedProductList(
+  productList,
+  filterState,
+  services,
+  sortStrategy,
+) {
+  const activeFilter = filterState.getFilterType();
+  const filteredList = services.getListByFilter(activeFilter, productList);
+  return services.getSortedProducts(sortStrategy, filteredList);
+}
+
+/**
+ * Prepares the target dataset for the search operation.
+ * @description
+ * Synchronizes the search scope by pre-filtering the master list
+ * according to the currently active UI filter category.
+ * @param {Array} productList - The raw master data.
+ * @param {Object} filterState - State manager for the active filter type.
+ * @param {Object} services - Logic utility for category filtering.
+ * @returns {Array} A refined list to be used as the search baseline.
+ */
+function resolvedSearchProductList(productList, filterState, services) {
+  const activeFilter = filterState.getFilterType();
+  const searchList = services.getListByFilter(activeFilter, productList);
+  return searchList;
 }

@@ -1,5 +1,3 @@
-import { productListTableUI } from "../dom.js";
-
 /**
  * State transition map for cycling through sorting types.
  * @type {Object.<string, string>}
@@ -7,6 +5,10 @@ import { productListTableUI } from "../dom.js";
 const NEXT_SORT_TYPE = {
   price_asc: "price_desc",
   price_desc: "price_asc",
+};
+
+const sortBtnState = {
+  descending: true,
 };
 /**
  *
@@ -18,7 +20,6 @@ const NEXT_SORT_TYPE = {
 function handleSortPriceOnClick(sortPriceIcon, dispatch) {
   const current = sortPriceIcon.dataset.sortType;
   const next = NEXT_SORT_TYPE[current];
-
   if (!next) return;
 
   // Update UI State
@@ -31,16 +32,19 @@ function handleSortPriceOnClick(sortPriceIcon, dispatch) {
     payload: { sortStrategy: next },
   });
 }
-
 /**
  * Initializes the click event listener for the price sorting button.
  * * @param {Function} dispatch - The dispatcher function for state communication.
  */
-export function initSortPriceBtn(filterState, dispatch) {
-  const { sortPriceBtn, sortPriceIcon } = productListTableUI;
+export function initSortPriceBtn({
+  filteredList = {},
+  dispatch,
+  tableUI = {},
+}) {
+  const { sortPriceBtn, sortPriceIcon } = tableUI;
 
-  sortPriceBtn.addEventListener("click", () => {
-    if(filterState.getFilterList().length === 1) return ;
+  sortPriceBtn.addEventListener("click", (e) => {
+    if (filteredList.length <= 1) return;
     handleSortPriceOnClick(sortPriceIcon, dispatch);
   });
 }

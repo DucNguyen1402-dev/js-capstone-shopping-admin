@@ -1,71 +1,49 @@
-// import {initProductListTableEvent} from "./event.js";
+import { productListTableUI } from "./dom.js";
 import {
-  renderProductList,
+  renderRawOrderOfList,
   renderSkeleton,
-  renderNotFoundProduct,
+  renderNotFoundState,
 } from "./ui/render.js";
-import { initProductTableEvents } from "./events/index.js";
 
 /**
- * Controller object for managing product table UI and behavior.
- * * @type {Object}
- * @property {Function} showSkeleton - Displays the loading placeholder (skeleton screen).
- * @property {Function} render - Renders the actual product list into the table.
- * @property {Function} initProductTable - Sets up table-related events.
+ * Renders the initial table view with a default sorting order.
+ * @description
+ * Sorts the provided list by price (descending) as the baseline view
+ * before any user interaction. Creates a shallow copy to preserve data integrity.
+ * @param {Array} list - The dataset to be rendered initially.
  */
-
-export const productTable = {
-  showSkeleton: renderSkeleton,
-  render: renderSortedProducts,
-  showNotFound: renderNotFoundProduct,
-  initProductTable: initProductTableEvents,
-  handleSorting: handleProductSorting,
-};
-
-/**
- * Collection of sorting functions for product data.
- * @type {Object.<string, Function>}
- * @description Defines strategies for sorting products based on price
- * in both ascending and descending order.
- */
-export const PRODUCT_SORT_STRATEGIES = {
-  price_asc: (a, b) => a.price - b.price,
-  price_desc: (a, b) => b.price - a.price,
-};
-
-/**
- * Handles the product sorting logic and re-renders the table.
- * * @description
- * Identifies the correct sorting strategy from the payload, creates a
- * shallow copy of the product list to avoid mutating the original state,
- * and triggers a re-render with the sorted data.
- * * @param {Object} state - The current action/event state containing the payload.
- * @param {Object} productState - The global or local product state object.
- * @param {Array<Object>} productState.list - The array of products to be sorted.
- */
-export function handleProductSorting(state, productList) {
-  const sorter = PRODUCT_SORT_STRATEGIES[state.payload.sortStrategy];
-
-  if (!sorter) return;
-  const sortedList = [...productList].sort(sorter);
-
-  renderProductList(sortedList);
+function sortByPriceDesc(list) {
+  return [...list].sort((a, b) => b.price - a.price);
 }
 
+
+
 /**
- * Sorts the product list by price in descending order and triggers the render process.
- * * @param {Object[]} list - The array of product objects to be sorted.
- * @param {number} list[].price - The price of the product.
- * @returns {void}
+ * Create Product Table UI bound to given DOM elements.
+ *
+ * @param {Object} tableElements
+ * @returns {{
+ *   renderSkeleton: (expectedCount: number) => void,
+ *   renderDefaultTableOrder: (list: Array) => void,
+ *   renderRawOrderOfList: (list: Array) => void,
+ *   renderNotFoundState: () => void
+ * }}
  */
-function renderSortedProducts(list, isDescending= true) {
-  if (!Array.isArray(list)) return;
+const createProductTableUI = (tableElements) => ({
+  renderSkeleton: (expectedCount) => {
+    renderSkeleton(expectedCount, tableElements);
+  },
+  renderDefaultTableOrder: (list) => {
+    const sortedList = sortByPriceDesc(list);
+    renderRawOrderOfList(sortedList, tableElements);
+  },
+  renderRawOrderOfList: (list) => {
+    renderRawOrderOfList(list, tableElements);
+  },
+  renderNotFoundState: () => {
+    renderNotFoundState(tableElements);
+  },
+});
 
-  const sorter = isDescending
-    ? PRODUCT_SORT_STRATEGIES.price_desc
-    : PRODUCT_SORT_STRATEGIES.price_asc;
 
-  const sortedList = [...list].sort(sorter);
-
-  renderProductList(sortedList);
-}
+export const productTableUI = createProductTableUI(productListTableUI);

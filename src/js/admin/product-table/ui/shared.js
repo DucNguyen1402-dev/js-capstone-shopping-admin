@@ -1,6 +1,6 @@
 /**
  * @module UI/Shared
- * @description General UI utility functions for managing common element states 
+ * @description General UI utility functions for managing common element states
  * (modals, overlays, transitions) across the application.
  */
 
@@ -45,7 +45,7 @@ function setModalState(el, state) {
  * Transitions the modal to a hidden state (invisible and non-interactive).
  * * @param {HTMLElement} el - The modal element to hide.
  */
-export function hideModalState(el) {
+function hideModalState(el) {
   setModalState(el, MODAL_STATES.HIDDEN);
 }
 
@@ -53,10 +53,11 @@ export function hideModalState(el) {
  * Transitions the modal to a visible state (fully opaque and interactive).
  * * @param {HTMLElement} el - The modal element to show.
  */
-export function showModalState(el) {
+function showModalState(el) {
   setModalState(el, MODAL_STATES.VISIBLE);
 }
 
-
-
-
+export const modalUI = {
+  hideModalState,
+  showModalState,
+};

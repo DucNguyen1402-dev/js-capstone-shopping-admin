@@ -1,12 +1,9 @@
-import { productListTableUI } from "../dom.js";
-import { hideModalState } from "../ui/shared.js";
-
 /**
  * Handles the cancellation of the delete modal.
  * * @param {HTMLElement} deleteModal - The modal container element to be hidden.
  */
-function handleModelCancelAction(deleteModal) {
-  hideModalState(deleteModal);
+function handleModelCancelAction(deleteModal, modalUI) {
+  modalUI.hideModalState(deleteModal);
 }
 
 /**
@@ -14,12 +11,12 @@ function handleModelCancelAction(deleteModal) {
  * * @param {HTMLElement} deleteModal - The modal container element to be hidden.
  * @param {Function} dispatch - The dispatcher function to trigger state changes.
  */
-function handleModelConfirmAction(deleteModal, dispatch) {
+function handleModelConfirmAction(deleteModal, dispatch, modalUI) {
   dispatch({
     type: "PRODUCT_DELETE_CONFIRMED",
   });
 
-  hideModalState(deleteModal);
+  modalUI.hideModalState(deleteModal);
 }
 
 /**
@@ -28,18 +25,18 @@ function handleModelConfirmAction(deleteModal, dispatch) {
  * actions (cancel/confirm) based on the button's `data-action` attribute.
  * * @param {Function} dispatch - The dispatcher function used to communicate user actions back to the state.
  */
-export function initDeleteModalEvents(dispatch) {
-  const { deleteModal } = productListTableUI;
-
+export function initDeleteModalEvents({dispatch ={}, tableUI ={}, uiHandler ={}}) {
+  const { deleteModal } = tableUI;
+  const {modalUI} = uiHandler;
   deleteModal.addEventListener("click", (e) => {
     const el = e.target.closest("button");
     if (!el) return;
     const action = el.dataset.action;
 
     if (action === "cancel") {
-      handleModelCancelAction(deleteModal, dispatch);
+      handleModelCancelAction(deleteModal, modalUI);
     } else if (action === "confirm") {
-      handleModelConfirmAction(deleteModal, dispatch);
+      handleModelConfirmAction(deleteModal, dispatch, modalUI);
     }
   });
 }

@@ -1,7 +1,3 @@
-import { productListTableUI } from "../dom.js";
-import { showModalState } from "../ui/shared.js";
-import { getProductId } from "../ui/item-actions.js";
-
 /**
  * Handles the click event for the delete button.
  * Shows the confirmation modal and dispatches the product ID to be prepared for deletion.
@@ -9,8 +5,8 @@ import { getProductId } from "../ui/item-actions.js";
  * @param {HTMLElement} deleteModal - The delete confirmation modal element.
  * @param {Function} dispatch - The dispatcher function to handle state updates.
  */
-function handleRemoveAction(actionEl, deleteModal, dispatch) {
-  showModalState(deleteModal);
+function handleRemoveAction(actionEl, deleteModal, dispatch, modalUI) {
+  modalUI.showModalState(deleteModal);
   const productItem = actionEl.closest(".product-item");
   const productId = productItem.dataset.productId;
   dispatch({
@@ -39,11 +35,11 @@ function getMatchedProductFromState(productId, productState) {
  * @param {Array<Object>} productList - The current list of products.
  * @param {Function} dispatch - The dispatcher function to trigger the edit mode.
  */
-export function handleEditAction(actionEl, productState, dispatch) {
-  const productId = getProductId(actionEl);
+export function handleEditAction(actionEl, productState, dispatch, itemActionUI) {
+  const productId = itemActionUI.getProductId(actionEl);
   const matchedProduct = getMatchedProductFromState(productId, productState);
   dispatch({
-    type:  "PRODUCT_EDIT_STARTED",
+    type: "PRODUCT_EDIT_STARTED",
     payload: { product: matchedProduct, id: productId },
   });
 }
@@ -61,20 +57,24 @@ const ALLOWED_ACTIONS = ["edit", "delete"];
  * * @param {Array<Object>} productState
  * @param {Function} dispatch - The dispatcher function for state communication.
  */
-export function initProductActionEvents(productState, dispatch) {
-  const { productListTable, deleteModal } = productListTableUI;
-
+export function initProductActionEvents({
+  productState ={},
+  dispatch ={},
+  tableUI ={},
+  uiHandler ={},
+}) {
+  const { productListTable, deleteModal } = tableUI;
+  const { modalUI, itemActionUI } = uiHandler;
   productListTable.addEventListener("click", (e) => {
-
     const actionEl = e.target.closest("button");
     if (!actionEl) return;
     const action = actionEl.dataset.action;
     if (!ALLOWED_ACTIONS.includes(action)) return;
 
     if (action === "delete") {
-      handleRemoveAction(actionEl, deleteModal, dispatch);
+      handleRemoveAction(actionEl, deleteModal, dispatch, modalUI);
     } else if (action === "edit") {
-      handleEditAction(actionEl, productState, dispatch);
+      handleEditAction(actionEl, productState, dispatch, itemActionUI);
     }
   });
 }

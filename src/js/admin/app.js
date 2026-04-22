@@ -1,11 +1,9 @@
 import { initDropdownMobile } from "./mobile-nav/controller.js";
-import {initAllProductFormEvents} from  "./product-form/init-events.js";
-import { productTable } from "./product-table/controller.js";
-
+import { initAllProductFormEvents } from "./product-form/init-events.js";
+import { productTableUI, productTableServices, initAllProductTableEvents } from "./product-table/index.js";
 import { fetchProducts, productState } from "./index.js";
-
 import { dispatch } from "./product-main-controller/controller.js";
-import { filterState } from "./product-interaction-state.js";
+import { filterState , filteredList} from "./product-interaction-state.js";
 
 /* ======================================================
    1. INIT
@@ -28,10 +26,12 @@ function initPageInteractions() {
  * - Bind related events
  */
 async function initProductTablePage() {
-  productTable.showSkeleton();
+  productTableUI.renderSkeleton();
   await fetchProducts();
-  productTable.render(productState.list);
-  productTable.initProductTable(productState,filterState, dispatch );
+  productTableUI.renderDefaultTableOrder(productState.list);
+  filteredList.length = productState.list.length;
+  const context = {productState, filterState, filteredList, dispatch};
+  initAllProductTableEvents(context);
 }
 
 /**

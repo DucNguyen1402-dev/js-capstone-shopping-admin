@@ -5,8 +5,8 @@ import { updateProduct } from "../../index.js";
  * @param {Object} pendingActionState - Local state buffer.
  * @param {Object} action - Action containing target ID.
  */
-export function startEdit(editingState, action) {
-  editingState.setEditId(action.payload.id);
+export function startEdit(editingState, editId) {
+  editingState.setEditId(editId);
 }
 
 /**

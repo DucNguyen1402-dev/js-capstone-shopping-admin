@@ -52,31 +52,26 @@ export const editingState = {
  */
 export const filterState = {
   /** @type {Array<any>} */
-  _list: [],
-  _onFilter: false,
-  /** * Updates the current list of active filters.
-   * @param {Array<any>} list
-   */
-  setFilterList(list) {
-    this._list = list;
+  _type: "all",
+
+  setFilterType(type) {
+    this._type = type;
   },
-  /** * Get filter state when filter event is active
-   * @param {Boolean} onFilter
-   */
-  onFilterState(onFilter) {
-    this._onFilter = onFilter;
-  },
-  /** * Retrieves the current list of active filters.
-   * @returns {Array<any>}
-   */
-  getFilterList(){
-    return [...this._list];
-  },
-  /**
-   * Returns filtered list if active, otherwise default list.
-   */
-  resolveFilterList(defaultList) {
-    if (!this._onFilter) return defaultList;
-    return this._list;
+
+  getFilterType() {
+    return this._type;
   },
 };
+
+export const filteredList = {
+  length: null,
+};
+
+export const sortedPriceState = {
+  sortStrategy: "price_desc",
+};
+
+export const searchState = {
+  onSearch: false,
+  list: []
+}
