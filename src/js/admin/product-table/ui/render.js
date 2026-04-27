@@ -25,10 +25,10 @@ const STATUS_TEXT = {
  * @returns {string} The HTML representative of a table row.
  */
 const ProductRow = (item) => `
- <tr class="product-item transition-colors duration-200 hover:bg-gray-50" data-product-id="${item.id}">
-  <td class="product-id px-8 py-4 text-sm text-gray-700">${item.id}</td>
-  <td class="px-6 py-4 text-sm font-medium text-gray-900">${item.name}</td>
-  <td class="px-6 py-4 text-left text-sm text-gray-700">${item.price}</td>
+ <tr class="product-item transition-colors duration-400  text-gray-700 bg-white hover:bg-gray-50 " data-product-id=${item.id}>
+  <td class="product-id px-8 py-4 text-sm ">${item.id}</td>
+  <td class="px-6 py-4 text-sm font-medium ">${item.name}</td>
+  <td class="px-6 py-4 text-left text-sm ">${item.price}</td>
   <td class="px-6 py-4 text-sm text-gray-600 ">
     <div class="flex h-6 w-20 items-center justify-center rounded-full bg-blue-100 text-xs font-semibold text-blue-700">
       <span>${item.type}</span>
@@ -50,11 +50,11 @@ const ProductRow = (item) => `
     </div>
   </td>
   <td class="px-8 py-4 text-center">
-    <button class="mr-3 cursor-pointer text-blue-500 transition-colors duration-300 hover:text-blue-600"
+    <button class="mr-3 cursor-pointer text-blue-500 transition-colors duration-300 "
       data-action="edit">
       <span class="fa-solid fa-pen-to-square"></span>
     </button>
-    <button class="cursor-pointer text-red-500 transition-colors duration-300 hover:text-red-600" data-action="delete">
+    <button class="cursor-pointer text-rose-500 transition-colors duration-30" data-action="delete">
       <span class="fa-solid fa-trash"></span>
     </button>
   </td>
@@ -119,7 +119,6 @@ const SkeletonRow = () => `
  */
 export function renderSkeleton(expectedCount = 8, tableElements) {
   const { productListTable } = tableElements;
-
   productListTable.innerHTML = SkeletonRow().repeat(expectedCount);
 }
 

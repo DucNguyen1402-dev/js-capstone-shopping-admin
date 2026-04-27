@@ -17,5 +17,4 @@ export function setDeleteTarget(deletionState, deletedId){
  */
 export async function performDeleteAndUpdate(deletionState) {
   await deleteData(deletionState.getDeletedId());
-  deletionState.setDeletedId(null);
 }

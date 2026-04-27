@@ -16,8 +16,8 @@ const debounce = (func, delay) => {
  * during rapid user input.
  * @param {Function} dispatch - The central action dispatcher.
  */
-export function initSearchProductInputEvent({dispatch ={}, tableUI ={}}) {
-  const { searchInput } = tableUI;
+export function initSearchProductInputEvent({dispatch ={}, tableEl ={}}) {
+  const { searchInput } = tableEl;
 
   const debouncedDispatch = debounce((value) => {
     dispatch({

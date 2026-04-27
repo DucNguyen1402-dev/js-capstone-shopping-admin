@@ -23,7 +23,7 @@ import {
   filterState,
   filteredList,
   sortedPriceState,
-  searchState
+  searchState,
 } from "../product-interaction-state.js";
 
 /* ======================================================
@@ -43,14 +43,17 @@ import {
  */
 
 const actionUseCases = {
-  
   PRODUCT_DELETE_REQUESTED: (action) => {
     setDeleteTarget(deletionState, action.payload.id);
   },
   PRODUCT_DELETE_CONFIRMED: async (action) => {
     await performDeleteAndUpdate(deletionState);
-    fetchAndRenderProducts(getCurrentLength(productState) - 1);
+     fetchAndRenderProducts(getCurrentLength(productState.list) - 1, productTableUI);
   },
+   CANCEL_DELETION: (action) => {
+    handleCancelDeletion(deletionState, productTableUI);
+  },
+
   PRODUCT_EDIT_STARTED: (action) => {
     productFormServices.showFormEdit(action.payload.product);
     startEdit(editingState, action.payload.id);
@@ -93,8 +96,7 @@ const actionUseCases = {
       productState.list,
     );
     filterState.setFilterType(action.payload.productType);
-    if(searchState.onSearch) sortedStateOfList = searchState.list;
-  
+    if (searchState.onSearch) sortedStateOfList = searchState.list;
 
     handleProductTableFilter(
       action.payload.productType,
@@ -105,6 +107,7 @@ const actionUseCases = {
     );
   },
 };
+
 
 /**
  * Dispatches an action to its corresponding use-case handler.
@@ -171,7 +174,7 @@ async function handleSubmitProductUpdate(
  */
 async function runAfterUpdateFlow(productForm, toastServices, productState) {
   productForm.hideForm();
-  await fetchAndRenderProducts(getCurrentLength(productState));
+  await fetchAndRenderProducts(getCurrentLength(productState.list));
   toastServices.showUpdateSuccess();
 }
 
@@ -182,7 +185,7 @@ async function runAfterUpdateFlow(productForm, toastServices, productState) {
  * acquiring remote data, and refreshing the table representation.
  * @param {number} expectedCount - Record count for skeleton sizing.
  */
-export async function fetchAndRenderProducts(expectedCount) {
+ async function fetchAndRenderProducts(expectedCount, productTableUI) {
   productTableUI.renderSkeleton(expectedCount);
 
   await fetchProducts();
@@ -201,17 +204,17 @@ export async function fetchAndRenderProducts(expectedCount) {
  */
 function handleSearchProductOnTable(inputValue, productTableUI, productList) {
   const { state, list } = resolveProductSearch(inputValue, productList);
-    searchState.onSearch = true;
+  searchState.onSearch = true;
   if (state === "NOT_FOUND") {
     productTableUI.renderNotFoundState();
-    searchState.list =[];
+    searchState.list = [];
     return;
   }
 
-   searchState.list =  state === "EMPTY" ? productList : list,
-  productTableUI.renderDefaultTableOrder(
-    state === "EMPTY" ? productList : list,
-  );
+  ((searchState.list = state === "EMPTY" ? productList : list),
+    productTableUI.renderDefaultTableOrder(
+      state === "EMPTY" ? productList : list,
+    ));
 }
 
 /**
@@ -280,4 +283,20 @@ function resolvedSearchProductList(productList, filterState, services) {
   const activeFilter = filterState.getFilterType();
   const searchList = services.getListByFilter(activeFilter, productList);
   return searchList;
+}
+
+
+/**
+ * Resets the visual and data state of a pending deletion.
+ * @description 
+ * Removes the highlight (red background) from the targeted row and 
+ * clears the deletion tracking ID in the state to prevent accidental deletes.
+ * @param {Object} deletionState - State manager for the product being deleted.
+ * @param {Object} productTableUI - UI interface to manipulate row styling.
+ */
+function handleCancelDeletion(deletionState, productTableUI) {
+  productTableUI.clearPendingDeleteProductRow(
+    deletionState.getDeletedId()
+  );
+  deletionState.setDeletedId(null);
 }

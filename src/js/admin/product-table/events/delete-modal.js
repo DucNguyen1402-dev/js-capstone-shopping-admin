@@ -2,8 +2,11 @@
  * Handles the cancellation of the delete modal.
  * * @param {HTMLElement} deleteModal - The modal container element to be hidden.
  */
-function handleModelCancelAction(deleteModal, modalUI) {
+function handleModelCancelAction(deleteModal, dispatch, modalUI) {
   modalUI.hideModalState(deleteModal);
+  dispatch({
+    type: "CANCEL_DELETION",
+  });
 }
 
 /**
@@ -25,16 +28,20 @@ function handleModelConfirmAction(deleteModal, dispatch, modalUI) {
  * actions (cancel/confirm) based on the button's `data-action` attribute.
  * * @param {Function} dispatch - The dispatcher function used to communicate user actions back to the state.
  */
-export function initDeleteModalEvents({dispatch ={}, tableUI ={}, uiHandler ={}}) {
-  const { deleteModal } = tableUI;
-  const {modalUI} = uiHandler;
+export function initDeleteModalEvents({
+  dispatch = {},
+  tableEl = {},
+  uiHandler = {},
+}) {
+  const { deleteModal } = tableEl;
+  const { modalUI } = uiHandler;
   deleteModal.addEventListener("click", (e) => {
     const el = e.target.closest("button");
     if (!el) return;
     const action = el.dataset.action;
 
     if (action === "cancel") {
-      handleModelCancelAction(deleteModal, modalUI);
+      handleModelCancelAction(deleteModal, dispatch, modalUI);
     } else if (action === "confirm") {
       handleModelConfirmAction(deleteModal, dispatch, modalUI);
     }

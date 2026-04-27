@@ -5,8 +5,8 @@
  * specific product category view updates.
  * @param {Function} dispatch - The central action dispatcher.
  */
-export function initProductTableFilterEvent({filterState ={},dispatch ={}, tableUI ={}}) {
-  const { filterInput } = tableUI;
+export function initProductTableFilterEvent({filterState ={},dispatch ={}, tableEl ={}}) {
+  const { filterInput } = tableEl;
 
   filterInput.addEventListener("change", () => {
   

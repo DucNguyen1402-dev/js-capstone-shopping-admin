@@ -1,11 +1,13 @@
 import { initProductTableEvents } from "./events/index.js";
-import { productListTableUI } from "./dom.js";
+import { productListTableEl } from "./dom.js";
 import { itemActionUI } from "./ui/item-actions.js";
 import { modalUI } from "./ui/shared.js";
+import { productItemUI } from "./ui/product-item.js";
 
 const uiHandler = {
   itemActionUI,
   modalUI,
+  productItemUI
 };
 
 /**
@@ -19,7 +21,7 @@ export function initAllProductTableEvents({productState, filterState, filteredLi
     productState,
     filterState,
     dispatch,
-    tableUI: productListTableUI,
+    tableEl: productListTableEl,
     uiHandler,
     filteredList
   };

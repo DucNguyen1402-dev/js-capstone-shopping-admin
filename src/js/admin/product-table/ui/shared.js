@@ -49,6 +49,7 @@ function hideModalState(el) {
   setModalState(el, MODAL_STATES.HIDDEN);
 }
 
+
 /**
  * Transitions the modal to a visible state (fully opaque and interactive).
  * * @param {HTMLElement} el - The modal element to show.
@@ -61,3 +62,5 @@ export const modalUI = {
   hideModalState,
   showModalState,
 };
+
+

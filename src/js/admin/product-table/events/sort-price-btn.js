@@ -39,9 +39,9 @@ function handleSortPriceOnClick(sortPriceIcon, dispatch) {
 export function initSortPriceBtn({
   filteredList = {},
   dispatch,
-  tableUI = {},
+  tableEl = {},
 }) {
-  const { sortPriceBtn, sortPriceIcon } = tableUI;
+  const { sortPriceBtn, sortPriceIcon } = tableEl;
 
   sortPriceBtn.addEventListener("click", (e) => {
     if (filteredList.length <= 1) return;
