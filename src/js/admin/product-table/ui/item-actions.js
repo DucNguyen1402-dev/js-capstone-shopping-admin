@@ -30,14 +30,20 @@ function getActionBtns(product) {
  */
 const ACTION_BTN_CLASSES = {
   edit: {
-    mouseleave: ["text-blue-500"],
-    mouseenter: ["text-white"],
+    default: ["text-blue-500"],
+    hover: ["text-white"],
   },
   delete: {
-    mouseleave: ["text-rose-500"],
-    mouseenter: ["text-white"],
+    default: ["text-rose-500"],
+    hover: ["text-white"],
   },
 };
+
+
+const EVENT_TO_UI ={
+  mouseenter: "hover",
+  mouseleave: "default"
+}
 
 /**
  * Adjusts the contrast of action buttons to match the row's visual state.
@@ -58,6 +64,7 @@ function setActionButtonsContrast(
 
     // Identifies whether the button is 'edit' or 'delete' via data attribute
     const action = btn.dataset.action;
+    const uiState =  EVENT_TO_UI[eventType];
     const config = ACTION_BTN_CLASSES[action];
     if (!config) return;
 
@@ -66,8 +73,8 @@ function setActionButtonsContrast(
     btn.classList.remove(...allClasses);
 
     // Apply the theme corresponding to the current event (e.g., white text on hover)
-    if (config[eventType]) {
-      btn.classList.add(...config[eventType]);
+    if (config[uiState]) {
+      btn.classList.add(...config[uiState]);
     }
   };
 

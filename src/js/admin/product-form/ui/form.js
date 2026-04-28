@@ -1,11 +1,24 @@
 /**
- * Toggles the visibility of the main product form container.
- * * @param {HTMLElement} productForm - The form container element.
- * @param {boolean} [visible=true] - Whether the form should be shown.
+ * Tailwind classes for form visibility states
  */
-
+const FORM_CONTAINER_CLASSES = {
+  visible: ["opacity-100", "pointer-events-auto"],
+  invisible: ["opacity-0", "pointer-events-none"],
+};
+/**
+ * Flattened array of all classes for resetting state
+ */
+const ALL_CLASSES = Object.values(FORM_CONTAINER_CLASSES).flat();
+/**
+ * Toggles the visibility state of the product form
+ * @param {HTMLElement} productForm - The form element to target
+ * @param {boolean} [visible=true] - Whether to show or hide the form
+ */
 export function setProductFormToVisible(productForm, visible = true) {
-  productForm.classList.toggle("hidden", !visible);
+  productForm.classList.remove(...ALL_CLASSES);
+
+  const state = visible ? "visible" : "invisible";
+  productForm.classList.add(...FORM_CONTAINER_CLASSES[state]);
 }
 
 /**
@@ -34,11 +47,7 @@ function setProductFormUpdateBtnToVisible(updateBtn, visible = true) {
  * @param {HTMLElement} elements.updateBtn - The update button.
  * @param {HTMLElement} elements.title - The form heading element.
  */
-export function setProductFormStateForUpdate({
-  submitBtn,
-  updateBtn,
-  title,
-}) {
+export function setProductFormStateForUpdate({ submitBtn, updateBtn, title }) {
   setProductFormSubmitBtnToVisible(submitBtn, false);
   setProductFormUpdateBtnToVisible(updateBtn, true);
   title.textContent = "Update Product";
@@ -52,11 +61,7 @@ export function setProductFormStateForUpdate({
  * @param {HTMLElement} elements.updateBtn - The update button.
  * @param {HTMLElement} elements.title - The form heading element.
  */
-export function setProductFormStateForAdd({
-  submitBtn,
-  updateBtn,
-  title,
-}) {
+export function setProductFormStateForAdd({ submitBtn, updateBtn, title }) {
   setProductFormSubmitBtnToVisible(submitBtn, true);
   setProductFormUpdateBtnToVisible(updateBtn, false);
   title.textContent = "Add New Product";
@@ -74,4 +79,3 @@ export function fillForm(form, formData) {
 
   form.status.dispatchEvent(new Event("change"));
 }
-

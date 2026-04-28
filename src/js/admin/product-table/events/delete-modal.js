@@ -5,7 +5,10 @@
 function handleModelCancelAction(deleteModal, dispatch, modalUI) {
   modalUI.hideModalState(deleteModal);
   dispatch({
-    type: "CANCEL_DELETION",
+    type: "PRODUCT_CANCEL_DELETION",
+    payload:{
+      action: "delete"
+    }
   });
 }
 
@@ -31,10 +34,10 @@ function handleModelConfirmAction(deleteModal, dispatch, modalUI) {
 export function initDeleteModalEvents({
   dispatch = {},
   tableEl = {},
-  uiHandler = {},
+  uiToolkit = {},
 }) {
   const { deleteModal } = tableEl;
-  const { modalUI } = uiHandler;
+  const { modalUI } = uiToolkit;
   deleteModal.addEventListener("click", (e) => {
     const el = e.target.closest("button");
     if (!el) return;

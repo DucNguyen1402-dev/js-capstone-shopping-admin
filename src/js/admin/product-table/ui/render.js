@@ -25,7 +25,7 @@ const STATUS_TEXT = {
  * @returns {string} The HTML representative of a table row.
  */
 const ProductRow = (item) => `
- <tr class="product-item transition-colors duration-400  text-gray-700 bg-white hover:bg-gray-50 " data-product-id=${item.id}>
+ <tr class="product-item transition-colors duration-400  text-gray-700 bg-white" data-product-id=${item.id}>
   <td class="product-id px-8 py-4 text-sm ">${item.id}</td>
   <td class="px-6 py-4 text-sm font-medium ">${item.name}</td>
   <td class="px-6 py-4 text-left text-sm ">${item.price}</td>

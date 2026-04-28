@@ -4,7 +4,7 @@ import { itemActionUI } from "./ui/item-actions.js";
 import { modalUI } from "./ui/shared.js";
 import { productItemUI } from "./ui/product-item.js";
 
-const uiHandler = {
+const uiToolkit = {
   itemActionUI,
   modalUI,
   productItemUI
@@ -16,13 +16,14 @@ const uiHandler = {
  * Acts as a bridge to wire UI elements from 'productListTableUI'
  * with the central dispatch logic.
  */
-export function initAllProductTableEvents({productState, filterState, filteredList, dispatch}) {
+export function initAllProductTableEvents({productState, filterState, filteredList, searchState, dispatch}) {
   const context = {
     productState,
     filterState,
+    searchState,
     dispatch,
     tableEl: productListTableEl,
-    uiHandler,
+    uiToolkit,
     filteredList
   };
   initProductTableEvents(context);

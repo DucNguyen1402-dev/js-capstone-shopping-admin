@@ -6,7 +6,19 @@ import {
 } from "./ui/render.js";
 
 import { itemActionUI } from "./ui/item-actions.js";
-import { productItemUI } from "./ui/product-item.js";
+import { productItemUI, } from "./ui/product-item.js";
+
+/**
+ * UI Service Bundle for the Product Table.
+ * @description 
+ * Groups sub-modules (Action buttons and Row items) into a single 
+ * dependency object to be injected into the main Table UI factory.
+ */
+const uiToolkit = {
+  itemActionUI,
+  productItemUI,
+};
+
 
 /**
  * Renders the initial table view with a default sorting order.
@@ -30,7 +42,7 @@ function sortByPriceDesc(list) {
  *   renderNotFoundState: () => void
  * }}
  */
-const createProductTableUI = (productListTableEl, tableUIHandler) => ({
+const createProductTableUI = (productListTableEl, uiToolkit) => ({
   renderSkeleton: (expectedCount) => {
     renderSkeleton(expectedCount, productListTableEl);
   },
@@ -44,19 +56,24 @@ const createProductTableUI = (productListTableEl, tableUIHandler) => ({
   renderNotFoundState: () => {
     renderNotFoundState(productListTableEl);
   },
-  clearPendingDeleteProductRow: (deleteId) => {
-    handleClearPendingDeleteProductRow(deleteId, tableUIHandler);
+  setPendingProductRowUIState: (deleteId, action, eventType) => {
+    setPendingProductRowUIState(deleteId, action, eventType, uiToolkit);
   },
+  showHighlightEditRow: (editId) => {
+    const {productItemUI} = uiToolkit;
+     const product = productItemUI.getProductItemById(editId);
+    productItemUI.setRowEditorialMode(product);
+  },
+  hideHighlightEditRow: (editId) =>{
+     const {productItemUI} = uiToolkit;
+     const product = productItemUI.getProductItemById(editId);
+     const actionBtns = itemActionUI.getActionBtns(product);
+      itemActionUI.setActionButtonsContrast(actionBtns);
+    productItemUI.setRowEditorialMode(product, false);
+  }
 });
 
-const tableUIHandler = {
-  itemActionUI,
-  productItemUI,
-};
-export const productTableUI = createProductTableUI(
-  productListTableEl,
-  tableUIHandler,
-);
+
 
 /**
  * Executes the UI cleanup sequence for a canceled deletion.
@@ -69,14 +86,29 @@ export const productTableUI = createProductTableUI(
  * @param {Object} dependencies.productItemUI - Interface for row-level styling.
  */
 
-function handleClearPendingDeleteProductRow(
+function setPendingProductRowUIState(
   deleteId,
+  action,
+  eventType,
   { itemActionUI, productItemUI },
 ) {
   const product = productItemUI.getProductItemById(deleteId);
   if (!product) return;
   const actionBtns = itemActionUI.getActionBtns(product);
 
-  itemActionUI.setActionButtonsContrast(actionBtns);
-  productItemUI.setDeleteProductRowUI(product);
+  itemActionUI.setActionButtonsContrast(actionBtns, eventType);
+  productItemUI.applyActionFeedbackUI(product, action, eventType);
 }
+
+
+/**
+ * Main Product Table UI Instance.
+ * @description 
+ * Created via a factory function (createProductTableUI) by injecting the 
+ * table's root DOM element and the required UI service handlers.
+ * Exposes the public API for controlling the entire table component.
+ */
+export const productTableUI = createProductTableUI(
+  productListTableEl,
+  uiToolkit,
+);

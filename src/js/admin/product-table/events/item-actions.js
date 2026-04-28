@@ -55,8 +55,9 @@ export function handleEditAction(
   const matchedProduct = getMatchedProductFromState(productId, productState);
   dispatch({
     type: "PRODUCT_EDIT_STARTED",
-    payload: { product: matchedProduct, id: productId },
+    payload: { product: matchedProduct, id: productId},
   });
+
 }
 
 /**
@@ -90,10 +91,11 @@ function getDeleteHoverContext(actionEl, { productItemUI, itemActionUI }) {
 const handler = (
   { actionBtns, product },
   { itemActionUI, productItemUI },
+  action,
   eventType,
 ) => {
   itemActionUI.setActionButtonsContrast(actionBtns, eventType);
-  productItemUI.setDeleteProductRowUI(product, eventType);
+  productItemUI.applyActionFeedbackUI(product, action, eventType);
 };
 
 /**
@@ -116,10 +118,10 @@ const deleteHoverHandler = Object.freeze({
  * @param {Object} uiHandler - The UI service bundle.
  * @param {string} eventType - The triggered event name ('mouseenter' | 'mouseleave').
  */
-function handleDeleteHover(actionEl, uiHandler, eventType) {
-  const hoverEl = getDeleteHoverContext(actionEl, uiHandler);
+function handleDeleteHover({ actionEl, uiToolkit, action, eventType }) {
+  const hoverEl = getDeleteHoverContext(actionEl, uiToolkit);
 
-  deleteHoverHandler[eventType]?.(hoverEl, uiHandler, eventType);
+  deleteHoverHandler[eventType]?.(hoverEl, uiToolkit, action, eventType);
 }
 
 /**
@@ -139,17 +141,17 @@ export function initProductActionEvents({
   productState = {},
   dispatch = {},
   tableEl = {},
-  uiHandler = {},
+  uiToolkit = {},
 }) {
   const { productListTable, deleteModal } = tableEl;
-  const { modalUI, itemActionUI } = uiHandler;
+  const { modalUI, itemActionUI } = uiToolkit;
 
   /**
- * Main event delegation for product action buttons (Edit/Delete).
- * @description 
- * Intercepts clicks on the table, validates the action type via data-attributes, 
- * and dispatches to specific handlers (Remove or Edit).
- */
+   * Main event delegation for product action buttons (Edit/Delete).
+   * @description
+   * Intercepts clicks on the table, validates the action type via data-attributes,
+   * and dispatches to specific handlers (Remove or Edit).
+   */
   productListTable.addEventListener("click", (e) => {
     const actionEl = e.target.closest("button");
     if (!actionEl) return;
@@ -164,20 +166,32 @@ export function initProductActionEvents({
   });
 
   /**
- * Global hover delegation for delete warnings.
- * @description 
- * Captures mouseenter/mouseleave on delete buttons to trigger visual row highlights.
- * Uses 'true' (Event Capturing) to ensure events are caught early in the DOM tree.
- */
+   * Global hover delegation for delete warnings.
+   * @description
+   * Captures mouseenter/mouseleave on delete buttons to trigger visual row highlights.
+   * Uses 'true' (Event Capturing) to ensure events are caught early in the DOM tree.
+   */
   ["mouseenter", "mouseleave"].forEach((eventName) => {
     productListTable.addEventListener(
       eventName,
       (e) => {
         const actionEl = e.target.closest("button");
         if (!actionEl) return;
-        if (actionEl.dataset.action !== "delete") return;
-        if(eventName === "mouseleave" && deleteModal.classList.contains("opacity-100")) return;
-        handleDeleteHover(actionEl, uiHandler, e.type);
+        const action = actionEl.dataset.action;
+        if(action === "edit"){
+          dispatch({
+            type: "PRODUCT_EDIT_HOVER",
+            payload: {
+              id:  itemActionUI.getProductId(actionEl),
+              eventType: eventName,
+              action: "edit"
+            }
+          })
+          return;
+        }
+        if (deleteModal.classList.contains("opacity-100")) return;
+        const context = { actionEl, uiToolkit, action, eventType: e.type };
+        handleDeleteHover(context);
       },
       true,
     );

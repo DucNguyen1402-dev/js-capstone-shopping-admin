@@ -26,6 +26,7 @@ export const productFormServices = {
   showFormAdd: initProductFormAddVersion,
   getUpdateProduct,
   hideForm,
+  checkFormExistence,
 };
 
 /*=======================================
@@ -137,4 +138,10 @@ function getUpdateProduct() {
 function hideForm() {
   const { productFormContainer } = productFormUI;
   setProductFormToVisible(productFormContainer, false);
+}
+
+
+function checkFormExistence(){
+  const { productFormContainer } = productFormUI;
+  return productFormContainer.classList.contains("opacity-100");
 }

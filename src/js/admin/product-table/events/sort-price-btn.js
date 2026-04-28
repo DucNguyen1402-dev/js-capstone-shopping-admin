@@ -38,13 +38,14 @@ function handleSortPriceOnClick(sortPriceIcon, dispatch) {
  */
 export function initSortPriceBtn({
   filteredList = {},
+  searchState ={},
   dispatch,
   tableEl = {},
 }) {
   const { sortPriceBtn, sortPriceIcon } = tableEl;
 
   sortPriceBtn.addEventListener("click", (e) => {
-    if (filteredList.length <= 1) return;
+    if (filteredList.length <= 1 || (searchState.onSearch && searchState.list.length <= 1)) return;
     handleSortPriceOnClick(sortPriceIcon, dispatch);
   });
 }

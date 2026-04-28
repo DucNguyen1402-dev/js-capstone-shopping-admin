@@ -3,7 +3,7 @@ import { initAllProductFormEvents } from "./product-form/init-events.js";
 import { productTableUI, productTableServices, initAllProductTableEvents } from "./product-table/index.js";
 import { fetchProducts, productState } from "./index.js";
 import { dispatch } from "./product-main-controller/controller.js";
-import { filterState , filteredList} from "./product-interaction-state.js";
+import { filterState , filteredList, searchState} from "./product-interaction-state.js";
 
 /* ======================================================
    1. INIT
@@ -30,7 +30,7 @@ async function initProductTablePage() {
   await fetchProducts();
   productTableUI.renderDefaultTableOrder(productState.list);
   filteredList.length = productState.list.length;
-  const context = {productState, filterState, filteredList, dispatch};
+  const context = {productState, filterState, filteredList,searchState, dispatch};
   initAllProductTableEvents(context);
 }
 
