@@ -7,7 +7,7 @@ import { productItemUI } from "./ui/product-item.js";
 const uiToolkit = {
   itemActionUI,
   modalUI,
-  productItemUI
+  productItemUI,
 };
 
 /**
@@ -16,15 +16,13 @@ const uiToolkit = {
  * Acts as a bridge to wire UI elements from 'productListTableUI'
  * with the central dispatch logic.
  */
-export function initAllProductTableEvents({productState, filterState, filteredList, searchState, dispatch}) {
+export function initAllProductTableEvents({ productState, productInteractionState, dispatch }) {
   const context = {
     productState,
-    filterState,
-    searchState,
+    productInteractionState,
     dispatch,
     tableEl: productListTableEl,
     uiToolkit,
-    filteredList
   };
   initProductTableEvents(context);
 }

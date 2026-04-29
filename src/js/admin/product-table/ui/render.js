@@ -25,19 +25,31 @@ const STATUS_TEXT = {
  * @returns {string} The HTML representative of a table row.
  */
 const ProductRow = (item) => `
- <tr class="product-item transition-colors duration-400  text-gray-700 bg-white" data-product-id=${item.id}>
-  <td class="product-id px-8 py-4 text-sm ">${item.id}</td>
-  <td class="px-6 py-4 text-sm font-medium ">${item.name}</td>
-  <td class="px-6 py-4 text-left text-sm ">${item.price}</td>
-  <td class="px-6 py-4 text-sm text-gray-600 ">
+ <tr class="product-item transition-colors duration-400  text-gray-700 ${item.isInvalid ? "bg-orange-100  hover:bg-orange-200" : "bg-white  hover:bg-gray-50 "}
+
+ " data-product-id=${item.id}
+ data-product-variant = ${!item.isInvalid ? "valid" : "invalid"}
+   >
+  <td class="product-id px-6 py-4 text-sm  font-mono tracking-wider ${item.isFieldInvalid("id") ? "border border-red-500" : ""}">${item.id}</td>
+  <td class="px-6 py-4 text-sm font-medium ${item.isFieldInvalid("name") ? "border border-red-500" : ""}">${item.name}</td>
+  <td class="px-6 py-4  text-sm ${item.isFieldInvalid("price") ? "border border-red-500" : ""}">${item.price.toLocaleString(
+    "en-US",
+    {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    },
+  )}</td>
+  <td class="px-6 py-4 text-sm text-gray-600 ${item.isFieldInvalid("type") ? "border border-red-500" : ""}">
     <div class="flex h-6 w-20 items-center justify-center rounded-full bg-blue-100 text-xs font-semibold text-blue-700">
       <span>${item.type}</span>
     </div>
   </td>
-  <td class="px-8 py-4">
+  <td class="px-10 py-4 ${item.isFieldInvalid("stock") ? "border border-red-500" : ""} ">
     <div class="flex items-center gap-2">
-      <div class="group relative w-fit">
-        <span class="${STATUS_CLASSES[item.status]} inline-block h-3 w-3 cursor-pointer rounded-full"></span>
+      <div class="group relative w-fit ">
+        <span class="${item.isFieldInvalid("stock") ? "bg-black" : STATUS_CLASSES[item.status]} inline-block h-4 w-4 cursor-pointer rounded-full border-2 border-gray-50 "></span>
         <div
           class="absolute bottom-full left-1/2 z-50 mb-2 w-max -translate-x-1/2 rounded bg-gray-900 px-2 py-1 text-xs text-white opacity-0 transition-opacity duration-400 group-hover:opacity-100">
           ${STATUS_TEXT[item.status]}
@@ -49,7 +61,7 @@ const ProductRow = (item) => `
       </span>
     </div>
   </td>
-  <td class="px-8 py-4 text-center">
+  <td class="px-8 py-4 flex gap-4">
     <button class="mr-3 cursor-pointer text-blue-500 transition-colors duration-300 "
       data-action="edit">
       <span class="fa-solid fa-pen-to-square"></span>

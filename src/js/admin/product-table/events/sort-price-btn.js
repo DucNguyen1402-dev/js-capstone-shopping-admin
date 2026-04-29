@@ -37,15 +37,19 @@ function handleSortPriceOnClick(sortPriceIcon, dispatch) {
  * * @param {Function} dispatch - The dispatcher function for state communication.
  */
 export function initSortPriceBtn({
-  filteredList = {},
-  searchState ={},
+  productInteractionState ={},
   dispatch,
   tableEl = {},
 }) {
   const { sortPriceBtn, sortPriceIcon } = tableEl;
 
   sortPriceBtn.addEventListener("click", (e) => {
-    if (filteredList.length <= 1 || (searchState.onSearch && searchState.list.length <= 1)) return;
+    if (
+      productInteractionState.filteredCount <= 1 ||
+      (productInteractionState.isSearching &&
+        productInteractionState.searchResults.length <= 1)
+    )
+      return;
     handleSortPriceOnClick(sortPriceIcon, dispatch);
   });
 }

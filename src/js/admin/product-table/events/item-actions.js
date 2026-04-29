@@ -33,7 +33,7 @@ function handleRemoveAction(actionEl, deleteModal, dispatch, modalUI) {
  */
 function getMatchedProductFromState(productId, productState) {
   const matchedProduct = productState.list.find(
-    (product) => Number(product.id) === Number(productId),
+    (product) => product.id === productId
   );
   return matchedProduct;
 }

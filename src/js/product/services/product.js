@@ -4,17 +4,17 @@ const URL = "https://69ca67a6ba5984c44bf31972.mockapi.io/api/v1/phone";
 
 const toProductModel = (item) =>
   new ProductModel(
-    item.id,
-    item.name,
-    item.price,
-    item.screen,
-    item.backCamera,
-    item.frontCamera,
-    item.img,
-    item.desc,
-    item.type,
-    item.stock,
-    item.status,
+    item?.id,
+    item?.name,
+    item?.price,
+    item?.screen,
+    item?.backCamera,
+    item?.frontCamera,
+    item?.img,
+    item?.desc,
+    item?.type,
+    item?.stock,
+    item?.status,
   );
 
 export async function fetchProducts() {

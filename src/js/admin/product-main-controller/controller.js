@@ -14,23 +14,9 @@ import {
   updateProduct,
   fetchProducts,
 } from "../index.js";
-import {
-  deletionState,
-  editingState,
-  filterState,
-  filteredList,
-  sortedPriceState,
-  searchState,
-} from "../product-interaction-state.js";
 
-const interactionState = {
-  deletionState,
-  editingState,
-  filterState,
-  filteredList,
-  sortedPriceState,
-  searchState,
-};
+import {productInteractionState} from "../product-interaction-state.js";
+
 
 const componentUIHandler = { productFormServices, productTableUI };
 const componentServices = {
@@ -75,7 +61,7 @@ export async function dispatch(action) {
   if (!actionHandler) return;
   const context = {
     action,
-    interactionState,
+    productInteractionState,
     componentUIHandler,
     componentServices,
   };
@@ -97,11 +83,10 @@ export async function dispatch(action) {
  * @param {Object} context.action - The dispatched action object.
  * @param {Object} context.action.payload - The data payload.
  * @param {string|number} context.action.payload.id - ID of the product to delete.
- * @param {Object} context.interactionState - Current state of UI interactions.
+ * @param {Object} context.productInteractionState - Current state of UI interactions.
  */
-function handleDeleteRequest({ action, interactionState }) {
-  const { deletionState } = interactionState;
-  deletionState.setDeletedId(action.payload.id);
+function handleDeleteRequest({ action, productInteractionState }) {
+  productInteractionState.deleteId = action.payload.id;
 }
 
 /* ======== 2. PRODUCT DELETE CONFIRM ======== */
@@ -109,17 +94,17 @@ function handleDeleteRequest({ action, interactionState }) {
  * Executes the deletion after user confirmation and refreshes the product list.
  * * @async
  * @param {Object} context - The handler context.
- * @param {Object} context.interactionState - Current state of UI interactions.
+ * @param {Object} context.productInteractionState - Current state of UI interactions.
  * @param {Object} context.componentUIHandler - Utilities for UI manipulation.
  * @returns {Promise<void>}
  */
 async function handleDeleteConfirm({
   action,
-  interactionState,
+  productInteractionState,
   componentUIHandler,
 }) {
-  const { deletionState } = interactionState;
-  await performDeleteAndUpdate(deletionState.getDeletedId());
+
+  await performDeleteAndUpdate(productInteractionState.deleteId);
   fetchAndRenderProducts(
     getCurrentLength(productState.list) - 1,
     componentUIHandler,
@@ -133,17 +118,16 @@ async function handleDeleteConfirm({
  * @param {Object} context.action - The dispatched action object.
  * @param {Object} context.action.payload - The data payload.
  * @param {string} context.action.payload.action - The specific UI action context for clearing.
- * @param {Object} context.interactionState - Current state of UI interactions.
+ * @param {Object} context.productInteractionState - Current state of UI interactions.
  * @param {Object} context.componentUIHandler - Utilities for UI manipulation.
  */
-function handleCancelDelete({ action, interactionState, componentUIHandler }) {
+function handleCancelDelete({ action, productInteractionState, componentUIHandler }) {
   const { productTableUI } = componentUIHandler;
-  const { deletionState } = interactionState;
   productTableUI.setPendingProductRowUIState(
-    deletionState.getDeletedId(),
+   productInteractionState.deleteId,
     action.payload.action,
   );
-  deletionState.setDeletedId(null);
+ productInteractionState.deleteId= null;
 }
 
 /* ======== 4. PRODUCT EDIT HOVER  ======== */
@@ -155,13 +139,12 @@ function handleCancelDelete({ action, interactionState, componentUIHandler }) {
  * @param {Object} context.action.payload - The data payload.
  * @param {string|number} context.action.payload.id - The ID of the product being hovered.
  * @param {string} context.action.payload.eventType - The type of mouse event (e.g., 'mouseenter', 'mouseleave').
- * @param {Object} context.interactionState - Current state of UI interactions.
+ * @param {Object} context.productInteractionState - Current state of UI interactions.
  * @param {Object} context.componentUIHandler - Utilities for UI manipulation.
  */
-function handleEditHover({ action, interactionState, componentUIHandler }) {
+function handleEditHover({ action, productInteractionState, componentUIHandler }) {
   const { productTableUI } = componentUIHandler;
-  const { editingState } = interactionState;
-  if (editingState.getEditId()) return;
+  if (productInteractionState.editId) return;
   productTableUI.setPendingProductRowUIState(
     action.payload.id,
     action.payload.action,
@@ -174,14 +157,13 @@ function handleEditHover({ action, interactionState, componentUIHandler }) {
  * Closes the edit form, removes the highlight from the active row,
  * and resets the editing state.
  * * @param {Object} context - The handler context.
- * @param {Object} context.interactionState - Current state of UI interactions.
+ * @param {Object} context.productInteractionState - Current state of UI interactions.
  * @param {Object} context.componentUIHandler - Utilities for UI manipulation.
  */
-function handleCloseFormEdit({ action, interactionState, componentUIHandler }) {
+function handleCloseFormEdit({ action, productInteractionState, componentUIHandler }) {
   const { productTableUI } = componentUIHandler;
-  const { editingState } = interactionState;
-  productTableUI.hideHighlightEditRow(editingState.getEditId());
-  editingState.setEditId(null);
+  productTableUI.hideHighlightEditRow(productInteractionState.editId);
+ productInteractionState.editId = null;
 }
 
 /* ======== 6. PRODUCT EDIT STARTED ======== */
@@ -193,21 +175,20 @@ function handleCloseFormEdit({ action, interactionState, componentUIHandler }) {
  * @param {Object} context.action.payload - The data payload.
  * @param {Object} context.action.payload.product - The product data to populate the form.
  * @param {string|number} context.action.payload.id - The ID of the product being edited.
- * @param {Object} context.interactionState - Current state of UI interactions.
+ * @param {Object} context.productInteractionState - Current state of UI interactions.
  * @param {Object} context.componentUIHandler - Utilities for UI manipulation.
  * @param {Object} context.componentServices - External services for component logic.
  */
 function handleProductEditStart({
   action,
-  interactionState,
+  productInteractionState,
   componentUIHandler,
   componentServices,
 }) {
-  const { editingState } = interactionState;
   const { productTableUI } = componentUIHandler;
   const { productFormServices } = componentServices;
   productFormServices.showFormEdit(action.payload.product);
-  editingState.setEditId(action.payload.id);
+  productInteractionState.editId = action.payload.id;
   productTableUI.showHighlightEditRow(action.payload.id);
 }
 
@@ -239,18 +220,18 @@ async function submitUpdate(editId, data) {
  * Resets the UI and state after a successful update.
  * @param {Object} params
  * @param {string|number} params.editId - The ID of the product.
- * @param {Object} params.editingState - State of the editing process.
+ * @param {Object} params.productInteractionState - Contain state of the editing process.
  * @param {Object} params.productTableUI - UI utilities for the product table.
  * @param {Object} params.productFormServices - Service handling form visibility.
  */
 function cleanupAfterUpdate({
   editId,
-  editingState,
+  productInteractionState,
   productTableUI,
   productFormServices,
 }) {
   productTableUI.hideHighlightEditRow(editId);
-  editingState.setEditId(null);
+  productInteractionState.editId= null;
   productFormServices.hideForm();
 }
 
@@ -274,28 +255,27 @@ async function refreshProductList(componentUIHandler) {
  * Data retrieval -> API Submission -> UI Cleanup -> List Refresh.
  * * @async
  * @param {Object} context - The handler context.
- * @param {Object} context.interactionState - Current state of UI interactions.
+ * @param {Object} context.productInteractionState - Current state of UI interactions.
  * @param {Object} context.componentUIHandler - Utilities for UI manipulation.
  * @param {Object} context.componentServices - External services for component logic.
  * @returns {Promise<void>}
  */
 async function handleProductUpdateSubmitted({
   action,
-  interactionState,
+  productInteractionState,
   componentUIHandler,
   componentServices,
 }) {
   const { productTableUI } = componentUIHandler;
-  const { editingState } = interactionState;
   const { productFormServices } = componentServices;
-  const editId = editingState.getEditId();
+  const editId = productInteractionState.editId;
   const data = getUpdateData(productFormServices);
 
   await submitUpdate(editId, data);
 
   cleanupAfterUpdate({
     editId,
-    editingState,
+    productInteractionState,
     productTableUI,
     productFormServices,
   });
@@ -311,29 +291,28 @@ async function handleProductUpdateSubmitted({
  * @param {Object} context.action - The dispatched action object.
  * @param {Object} context.action.payload - The data payload.
  * @param {string} context.action.payload.sortStrategy - The sorting algorithm/criteria to apply.
- * @param {Object} context.interactionState - Current state of UI interactions (filter, search, sort).
+ * @param {Object} context.productInteractionState - Current state of UI interactions (filter, search, sort).
  * @param {Object} context.componentUIHandler - Utilities for UI manipulation.
  * @param {Object} context.componentServices - Services for table logic and sorting.
  */
 function handleProductSortChanged({
   action,
-  interactionState,
+  productInteractionState,
   componentUIHandler,
   componentServices,
 }) {
-  const { filterState, sortedPriceState, searchState } = interactionState;
   const { productTableUI } = componentUIHandler;
   const { productTableServices } = componentServices;
 
   // Update sorting state
-  sortedPriceState.sortStrategy = action.payload.sortStrategy;
+  productInteractionState.sortPriceStrategy = action.payload.sortStrategy;
 
   // Determine the base list: either current search results or the full product list
-  const baseList = searchState.onSearch ? searchState.list : productState.list;
+  const baseList = productInteractionState.isSearching ? productInteractionState.searchResults : productState.list;
 
   // Apply current filters to the base list
   const filteredList = getCurrentFilteredList(
-    filterState,
+    productInteractionState,
     productTableServices,
     baseList,
   );
@@ -378,23 +357,22 @@ const getSearchResult = (inputValue, filteredList) => {
  * @param {Object} context.action - The dispatched action object.
  * @param {Object} context.action.payload - The data payload.
  * @param {string} context.action.payload.inputValue - The text entered by the user.
- * @param {Object} context.interactionState - Current state of UI interactions.
+ * @param {Object} context.productInteractionState - Current state of UI interactions.
  * @param {Object} context.componentUIHandler - Utilities for UI manipulation.
  * @param {Object} context.componentServices - Services for table and search logic.
  */
 function handleSearchProductRequest({
   action,
-  interactionState,
+  productInteractionState,
   componentUIHandler,
   componentServices,
 }) {
-  const { searchState, filterState } = interactionState;
   const { productTableUI } = componentUIHandler;
   const { productTableServices } = componentServices;
 
   // Apply filters to the master list before searching
   const filteredList = getCurrentFilteredList(
-    filterState,
+    productInteractionState,
     productTableServices,
     productState.list,
   );
@@ -404,8 +382,8 @@ function handleSearchProductRequest({
     filteredList,
   );
   // Sync internal search state
-  searchState.onSearch = isSearching;
-  searchState.list = resultList;
+  productInteractionState.isSearching = isSearching;
+  productInteractionState.searchResults = resultList;
 
   // UI Branching: Show "Not Found" or render the list
   if (isSearching && resultList.length === 0) {
@@ -423,26 +401,25 @@ function handleSearchProductRequest({
  * @param {Object} context.action - The dispatched action object.
  * @param {Object} context.action.payload - The data payload.
  * @param {string} context.action.payload.productType - The category or type to filter by (e.g., 'all', 'electronics').
- * @param {Object} context.interactionState - Current state of UI interactions.
+ * @param {Object} context.productInteractionState - Current state of UI interactions.
  * @param {Object} context.componentUIHandler - Utilities for UI manipulation.
  * @param {Object} context.componentServices - Services for table logic and filtering.
  */
 function handleTableFilterRequest({
   action,
-  interactionState,
+  productInteractionState,
   componentUIHandler,
   componentServices,
 }) {
-  const { searchState, filterState, filteredList } = interactionState;
   const { productTableUI } = componentUIHandler;
   const { productType } = action.payload;
   const { productTableServices } = componentServices;
 
   // Determine the source list based on active search or default sorted list
-  let baseList = searchState.onSearch
-    ? searchState.list
+  let baseList = productInteractionState.isSearching
+    ? productInteractionState.searchResults
     : productTableServices.getSortedProducts(
-        sortedPriceState.sortStrategy,
+        productInteractionState.sortPriceStrategy,
         productState.list,
       );
 
@@ -451,10 +428,11 @@ function handleTableFilterRequest({
     productType === "all" ? baseList : getFilterProducts(productType, baseList);
 
   // Update internal states
-  filterState.setFilterType(productType);
+  productInteractionState.filterType = productType;
 
+  
   // Syncing the length of the filtered results
-  filteredList.length = finalDisplayList.length;
+  productInteractionState.filteredCount = finalDisplayList.length;
 
   // Refresh the table UI with the final list
   productTableUI.renderRawOrderOfList(finalDisplayList);
@@ -486,17 +464,17 @@ async function fetchAndRenderProducts(expectedCount, { productTableUI }) {
 
 /**
  * Retrieves the product list filtered by the current active filter type.
- * * @param {Object} filterState - State object managing current filter settings.
+ * * @param {Object} productInteractionState - State object managing current filter settings.
  * @param {Object} productTableServices - Service containing filtering logic.
  * @param {Array} productList - The source list of products to filter.
  * @returns {Array} The filtered list of products.
  */
 function getCurrentFilteredList(
-  filterState,
+  productInteractionState,
   productTableServices,
   productList,
 ) {
-  const activeFilter = filterState.getFilterType();
+  const activeFilter = productInteractionState.filterType;
   const filteredList = productTableServices.getListByFilter(
     activeFilter,
     productList,

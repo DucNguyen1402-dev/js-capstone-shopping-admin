@@ -14,6 +14,10 @@ export class ProductModel {
    * @param {string} type - Category or brand (e.g., "iPhone", "Samsung", "Pixel").
    */
 
+  static REGEX = {
+    ID: /^[a-zA-Z][a-zA-Z0-9]*$/,
+  };
+
   constructor(
     id,
     name,
@@ -21,23 +25,83 @@ export class ProductModel {
     screen,
     backCamera,
     frontCamera,
-    image,
+    img,
     desc,
     type,
     stock,
     status,
   ) {
     this.id = id;
-    this.name = name || "unknown";
-    this.price = price || 0;
+    this.name = name;
+    this.price = price;
     this.screen = screen;
     this.backCamera = backCamera;
     this.frontCamera = frontCamera;
-    this.image = image;
+    this.img = img;
     this.desc = desc;
-    this.type = type || "unknown";
+    this.type = type;
     this.stock = stock;
     this.status = status;
     this.nameLower = name.toLowerCase();
+  }
+
+  /**
+   * Contains validation logic for each product property.
+   * Each validator returns true if the data is invalid and false if valid.
+   * @type {Object.<string, function(): boolean>}
+   */
+  get validators() {
+    return {
+      id: () =>
+        !this.id || !ProductModel.REGEX.ID.test(this.id) || this.id.length < 3,
+
+      name: () => !this.name || this.name.trim().length < 2,
+
+      price: () => isNaN(this.price) || this.price <= 0,
+
+      screen: () => !this.screen || this.screen.trim() === "",
+
+      backCamera: () => !this.backCamera || this.backCamera.trim() === "",
+
+      frontCamera: () => !this.frontCamera || this.frontCamera.trim() === "",
+      img: () => {
+        if (!this.img) return true;
+        try {
+          const url = new URL(this.img);
+          return !/\.(jpg|jpeg|png|webp|gif|svg)$/i.test(url.pathname);
+        } catch {
+          return true;
+        }
+      },
+      desc: () => !this.desc || this.desc.trim().length < 10,
+
+      type: () => !this.type || this.type === "Select brand",
+
+      stock: () =>
+        isNaN(this.stock) || this.stock < 0 || !Number.isInteger(this.stock),
+
+      status: () => !this.status || this.status.trim() === "",
+    };
+  }
+
+  /**
+   * Checks if a specific data field is invalid.
+   * Useful for binding CSS error classes to specific input fields or table cells.
+   * @param {string} fieldName - The property name to validate (e.g., 'id', 'name', 'price').
+   * @returns {boolean} Returns true if the field is invalid.
+   */
+  isFieldInvalid(fieldName) {
+    const validator = this.validators[fieldName];
+    return validator ? validator() : false;
+  }
+
+  /**
+   * Evaluates the overall validity of the product object.
+   * @returns {boolean} Returns true if at least one field is invalid.
+   */
+  get isInvalid() {
+    return Object.keys(this.validators).some((field) =>
+      this.isFieldInvalid(field),
+    );
   }
 }

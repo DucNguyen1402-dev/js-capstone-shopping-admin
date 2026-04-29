@@ -1,77 +1,19 @@
 /**
- * State management for task execution workflows (Delete, Edit, Filter).
- * Stores identifiers or data lists between actions to determine subsequent logic.
+ * @typedef {Object} ProductInteractionState
+ * @property {number|string|null} deleteId - ID of the product marked for deletion.
+ * @property {number|string|null} editId - ID of the product currently being edited.
+ * @property {string} filterType - Current active filter category.
+ * @property {number} filteredCount - Total number of items after filtering.
+ * @property {'price_asc'|'price_desc'} sortPriceStrategy - Strategy used to sort product prices.
+ * @property {boolean} isSearching - Toggle state for the search mode.
+ * @property {Array} searchResults - List of items matching the search query.
  */
-
-/**
- * Manages the state of records pending deletion.
- */
-export const deletionState = {
-  /** @type {string|number|null} */
-  _id: null,
-
-  /** * Sets the ID of the record to be deleted.
-   * @param {string|number} id
-   */
-  setDeletedId(id) {
-    this._id = id;
-  },
-
-  /** * Retrieves the current ID pending deletion.
-   * @returns {string|number|null}
-   */
-  getDeletedId() {
-    return this._id;
-  },
+export const productInteractionState = {
+  deleteId: null,
+  editId: null,
+  filterType: "all",
+  filteredCount: 0,
+  sortPriceStrategy: "price_desc", // Fixed typo
+  isSearching: false, // Renamed for clarity
+  searchResults: [], // Alternative to searchList
 };
-
-/**
- * Manages the state of the record currently being edited.
- */
-export const editingState = {
-  /** @type {string|number|null} */
-  _id: null,
-
-  /** * Sets the ID of the record to enter edit mode.
-   * @param {string|number} id
-   */
-  setEditId(id) {
-    this._id = id;
-  },
-
-  /** * Retrieves the ID of the record currently under edit.
-   * @returns {string|number|null}
-   */
-  getEditId() {
-    return this._id;
-  },
-};
-
-/**
- * Manages active filter criteria.
- */
-export const filterState = {
-  /** @type {Array<any>} */
-  _type: "all",
-
-  setFilterType(type) {
-    this._type = type;
-  },
-
-  getFilterType() {
-    return this._type;
-  },
-};
-
-export const filteredList = {
-  length: null,
-};
-
-export const sortedPriceState = {
-  sortStrategy: "price_desc",
-};
-
-export const searchState = {
-  onSearch: false,
-  list: []
-}

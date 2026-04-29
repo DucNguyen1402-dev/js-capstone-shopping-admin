@@ -42,12 +42,7 @@
 
   <body class="relative">
     <header class="sticky top-0 z-10 bg-white shadow-sm">
-      <div
-        class="absolute top-1/2 right-30 -translate-y-1/2 cursor-pointer text-gray-500 transition-colors duration-300 hover:text-gray-600"
-      >
-        <span class="fa-solid fa-gear"></span>
-      </div>
-
+      <
       <div class="relative mx-auto max-w-7xl px-4 py-6 lg:px-8 lg:py-0">
         <div class="flex items-center justify-between gap-6 lg:h-20">
           <div class="flex items-center gap-2">
@@ -100,9 +95,9 @@
       </div>
     </header>
 
-    <main class="mt-14 max-w-7xl xl:mt-16  w-full xl:w-[90%] mx-auto">
+    <main class="mx-auto mt-14 w-full max-w-7xl xl:mt-16 xl:w-[80%]">
       <div
-        class="mb-12 flex flex-col items-start gap-10 px-4 lg:px-10 xl:px-4 lg:flex-row lg:items-center lg:justify-between lg:gap-0 "
+        class="mb-12 flex flex-col items-start gap-10 px-4 lg:flex-row lg:items-center lg:justify-between lg:gap-0 lg:px-10 xl:px-4"
       >
         <div class="flex items-start gap-4">
           <div
@@ -191,7 +186,9 @@
         </div>
       </div>
 
-      <div class="js-product-form-container relative opacity-0  transition-all duration-300 pointer-events-none z-60">
+      <div
+        class="js-product-form-container pointer-events-none relative z-60 opacity-0 transition-all duration-300"
+      >
         <div class="fixed inset-0 z-50 flex items-center justify-center">
           <div
             class="scrollbar relative z-50 h-180 w-[95%] overflow-y-scroll rounded-xl border border-gray-300 bg-white px-3 py-4 shadow-sm md:w-120 lg:h-160 lg:p-8"
@@ -364,7 +361,7 @@
                     >
                     <select
                       id="type"
-                      class="js-product-status w-full cursor-pointer rounded-sm border border-gray-300 px-3 py-2 text-sm outline-none invalid:text-gray-500 focus:ring-1 focus:ring-blue-500"
+                      class="js-product-status w-full cursor-pointer rounded-sm border border-gray-300 px-3 py-2 text-sm outline-none invalid:text-gray-500 focus:ring-1 focus:ring-slate-900"
                       required
                     >
                       <option value="" disable selected hidden>
@@ -384,6 +381,9 @@
                       </option>
                       <option value="comingSoon" class="text-gray-700">
                         Coming soon
+                      </option>
+                      <option value="unknown" class="text-gray-700">
+                      Unknown
                       </option>
                     </select>
                     <p
@@ -416,13 +416,11 @@
             </div>
           </div>
         </div>
-        <div
-          class="fixed inset-0 z-40 bg-black/70"
-        ></div>
+        <div class="fixed inset-0 z-40 bg-black/70"></div>
       </div>
 
       <div
-        class=" mb-25 w-full overflow-hidden rounded-md border border-gray-200 bg-white px-1 shadow-sm lg:px-2 xl:px-0"
+        class="mb-25 w-full overflow-hidden rounded-md border border-gray-200 bg-white px-1 shadow-sm lg:px-2 xl:px-0"
       >
         <div
           class="flex flex-col gap-6 bg-blue-500 px-2 py-3 md:flex-row md:items-center md:justify-between md:px-8 md:py-5"
@@ -490,13 +488,13 @@
               class="border-b border-gray-200 bg-gray-50 text-sm font-semibold tracking-wider text-gray-600"
             >
               <tr>
-                <th class="w-30 px-8 py-4 text-left">ID</th>
+                <th class="w-30 px-8 py-4">ID</th>
 
-                <th class="w-80 truncate px-6 py-4 text-left">PRODUCT</th>
+                <th class="w-90 truncate px-6 py-4">PRODUCT NAME</th>
 
                 <th class="w-40 cursor-pointer px-6 py-4">
                   <div
-                    class="js-sort-price-btn flex ngap-1 transition duration-300 hover:text-orange-500"
+                    class="js-sort-price-btn ngap-1 flex transition duration-300 hover:text-orange-500"
                   >
                     <span>PRICE ($)</span>
                     <span
@@ -507,11 +505,11 @@
                   </div>
                 </th>
 
-                <th class="w-40 px-8 py-4 text-left">TYPE</th>
+                <th class="w-40 px-8 py-4">TYPE</th>
 
-                <th class="w-40 px-8 py-4">STOCK (psc)</th>
+                <th class="w-40 px-8 py-4">STOCK (pcs)</th>
 
-                <th class="b w-50 px-8 py-4 text-center">ACTIONS</th>
+                <th class="w-40 px-8 py-4">ACTIONS</th>
               </tr>
             </thead>
             <tbody class="js-products-list-table divide-y divide-gray-100">

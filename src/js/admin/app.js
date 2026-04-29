@@ -3,8 +3,7 @@ import { initAllProductFormEvents } from "./product-form/init-events.js";
 import { productTableUI, productTableServices, initAllProductTableEvents } from "./product-table/index.js";
 import { fetchProducts, productState } from "./index.js";
 import { dispatch } from "./product-main-controller/controller.js";
-import { filterState , filteredList, searchState} from "./product-interaction-state.js";
-
+import {productInteractionState} from "./product-interaction-state.js";
 /* ======================================================
    1. INIT
    - Entry points for page setup
@@ -29,8 +28,8 @@ async function initProductTablePage() {
   productTableUI.renderSkeleton();
   await fetchProducts();
   productTableUI.renderDefaultTableOrder(productState.list);
-  filteredList.length = productState.list.length;
-  const context = {productState, filterState, filteredList,searchState, dispatch};
+  productInteractionState.filteredCount = productState.list.length;
+  const context = {productState, productInteractionState, dispatch};
   initAllProductTableEvents(context);
 }
 
