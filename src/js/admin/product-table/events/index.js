@@ -10,10 +10,13 @@ import {initProductTableFilterEvent} from "./list-filter.js";
  * @param {Function} dispatch - The dispatcher function for handling state or actions.
  */
 
-export function initProductTableEvents(productState, filterState, dispatch) {
-  initSortPriceBtn(filterState,  dispatch);
-  initDeleteModalEvents(dispatch);
-  initProductActionEvents(productState, dispatch);
-  initSearchProductInputEvent(dispatch);
-  initProductTableFilterEvent(filterState, dispatch );
+export function initProductTableEvents(context) {
+  const initializers = [
+    initSortPriceBtn,
+    initDeleteModalEvents,
+    initProductActionEvents,
+    initSearchProductInputEvent,
+    initProductTableFilterEvent
+  ];
+  initializers.forEach(init => init(context));
 }

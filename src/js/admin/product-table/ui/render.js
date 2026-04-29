@@ -1,5 +1,3 @@
-import { getProductListTableDOM } from "../../dom-factory.js";
-
 /**
  * CSS classes for product status badges based on inventory levels.
  * @type {Object.<string, string>}
@@ -9,6 +7,15 @@ const STATUS_CLASSES = {
   lowStock: "bg-yellow-500",
   outOfStock: "bg-rose-500",
   discontinuted: "bg-gray-500",
+  comingSoon: "bg-blue-500",
+};
+
+const STATUS_TEXT = {
+  inStock: "In stock",
+  lowStock: "Low stock",
+  outOfStock: "Out of stock",
+  discontinuted: "discontinuted",
+  comingSoon: "Comming soon",
 };
 
 /**
@@ -18,36 +25,52 @@ const STATUS_CLASSES = {
  * @returns {string} The HTML representative of a table row.
  */
 const ProductRow = (item) => `
-   <tr class="product-item transition-colors duration-200 hover:bg-gray-50" data-product-id="${item.id}">
-    <td class="product-id px-6 py-4 text-sm text-gray-700">${item.id}</td>
-    <td class="px-6 py-4 text-sm font-medium text-gray-900">${item.name}</td>
-    <td class="px-6 py-4 text-left text-sm text-gray-700">${item.price}</td>
-    <td class="px-6 py-4 text-sm text-gray-600">
-      <div
-        class="flex h-6 w-20 items-center justify-center rounded-full bg-blue-100 text-xs font-semibold text-blue-700">
-        <span>${item.type}</span>
+ <tr class="product-item transition-colors duration-400  text-gray-700 ${item.isInvalid ? "bg-orange-100  hover:bg-orange-200" : "bg-white  hover:bg-gray-50 "}
+
+ " data-product-id=${item.id}
+ data-product-variant = ${!item.isInvalid ? "valid" : "invalid"}
+   >
+  <td class="product-id px-6 py-4 text-sm  font-mono tracking-wider ${item.isFieldInvalid("id") ? "border border-red-500" : ""}">${item.id}</td>
+  <td class="px-6 py-4 text-sm font-medium ${item.isFieldInvalid("name") ? "border border-red-500" : ""}">${item.name}</td>
+  <td class="px-6 py-4  text-sm ${item.isFieldInvalid("price") ? "border border-red-500" : ""}">${item.price.toLocaleString(
+    "en-US",
+    {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    },
+  )}</td>
+  <td class="px-6 py-4 text-sm text-gray-600 ${item.isFieldInvalid("type") ? "border border-red-500" : ""}">
+    <div class="flex h-6 w-20 items-center justify-center rounded-full bg-blue-100 text-xs font-semibold text-blue-700">
+      <span>${item.type}</span>
+    </div>
+  </td>
+  <td class="px-10 py-4 ${item.isFieldInvalid("stock") ? "border border-red-500" : ""} ">
+    <div class="flex items-center gap-2">
+      <div class="group relative w-fit ">
+        <span class="${item.isFieldInvalid("stock") ? "bg-black" : STATUS_CLASSES[item.status]} inline-block h-4 w-4 cursor-pointer rounded-full border-2 border-gray-50 "></span>
+        <div
+          class="absolute bottom-full left-1/2 z-50 mb-2 w-max -translate-x-1/2 rounded bg-gray-900 px-2 py-1 text-xs text-white opacity-0 transition-opacity duration-400 group-hover:opacity-100">
+          ${STATUS_TEXT[item.status]}
+        </div>
       </div>
-    </td>
-    <td class="px-6 py-4">
-      <div class="flex items-center gap-2">
-  <span class="${STATUS_CLASSES[item.status]} h-3 w-3 rounded-full"></span>
-        <span
-          class="inline-flex h-6 w-8 items-center justify-center rounded-sm bg-slate-100 text-xs font-medium text-slate-700">
-          <span> ${item.stock} </span>
-        </span>
-      </div>
-    </td>
-    <td class="px-6 py-4 text-center">
-      <button class="mr-3 cursor-pointer text-blue-500 transition-colors duration-300 hover:text-blue-600"
-        data-action="edit">
-        <span class="fa-solid fa-pen-to-square"></span>
-      </button>
-      <button class="cursor-pointer text-red-500 transition-colors duration-300 hover:text-red-600" 
-      data-action="delete">
-        <span class="fa-solid fa-trash"></span>
-      </button>
-    </td>
-  </tr>
+      <span
+        class="inline-flex h-6 w-8 items-center justify-center rounded-sm bg-slate-100 text-xs font-medium text-slate-700">
+        <span> ${item.stock} </span>
+      </span>
+    </div>
+  </td>
+  <td class="px-8 py-4 flex gap-4">
+    <button class="mr-3 cursor-pointer text-blue-500 transition-colors duration-300 "
+      data-action="edit">
+      <span class="fa-solid fa-pen-to-square"></span>
+    </button>
+    <button class="cursor-pointer text-rose-500 transition-colors duration-30" data-action="delete">
+      <span class="fa-solid fa-trash"></span>
+    </button>
+  </td>
+</tr>
   `;
 
 /**
@@ -58,8 +81,8 @@ const ProductRow = (item) => `
  * - Injects the joined string into the DOM container.
  * * @param {Array<Object>} productList - The array of product objects to display.
  */
-export function renderProductList(list) {
-  const { productListTable } = getProductListTableDOM();
+export function renderRawOrderOfList(list, tableElements) {
+  const { productListTable } = tableElements;
 
   productListTable.innerHTML = list.map((item) => ProductRow(item)).join("");
 }
@@ -106,14 +129,13 @@ const SkeletonRow = () => `
  * skeleton rows to improve perceived performance during data fetching.
  * * @param {number} [preCount=8] - The number of skeleton rows to display.
  */
-export function renderSkeleton(preCount = 8) {
-  const { productListTable } = getProductListTableDOM();
-
-  productListTable.innerHTML = SkeletonRow().repeat(preCount);
+export function renderSkeleton(expectedCount = 8, tableElements) {
+  const { productListTable } = tableElements;
+  productListTable.innerHTML = SkeletonRow().repeat(expectedCount);
 }
 
-export function renderNotFoundProduct() {
-  const { productListTable } = getProductListTableDOM();
+export function renderNotFoundState(tableElements) {
+  const { productListTable } = tableElements;
 
   productListTable.innerHTML = `
     <tr class="not-found-row">

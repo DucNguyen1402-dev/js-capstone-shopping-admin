@@ -26,6 +26,7 @@ export const productFormServices = {
   showFormAdd: initProductFormAddVersion,
   getUpdateProduct,
   hideForm,
+  checkFormExistence,
 };
 
 /*=======================================
@@ -50,14 +51,14 @@ function productToFormModel(p) {
   return {
     name: p.name,
     price: p.price,
-    image: p.image,
+    image: p.img,
     screen: p.screen,
     backCamera: p.backCamera,
     frontCamera: p.frontCamera,
     decs: p.desc,
     type: p.type.toLowerCase(),
     stock: p.stock,
-    status: p.status
+    status: p.status,
   };
 }
 
@@ -118,9 +119,21 @@ const PRODUCT_FIELDS = [
  * into a structured data object.
  * @returns {Object} A clean product entity for API or state updates.
  */
+
+const numberFields = new Set(["price", "stock"]);
+
+function isNumberField(key) {
+  return numberFields.has(key);
+}
+
 function getUpdateProduct() {
   return PRODUCT_FIELDS.reduce((acc, key) => {
-    acc[key] = productFormInputUI[key].value;
+    if (isNumberField(key)) {
+      const value = productFormInputUI[key].valueAsNumber;
+      acc[key] = Number.isNaN(value) ? null : value;
+    } else {
+      acc[key] = productFormInputUI[key].value;
+    }
     return acc;
   }, {});
 }
@@ -137,4 +150,9 @@ function getUpdateProduct() {
 function hideForm() {
   const { productFormContainer } = productFormUI;
   setProductFormToVisible(productFormContainer, false);
+}
+
+function checkFormExistence() {
+  const { productFormContainer } = productFormUI;
+  return productFormContainer.classList.contains("opacity-100");
 }

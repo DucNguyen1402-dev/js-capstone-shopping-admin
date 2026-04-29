@@ -11,7 +11,7 @@ import {initResetBtnEvent} from "./reset-btn.js";
  * @param {Object} productFormUI - UI elements mapping for the form.
  */
 export function initFormBtnEvents(dispatch, productFormUI, productFormInputUI) {
-  initProductFormCloseEvent(productFormUI);
+  initProductFormCloseEvent(dispatch, productFormUI);
   initUpdateBtnEvent(dispatch, productFormUI);
   initResetBtnEvent(productFormUI, productFormInputUI);
 }

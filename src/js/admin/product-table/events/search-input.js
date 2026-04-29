@@ -1,5 +1,3 @@
-import { productListTableUI } from "../dom.js";
-
 /**
  * Utility to delay function execution until typing pauses.
  */
@@ -18,8 +16,8 @@ const debounce = (func, delay) => {
  * during rapid user input.
  * @param {Function} dispatch - The central action dispatcher.
  */
-export function initSearchProductInputEvent(dispatch) {
-  const { searchInput } = productListTableUI;
+export function initSearchProductInputEvent({dispatch ={}, tableEl ={}}) {
+  const { searchInput } = tableEl;
 
   const debouncedDispatch = debounce((value) => {
     dispatch({
