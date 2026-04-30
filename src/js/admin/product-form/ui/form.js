@@ -76,7 +76,5 @@ export function fillForm(form, formData) {
   Object.entries(formData).forEach(([k, v]) => {
     form[k].value = v ?? "";
   });
-
-
   form.status.dispatchEvent(new Event("change"));
 }

@@ -33,10 +33,10 @@ const ProductRow = (item) => `
   <td class="product-id px-6 py-4 text-sm  font-mono tracking-wider ${item.isFieldInvalid("id") ? "border border-red-500" : ""}">${item.id}</td>
   <td class="px-6 py-4 text-sm font-medium ${item.isFieldInvalid("name") ? "border border-red-500" : ""}">${item.name}</td>
   <td class="px-6 py-4  text-sm ${item.isFieldInvalid("price") ? "border border-red-500" : ""}">${item.price.toLocaleString(
-    "en-US",
+    "vn",
     {
       style: "currency",
-      currency: "USD",
+      currency: "VND",
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     },

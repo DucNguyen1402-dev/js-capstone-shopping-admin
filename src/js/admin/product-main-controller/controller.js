@@ -1,13 +1,18 @@
-import { productFormServices } from "../product-form/services/product-form.js";
-import { toastServices } from "../product-form/services/toast.js";
+import {
+  productFormServices,
+  toastServices,
+} from "../product-form/services/index.js";
 import {
   productTableUI,
   productTableServices,
 } from "../product-table/index.js";
-import { performDeleteAndUpdate } from "./use-cases/delete-flow.js";
-import { submitProductUpdate } from "./use-cases/edit-flow.js";
-import { resolveProductSearch } from "./use-cases/search-product.js";
-import { getFilterProducts } from "./use-cases/filter.js";
+import {
+  performDeleteAndUpdate,
+  submitProductUpdate,
+  resolveProductSearch,
+  getFilterProducts,
+} from "./use-cases/index.js";
+
 import {
   productState,
   getCurrentLength,
@@ -15,10 +20,29 @@ import {
   fetchProducts,
 } from "../index.js";
 
-import {productInteractionState} from "../product-interaction-state.js";
+import { productInteractionState } from "../product-interaction-state.js";
 
-
+/**
+ * =========================================================
+ *                0.COMPONENT MODULE WRAPPERS
+ * =========================================================
+ */
+/**
+ * Groups UI-related handlers for managing component interactions.
+ * @type {{
+ * productFormServices: Object,
+ * productTableUI: Object
+ * }}
+ */
 const componentUIHandler = { productFormServices, productTableUI };
+/**
+ * Aggregates business logic services used within the component.
+ * @type {{
+ * productFormServices: Object,
+ * toastServices: Object,
+ * productTableServices: Object
+ * }}
+ */
 const componentServices = {
   productFormServices,
   toastServices,
@@ -47,6 +71,7 @@ const useAction = {
   PRODUCT_SORT_CHANGED: handleProductSortChanged,
   SEARCH_PRODUCT_REQUEST: handleSearchProductRequest,
   TABLE_FILTER_REQUEST: handleTableFilterRequest,
+  TRIGGER_STATUS_EVENT: onStatusEvent,
 };
 /**
  * Dispatches and executes the appropriate action handler based on the action type.
@@ -103,7 +128,6 @@ async function handleDeleteConfirm({
   productInteractionState,
   componentUIHandler,
 }) {
-
   await performDeleteAndUpdate(productInteractionState.deleteId);
   fetchAndRenderProducts(
     getCurrentLength(productState.list) - 1,
@@ -121,13 +145,17 @@ async function handleDeleteConfirm({
  * @param {Object} context.productInteractionState - Current state of UI interactions.
  * @param {Object} context.componentUIHandler - Utilities for UI manipulation.
  */
-function handleCancelDelete({ action, productInteractionState, componentUIHandler }) {
+function handleCancelDelete({
+  action,
+  productInteractionState,
+  componentUIHandler,
+}) {
   const { productTableUI } = componentUIHandler;
   productTableUI.setPendingProductRowUIState(
-   productInteractionState.deleteId,
+    productInteractionState.deleteId,
     action.payload.action,
   );
- productInteractionState.deleteId= null;
+  productInteractionState.deleteId = null;
 }
 
 /* ======== 4. PRODUCT EDIT HOVER  ======== */
@@ -142,7 +170,11 @@ function handleCancelDelete({ action, productInteractionState, componentUIHandle
  * @param {Object} context.productInteractionState - Current state of UI interactions.
  * @param {Object} context.componentUIHandler - Utilities for UI manipulation.
  */
-function handleEditHover({ action, productInteractionState, componentUIHandler }) {
+function handleEditHover({
+  action,
+  productInteractionState,
+  componentUIHandler,
+}) {
   const { productTableUI } = componentUIHandler;
   if (productInteractionState.editId) return;
   productTableUI.setPendingProductRowUIState(
@@ -160,10 +192,14 @@ function handleEditHover({ action, productInteractionState, componentUIHandler }
  * @param {Object} context.productInteractionState - Current state of UI interactions.
  * @param {Object} context.componentUIHandler - Utilities for UI manipulation.
  */
-function handleCloseFormEdit({ action, productInteractionState, componentUIHandler }) {
+function handleCloseFormEdit({
+  action,
+  productInteractionState,
+  componentUIHandler,
+}) {
   const { productTableUI } = componentUIHandler;
   productTableUI.hideHighlightEditRow(productInteractionState.editId);
- productInteractionState.editId = null;
+  productInteractionState.editId = null;
 }
 
 /* ======== 6. PRODUCT EDIT STARTED ======== */
@@ -231,7 +267,7 @@ function cleanupAfterUpdate({
   productFormServices,
 }) {
   productTableUI.hideHighlightEditRow(editId);
-  productInteractionState.editId= null;
+  productInteractionState.editId = null;
   productFormServices.hideForm();
 }
 
@@ -308,7 +344,9 @@ function handleProductSortChanged({
   productInteractionState.sortPriceStrategy = action.payload.sortStrategy;
 
   // Determine the base list: either current search results or the full product list
-  const baseList = productInteractionState.isSearching ? productInteractionState.searchResults : productState.list;
+  const baseList = productInteractionState.isSearching
+    ? productInteractionState.searchResults
+    : productState.list;
 
   // Apply current filters to the base list
   const filteredList = getCurrentFilteredList(
@@ -430,7 +468,6 @@ function handleTableFilterRequest({
   // Update internal states
   productInteractionState.filterType = productType;
 
-  
   // Syncing the length of the filtered results
   productInteractionState.filteredCount = finalDisplayList.length;
 
@@ -438,6 +475,12 @@ function handleTableFilterRequest({
   productTableUI.renderRawOrderOfList(finalDisplayList);
 }
 
+/* ======== 10. STATUS EVENT TRIGGER ======== */
+function onStatusEvent({ action, componentServices }) {
+  const { productFormServices } = componentServices;
+  const statusValue = action.payload.statusValue;
+  productFormServices.triggerStatusEvent(statusValue);
+}
 /**
  * ==========================================
  *           3. INTERNAL HELPERS

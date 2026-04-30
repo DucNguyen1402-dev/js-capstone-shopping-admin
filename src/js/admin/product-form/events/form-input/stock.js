@@ -1,4 +1,3 @@
-
 /**
  * Threshold rules for determining product status based on stock quantity.
  * @type {Array<{max: number, value: string}>}
@@ -15,26 +14,41 @@ const STATUS_RULES = [
  * @returns {string} The matching status value (e.g., "outOfStock", "lowStock", "inStock").
  */
 
-
 function getStatusFromStock(value) {
-  return STATUS_RULES.find((rule) =>  value >= rule.min && value <= rule.max).value;
+  if (value === "") return "unknown";
+  return STATUS_RULES.find((rule) => value >= rule.min && value <= rule.max)
+    .value;
 }
+
 
 /**
- * Binds a change event to the stock input to automatically update the status field.
- * * @description
- * When the stock value changes, it calculates the new status and updates
- * the status dropdown. It also triggers a 'change' event on the status
- * element to ensure any dependent UI styling is updated.
+ * Initializes stock input blur event listeners for validation and UI updates.
+ * 
+ * @param {Object} options - Configuration object.
+ * @param {Function} options.dispatch - State management dispatch function.
+ * @param {Object} options.productFormInputEl - Container for form input elements.
+ * @param {Object} options.inputValidators - Collection of validation logic.
+ * @param {Object} options.inputUIHandler - Handlers for UI state rendering.
  */
-export function initStockInputEvent(productFormInputUI) {
-  const { stock, status } = productFormInputUI;
+export function initStockInputEvent({
+  dispatch,
+  productFormInputEl,
+  inputValidators,
+  inputUIHandler: { stockUIHandler },
+}) {
+  const { stock: stockInput, status: statusInput } = productFormInputEl;
+  stockInput.addEventListener("blur", () => {
+    const value = stockInput.value.trim();
 
-  stock.addEventListener("change", () => {
-    const value = stock.valueAsNumber;
-    const statusValue = getStatusFromStock(value);
+    const { isValid, issue } = inputValidators.stock(value);
+    dispatch({
+        type: "TRIGGER_STATUS_EVENT",
+        payload: {
+          statusValue: isValid ? getStatusFromStock(value) : "unknown",
+        },
+      });
+    stockUIHandler.renderStockValidationState({ isValid, issue, inputEl: stockInput });
 
-    status.value = statusValue;
-    status.dispatchEvent(new Event("change"));
   });
 }
+

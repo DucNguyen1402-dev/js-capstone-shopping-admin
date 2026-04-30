@@ -42,7 +42,7 @@ export function getToastNotificationDOM() {
   };
 }
 
-export function getProductFormInput() {
+export function getProductFormInputDOM() {
   return {
     name: $(".js-product-name-input"),
     price: $(".js-price-input"),
@@ -55,4 +55,10 @@ export function getProductFormInput() {
     stock: $(".js-stock-input"),
     status: $(".js-product-status"),
   };
+}
+
+export function getProductFormInputWarningMessageDOM(){
+  return {
+    stockWarningMessage: $('[data-role="warning"][data-field="stock"]')
+  }
 }

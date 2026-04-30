@@ -5,29 +5,8 @@ import {
   setProductFormToVisible,
 } from "../ui/form.js";
 
-import { productFormUI, productFormInputUI } from "../dom.js";
+import { productFormEl, productFormInputEl } from "../dom.js";
 
-/**
- * ============================================
- *    0. PUBLIC SERVICE INTERFACE (EXPORTS)
- * ============================================
- * @module Services/ProductForm
- * @description
- * Manages the lifecycle, state transitions, and data extraction for the
- * Product Form component. Acts as the primary bridge between the UI
- * implementation and the Main Controller's business logic.
- */
-
-/**
- * High-level API for form operations and data retrieval.
- */
-export const productFormServices = {
-  showFormEdit: initProductFormUpdateVersion,
-  showFormAdd: initProductFormAddVersion,
-  getUpdateProduct,
-  hideForm,
-  checkFormExistence,
-};
 
 /*=======================================
       1. FORM ADD INITIALIZERS 
@@ -70,12 +49,12 @@ function productToFormModel(p) {
  * @param {Object} product - The raw product entity to be edited.
  */
 function initProductFormUpdateVersion(product) {
-  const { productFormContainer } = productFormUI;
+  const { productFormContainer } = productFormEl;
   setProductFormToVisible(productFormContainer, true);
-  setProductFormStateForUpdate(productFormUI);
+  setProductFormStateForUpdate(productFormEl);
   const formData = productToFormModel(product);
 
-  fillForm(productFormInputUI, formData);
+  fillForm(productFormInputEl, formData);
 }
 
 /*=======================================
@@ -87,9 +66,9 @@ function initProductFormUpdateVersion(product) {
  * * @param {Object} [product] - Optional initial data for the new product.
  */
 function initProductFormAddVersion() {
-  const { productFormContainer } = productFormUI;
+  const { productFormContainer } = productFormEl;
   setProductFormToVisible(productFormContainer, true);
-  setProductFormStateForAdd(productFormUI);
+  setProductFormStateForAdd(productFormEl);
 }
 
 /*===============================================
@@ -129,10 +108,10 @@ function isNumberField(key) {
 function getUpdateProduct() {
   return PRODUCT_FIELDS.reduce((acc, key) => {
     if (isNumberField(key)) {
-      const value = productFormInputUI[key].valueAsNumber;
+      const value = productFormInputEl[key].valueAsNumber;
       acc[key] = Number.isNaN(value) ? null : value;
     } else {
-      acc[key] = productFormInputUI[key].value;
+      acc[key] = productFormInputEl[key].value;
     }
     return acc;
   }, {});
@@ -148,11 +127,45 @@ function getUpdateProduct() {
  * from the active viewport.
  */
 function hideForm() {
-  const { productFormContainer } = productFormUI;
+  const { productFormContainer } = productFormEl;
   setProductFormToVisible(productFormContainer, false);
 }
 
 function checkFormExistence() {
-  const { productFormContainer } = productFormUI;
+  const { productFormContainer } = productFormEl;
   return productFormContainer.classList.contains("opacity-100");
 }
+
+/*================================================
+       4. EVENT TRIGGER
+==================================================*/
+
+function triggerStatusEvent(value) {
+  const {status} = productFormInputEl;
+  status.value = value;
+  status.dispatchEvent(new Event("change"));
+}
+
+
+/**
+ * ============================================
+ *    5. PUBLIC SERVICE INTERFACE (EXPORTS)
+ * ============================================
+ * @module Services/ProductForm
+ * @description
+ * Manages the lifecycle, state transitions, and data extraction for the
+ * Product Form component. Acts as the primary bridge between the UI
+ * implementation and the Main Controller's business logic.
+ */
+
+/**
+ * High-level API for form operations and data retrieval.
+ */
+export const productFormServices = {
+  showFormEdit: initProductFormUpdateVersion,
+  showFormAdd: initProductFormAddVersion,
+  getUpdateProduct,
+  hideForm,
+  triggerStatusEvent,
+  checkFormExistence,
+};

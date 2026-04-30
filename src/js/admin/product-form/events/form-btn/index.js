@@ -10,8 +10,8 @@ import {initResetBtnEvent} from "./reset-btn.js";
  * @param {Function} dispatch - Central action dispatcher.
  * @param {Object} productFormUI - UI elements mapping for the form.
  */
-export function initFormBtnEvents(dispatch, productFormUI, productFormInputUI) {
-  initProductFormCloseEvent(dispatch, productFormUI);
-  initUpdateBtnEvent(dispatch, productFormUI);
-  initResetBtnEvent(productFormUI, productFormInputUI);
+export function initFormBtnEvents(context) {
+  initProductFormCloseEvent(context);
+  initUpdateBtnEvent(context);
+  initResetBtnEvent(context);
 }

@@ -4,8 +4,8 @@
  * and state synchronization.
  * * @param {Function} dispatch - The application's action dispatcher.
  */
-export function initUpdateBtnEvent(dispatch, productFormUI) {
-  const { updateBtn } = productFormUI;
+export function initUpdateBtnEvent({dispatch, productFormEl}) {
+  const { updateBtn } = productFormEl;
   updateBtn.addEventListener("click", () => {
     dispatch({
       type: "PRODUCT_UPDATE_SUBMITTED",

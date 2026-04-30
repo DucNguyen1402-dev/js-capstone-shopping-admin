@@ -173,13 +173,13 @@
         </div>
 
         <div
-          class="fixed top-0 right-20 z-20 rounded-sm bg-emerald-500 p-4 text-sm text-white opacity-0 shadow-md transition-opacity duration-200"
+          class="fixed top-10 left-1/2 -translate-x-1/2 z-20 rounded-sm bg-emerald-500 p-4 text-sm text-white opacity-0 shadow-md transition-opacity duration-200"
           data-toast="add"
         >
           Item added successfully
         </div>
         <div
-          class="fixed top-0 right-20 z-20 rounded-sm bg-indigo-500 p-4 text-sm text-white opacity-0 shadow-md transition-opacity duration-200"
+          class="fixed top-10 left-1/2 -translate-x-1/2 z-20 rounded-sm bg-indigo-500 p-4 text-sm text-white opacity-0 shadow-md transition-opacity duration-200"
           data-toast="update"
         >
           Updated successfully
@@ -351,7 +351,8 @@
                       class="js-stock-input w-full rounded-sm border border-gray-300 px-3 py-2 outline-none placeholder:text-sm focus:ring-1 focus:ring-blue-500"
                     />
                     <p
-                      class="js-input-warning hidden rounded-sm px-2 py-1 text-sm text-white"
+                      class="js-input-warning hidden rounded-sm px-2 py-1 text-sm text-white" 
+                      data-role="warning" data-field="stock"
                     ></p>
                   </div>
 
@@ -382,7 +383,7 @@
                       <option value="comingSoon" class="text-gray-700">
                         Coming soon
                       </option>
-                      <option value="unknown" class="text-gray-700">
+                      <option value="unknown" class="text-gray-700" hidden>
                       Unknown
                       </option>
                     </select>
