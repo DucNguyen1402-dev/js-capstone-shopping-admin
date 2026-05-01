@@ -7,10 +7,11 @@ import {
   productTableServices,
 } from "../product-table/index.js";
 import {
-  performDeleteAndUpdate,
+  performDelete,
   submitProductUpdate,
   resolveProductSearch,
   getFilterProducts,
+  performAddProduct,
 } from "./use-cases/index.js";
 
 import {
@@ -21,6 +22,7 @@ import {
 } from "../index.js";
 
 import { productInteractionState } from "../product-interaction-state.js";
+import { getFriendlyErrorMessage } from "../utils.js";
 
 /**
  * =========================================================
@@ -34,7 +36,7 @@ import { productInteractionState } from "../product-interaction-state.js";
  * productTableUI: Object
  * }}
  */
-const componentUIHandler = { productFormServices, productTableUI };
+const componentUIHandler = { productTableUI };
 /**
  * Aggregates business logic services used within the component.
  * @type {{
@@ -65,13 +67,15 @@ const useAction = {
   PRODUCT_DELETE_CONFIRMED: handleDeleteConfirm,
   PRODUCT_CANCEL_DELETION: handleCancelDelete,
   PRODUCT_EDIT_HOVER: handleEditHover,
-  CLOSE_FORM_EDIT: handleCloseFormEdit,
+  CLOSE_FORM: handleCloseForm,
   PRODUCT_EDIT_STARTED: handleProductEditStart,
   PRODUCT_UPDATE_SUBMITTED: handleProductUpdateSubmitted,
   PRODUCT_SORT_CHANGED: handleProductSortChanged,
   SEARCH_PRODUCT_REQUEST: handleSearchProductRequest,
   TABLE_FILTER_REQUEST: handleTableFilterRequest,
   TRIGGER_STATUS_EVENT: onStatusEvent,
+  OPEN_ADD_PRODUCT_FORM: handleOpenAddProductForm,
+  CREATE_NEW_PRODUCT: handleCreateNewProduct,
 };
 /**
  * Dispatches and executes the appropriate action handler based on the action type.
@@ -89,6 +93,8 @@ export async function dispatch(action) {
     productInteractionState,
     componentUIHandler,
     componentServices,
+    productState,
+    productCoordinator,
   };
   await actionHandler(context);
 }
@@ -127,12 +133,11 @@ async function handleDeleteConfirm({
   action,
   productInteractionState,
   componentUIHandler,
+  productState,
+  productCoordinator,
 }) {
-  await performDeleteAndUpdate(productInteractionState.deleteId);
-  fetchAndRenderProducts(
-    getCurrentLength(productState.list) - 1,
-    componentUIHandler,
-  );
+  await performDelete(productInteractionState.deleteId);
+  await productCoordinator.refresh(getCurrentLength(productState.list) - 1);
 }
 
 /* ======== 3. PRODUCT CANCEL DELETION ======== */
@@ -192,12 +197,17 @@ function handleEditHover({
  * @param {Object} context.productInteractionState - Current state of UI interactions.
  * @param {Object} context.componentUIHandler - Utilities for UI manipulation.
  */
-function handleCloseFormEdit({
+function handleCloseForm({
   action,
   productInteractionState,
   componentUIHandler,
+  componentServices,
 }) {
   const { productTableUI } = componentUIHandler;
+  const { productFormServices } = componentServices;
+
+  productFormServices.hideForm();
+  if (!productInteractionState.editId) return;
   productTableUI.hideHighlightEditRow(productInteractionState.editId);
   productInteractionState.editId = null;
 }
@@ -237,7 +247,7 @@ function handleProductEditStart({
  * @returns {Object} The updated product data.
  */
 function getUpdateData(productFormServices) {
-  return productFormServices.getUpdateProduct();
+  return productFormServices.getUpdatedProduct();
 }
 /**
  * Handles the loading state and executes the update API call.
@@ -246,7 +256,7 @@ function getUpdateData(productFormServices) {
  * @param {Object} data - The new product data.
  * @returns {Promise<void>}
  */
-async function submitUpdate(editId, data) {
+async function submitUpdate(editId, data, toastServices) {
   toastServices.showLoading();
   await submitProductUpdate(editId, data);
   toastServices.hideLoading();
@@ -277,11 +287,13 @@ function cleanupAfterUpdate({
  * @param {Object} componentUIHandler - Utilities for UI manipulation.
  * @returns {Promise<void>}
  */
-async function refreshProductList(componentUIHandler) {
-  await fetchAndRenderProducts(
-    getCurrentLength(productState.list),
-    componentUIHandler,
-  );
+async function refreshProductList(
+  componentUIHandler,
+  productState,
+  productCoordinator,
+  toastServices
+) {
+  await productCoordinator.refresh(getCurrentLength(productState.list));
   toastServices.showUpdateSuccess();
 }
 
@@ -301,13 +313,15 @@ async function handleProductUpdateSubmitted({
   productInteractionState,
   componentUIHandler,
   componentServices,
+  productState,
+  productCoordinator,
 }) {
   const { productTableUI } = componentUIHandler;
-  const { productFormServices } = componentServices;
+  const { productFormServices , toastServices} = componentServices;
   const editId = productInteractionState.editId;
   const data = getUpdateData(productFormServices);
 
-  await submitUpdate(editId, data);
+  await submitUpdate(editId, data, toastServices);
 
   cleanupAfterUpdate({
     editId,
@@ -316,7 +330,12 @@ async function handleProductUpdateSubmitted({
     productFormServices,
   });
 
-  await refreshProductList(componentUIHandler);
+  await refreshProductList(
+    componentUIHandler,
+    productState,
+    productCoordinator,
+    toastServices
+  );
 }
 
 /* ======== 8. PRODUCT SORT CHANGED ======== */
@@ -336,6 +355,7 @@ function handleProductSortChanged({
   productInteractionState,
   componentUIHandler,
   componentServices,
+  productState,
 }) {
   const { productTableUI } = componentUIHandler;
   const { productTableServices } = componentServices;
@@ -404,6 +424,7 @@ function handleSearchProductRequest({
   productInteractionState,
   componentUIHandler,
   componentServices,
+  productState,
 }) {
   const { productTableUI } = componentUIHandler;
   const { productTableServices } = componentServices;
@@ -448,6 +469,7 @@ function handleTableFilterRequest({
   productInteractionState,
   componentUIHandler,
   componentServices,
+  productState,
 }) {
   const { productTableUI } = componentUIHandler;
   const { productType } = action.payload;
@@ -481,6 +503,61 @@ function onStatusEvent({ action, componentServices }) {
   const statusValue = action.payload.statusValue;
   productFormServices.triggerStatusEvent(statusValue);
 }
+
+/* ======== 10. ADD PRODUCT FORM TRIGGER ======== */
+
+function handleOpenAddProductForm({ componentServices }) {
+  const { productFormServices } = componentServices;
+  productFormServices.showFormAdd();
+}
+
+/* ======== 10. CREATE NEW PRODUCT ======== */
+
+function refreshAfterCreation(
+  productFormServices,
+  toastServices,
+  productCoordinator,
+) {
+  productFormServices.hideForm();
+  toastServices.hideLoading();
+
+  productCoordinator.refresh(getCurrentLength(productState.list) + 1);
+  toastServices.showAddSuccess();
+}
+
+async function handleCreateNewProduct({
+  componentServices,
+  productState,
+  productCoordinator,
+}) {
+  const { productFormServices, toastServices } = componentServices;
+  const data = productFormServices.getFormData();
+
+  const isValidData  = productFormServices.validateData(data);
+
+  if(!isValidData){
+     toastServices.showError("Data invalid! Check your form");
+     productFormServices.showValidationErrors();
+     return;
+  }
+
+  const norminalizeData = productFormServices.normalizeFormDataTypes(data);
+  try {
+    toastServices.showLoading();
+    await performAddProduct(norminalizeData);
+
+    refreshAfterCreation(
+      productFormServices,
+      toastServices,
+      productCoordinator,
+    );
+  } catch (error) {
+    toastServices.hideLoading();
+    const errorMessage = getFriendlyErrorMessage(error);
+    toastServices.showError(errorMessage);
+  }
+}
+
 /**
  * ==========================================
  *           3. INTERNAL HELPERS
@@ -489,21 +566,20 @@ function onStatusEvent({ action, componentServices }) {
  * ==========================================
  */
 /**
- * Orchestrates the loading state and data fetching for the product list.
- * Displays a skeleton screen based on the expected count before rendering the actual data.
- * * @async
- * @param {number} expectedCount - The number of skeleton rows to display while loading.
- * @param {Object} handlers - UI handlers context.
- * @param {Object} handlers.productTableUI - Utilities for UI manipulation.
- * @returns {Promise<void>}
+ * Coordinator to sync Product data and UI.
+ * Used by dispatch handlers.
  */
-async function fetchAndRenderProducts(expectedCount, { productTableUI }) {
-  productTableUI.renderSkeleton(expectedCount);
 
-  await fetchProducts();
+const productCoordinator = {
+  ui: productTableUI,
+  state: productState,
 
-  productTableUI.renderDefaultTableOrder(productState.list);
-}
+  async refresh(count) {
+    this.ui.renderSkeleton(count);
+    await fetchProducts();
+    this.ui.renderDefaultTableOrder(this.state.list);
+  },
+};
 
 /**
  * Retrieves the product list filtered by the current active filter type.

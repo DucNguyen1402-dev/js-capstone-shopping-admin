@@ -1,5 +1,9 @@
 import { $ } from "../shared/dom-utils.js";
 
+
+
+export const createProductTriggerBtn = $('[data-action="open-create-product-form"]');
+
 export function getDropdownButtonDOM() {
   return {
     dropDownOpen: $(".js-open-btn"),
@@ -25,7 +29,7 @@ export function getProductFormDOM() {
   return {
     productFormContainer: $(".js-product-form-container"),
     form: $(".js-product-form"),
-    submitBtn: $(".js-product-submit-btn"),
+    createBtn: $(".js-product-create-btn"),
     updateBtn: $(".js-product-update-btn"),
     resetBtn: $(".js-product-reset-btn"),
     closeBtn: $(".js-product-form-close-btn"),
@@ -39,6 +43,7 @@ export function getToastNotificationDOM() {
     loading: $("[data-toast='loading']"),
     add: $("[data-toast='add']"),
     update: $("[data-toast='update']"),
+    error: $('[data-toast="error"]')
   };
 }
 
@@ -50,15 +55,9 @@ export function getProductFormInputDOM() {
     screen: $(".js-product-screen-input"),
     backCamera: $(".js-product-back-camera-input"),
     frontCamera: $(".js-product-front-camera-input"),
-    decs: $(".js-product-desc-input"),
+    desc: $(".js-product-desc-input"),
     type: $(".js-product-type"),
     stock: $(".js-stock-input"),
     status: $(".js-product-status"),
   };
-}
-
-export function getProductFormInputWarningMessageDOM(){
-  return {
-    stockWarningMessage: $('[data-role="warning"][data-field="stock"]')
-  }
 }

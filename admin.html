@@ -130,7 +130,8 @@
 
         <button
           type="button"
-          class="js-add-product-btn flex cursor-pointer items-center gap-1 rounded-md bg-green-500 px-3 py-2 text-sm font-medium text-white transition-colors duration-400 hover:bg-green-600"
+          class="flex cursor-pointer items-center gap-1 rounded-md bg-green-500 px-3 py-2 text-sm font-medium text-white transition-colors duration-400 hover:bg-green-600"
+          data-action="open-create-product-form"
         >
           <span class="fa-solid fa-plus"></span>
           <span>Add Product</span>
@@ -173,13 +174,20 @@
         </div>
 
         <div
-          class="fixed top-10 left-1/2 -translate-x-1/2 z-20 rounded-sm bg-emerald-500 p-4 text-sm text-white opacity-0 shadow-md transition-opacity duration-200"
+          class="fixed top-10 left-1/2 z-80 -translate-x-1/2 rounded-sm bg-rose-500 p-4 text-sm text-white opacity-0 shadow-md transition-opacity duration-200"
+          data-toast="error"
+        >
+          
+        </div>
+
+        <div
+          class="fixed top-10 left-1/2 z-20 -translate-x-1/2 rounded-sm bg-emerald-500 p-4 text-sm text-white opacity-0 shadow-md transition-opacity duration-200"
           data-toast="add"
         >
           Item added successfully
         </div>
         <div
-          class="fixed top-10 left-1/2 -translate-x-1/2 z-20 rounded-sm bg-indigo-500 p-4 text-sm text-white opacity-0 shadow-md transition-opacity duration-200"
+          class="fixed top-10 left-1/2 z-20 -translate-x-1/2 rounded-sm bg-indigo-500 p-4 text-sm text-white opacity-0 shadow-md transition-opacity duration-200"
           data-toast="update"
         >
           Updated successfully
@@ -217,7 +225,9 @@
                       class="js-product-name-input w-full rounded-sm border border-gray-300 px-3 py-2 outline-none placeholder:text-sm focus:ring-1 focus:ring-blue-500"
                     />
                     <p
-                      class="js-input-warning hidden rounded-sm px-2 py-1 text-sm text-white"
+                      class="js-input-warning hidden rounded-sm px-2 py-1.5 text-sm text-white mt-1"
+                      data-role="warning"
+                      data-field="name"
                     ></p>
                   </div>
 
@@ -232,8 +242,10 @@
                       placeholder="e.g. 39.400.000đ"
                       class="js-price-input w-full rounded-sm border border-gray-300 px-3 py-2 outline-none placeholder:text-sm focus:ring-1 focus:ring-blue-500"
                     />
-                    <p
+                   <p
                       class="js-input-warning hidden rounded-sm px-2 py-1 text-sm text-white"
+                      data-role="warning"
+                      data-field="price"
                     ></p>
                   </div>
 
@@ -249,6 +261,8 @@
                     />
                     <p
                       class="js-input-warning hidden rounded-sm px-2 py-1 text-sm text-white"
+                      data-role="warning"
+                      data-field="image"
                     ></p>
                   </div>
 
@@ -262,8 +276,10 @@
                       placeholder="e.g. 6.7', OLED, 120Hz"
                       class="js-product-screen-input w-full rounded-sm border border-gray-300 px-3 py-2 outline-none placeholder:text-sm focus:ring-1 focus:ring-blue-500"
                     />
-                    <p
+                     <p
                       class="js-input-warning hidden rounded-sm px-2 py-1 text-sm text-white"
+                      data-role="warning"
+                      data-field="screen"
                     ></p>
                   </div>
 
@@ -277,8 +293,10 @@
                       placeholder="e.g. 48MP triple camera"
                       class="js-product-back-camera-input w-full rounded-sm border border-gray-300 px-3 py-2 outline-none placeholder:text-sm focus:ring-1 focus:ring-blue-500"
                     />
-                    <p
+                   <p
                       class="js-input-warning hidden rounded-sm px-2 py-1 text-sm text-white"
+                      data-role="warning"
+                      data-field="backCamera"
                     ></p>
                   </div>
 
@@ -292,8 +310,10 @@
                       placeholder="e.g. 12MP selfie"
                       class="js-product-front-camera-input w-full rounded-sm border border-gray-300 px-3 py-2 outline-none placeholder:text-sm focus:ring-1 focus:ring-blue-500"
                     />
-                    <p
+                   <p
                       class="js-input-warning hidden rounded-sm px-2 py-1 text-sm text-white"
+                      data-role="warning"
+                      data-field="frontCamera"
                     ></p>
                   </div>
 
@@ -307,8 +327,10 @@
                       placeholder="Enter phone description..."
                       class="js-product-desc-input w-full rounded-sm border border-gray-300 px-3 py-2 outline-none placeholder:text-sm focus:ring-1 focus:ring-blue-500"
                     />
-                    <p
+                   <p
                       class="js-input-warning hidden rounded-sm px-2 py-1 text-sm text-white"
+                      data-role="warning"
+                      data-field="desc"
                     ></p>
                   </div>
 
@@ -335,8 +357,10 @@
                       </option>
                       <option value="oppo" class="text-gray-700">Oppo</option>
                     </select>
-                    <p
+                   <p
                       class="js-input-warning hidden rounded-sm px-2 py-1 text-sm text-white"
+                      data-role="warning"
+                      data-field="type"
                     ></p>
                   </div>
                   <div class="flex flex-col gap-2">
@@ -351,8 +375,9 @@
                       class="js-stock-input w-full rounded-sm border border-gray-300 px-3 py-2 outline-none placeholder:text-sm focus:ring-1 focus:ring-blue-500"
                     />
                     <p
-                      class="js-input-warning hidden rounded-sm px-2 py-1 text-sm text-white" 
-                      data-role="warning" data-field="stock"
+                      class="js-input-warning hidden rounded-sm px-2 py-1 text-sm text-white"
+                      data-role="warning"
+                      data-field="stock"
                     ></p>
                   </div>
 
@@ -384,19 +409,22 @@
                         Coming soon
                       </option>
                       <option value="unknown" class="text-gray-700" hidden>
-                      Unknown
+                        Unknown
                       </option>
                     </select>
                     <p
                       class="js-input-warning hidden rounded-sm px-2 py-1 text-sm text-white"
+                      data-role="warning"
+                      data-field="status"
                     ></p>
                   </div>
                 </div>
 
+              
                 <div class="mt-16 flex gap-2" data-modal-submit>
                   <button
-                    type="submit"
-                    class="js-product-submit-btn flex-1 cursor-pointer rounded-lg bg-blue-500 py-2 text-sm text-white transition-colors duration-300 hover:bg-blue-600"
+                    type="button"
+                    class="js-product-create-btn flex-1 cursor-pointer rounded-lg bg-blue-500 py-2.5 text-sm text-white transition-colors duration-300 hover:bg-blue-600"
                   >
                     Create new
                   </button>
@@ -440,6 +468,7 @@
               <option value="samsung" class="text-gray-700">Samsung</option>
               <option value="xiaomi" class="text-gray-700">Xiaomi</option>
               <option value="oppo" class="text-gray-700">Oppo</option>
+              <option value="" class="text-gray-700" hidden>Unknown</option>
             </select>
           </div>
 

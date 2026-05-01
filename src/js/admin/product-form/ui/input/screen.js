@@ -25,7 +25,7 @@ const ALL_SEVERITY_CLASSES = Object.values(SEVERITY_CLASSES).flat();
  */
 /**
  * Updates the input element's visual state based on validation severity.
- * 
+ *
  * @param {Object} params - The validation state.
  * @param {boolean} params.isValid - Whether the input is valid.
  * @param {Object} params.issue - The issue details (contains severity).
@@ -33,9 +33,8 @@ const ALL_SEVERITY_CLASSES = Object.values(SEVERITY_CLASSES).flat();
  */
 
 /* =============== 1.1 VALIDATION LOGIC ==================== */
-function renderNameValidationState({ isValid, issue, inputEl }) {
-      
-  clearNameInputHighlight(inputEl);
+function renderScreenValidationState({ isValid, issue, inputEl }) {
+  clearScreenInputHighlight(inputEl);
 
   if (isValid) return;
 
@@ -47,11 +46,11 @@ function renderNameValidationState({ isValid, issue, inputEl }) {
 
 /**
  * Removes all validation-related CSS classes from the input element.
- * 
+ *
  * @param {HTMLElement} inputEl - The target input element.
  */
-function clearNameInputHighlight(inputEl) {
-    if(!inputEl) return;
+function clearScreenInputHighlight(inputEl) {
+  if (!inputEl) return;
   inputEl.classList.remove(...ALL_SEVERITY_CLASSES);
 }
 
@@ -63,17 +62,16 @@ function clearNameInputHighlight(inputEl) {
  * @param {HTMLInputElement|null} inputEl - The input element to clear the validation state from.
  * @returns {void}
  */
-function clearInputValidationState(inputEl){
-    if(!inputEl) return;
+function clearInputValidationState(inputEl) {
+  if (!inputEl) return;
   inputEl.classList.remove(...ALL_SEVERITY_CLASSES);
 }
-
 
 /**
  * Interface for status-related UI updates.
  */
-export const nameUIHandler = {
-  renderNameValidationState,
+export const screenUIHandler = {
+  renderScreenValidationState,
   clearInputValidationState,
   renderValidationMessage,
   resetValidationMessage

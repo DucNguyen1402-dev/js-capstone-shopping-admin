@@ -1,3 +1,4 @@
+import {renderValidationMessage, resetValidationMessage} from "./shared.js";
 /**
  * CSS class mapping for different product stock statuses.
  * @type {Object.<string, string[]>}
@@ -38,9 +39,25 @@ function renderStatusInputState(el) {
   currentStatusState = value;
 }
 
+
+/**
+ * Removes all validation severity classes from an input element.
+ * Typically used during form reset events to revert the UI to its initial state.
+ * 
+ * @param {HTMLInputElement|null} inputEl - The input element to clear the validation state from.
+ * @returns {void}
+ */
+function resetToNormalState(inputEl) {
+  if (!currentStatusState || !inputEl) return;
+  inputEl.classList.remove("text-white",...STATUS_CLASSES[currentStatusState]);
+}
+
 /**
  * Interface for status-related UI updates.
  */
 export const statusUIHandler = {
   renderStatusInputState,
+  resetToNormalState,
+  renderValidationMessage,
+  resetValidationMessage
 };

@@ -10,9 +10,10 @@ import {inputUIHandler} from "./ui/input/index.js";
  * Only this function needs to be exposed for event initialization.
  * @param {Function} dispatch - The central state/action manager.
  */
-export function initAllProductFormEvents(dispatch) {
+export function initAllProductFormEvents({dispatch, productList}) {
+
   const contextBtn = {dispatch, productFormEl, productFormInputEl};
-  const contextInput ={dispatch, productFormInputEl, inputValidators, inputUIHandler}
+  const contextInput ={dispatch, productFormInputEl, inputValidators, inputUIHandler, productList, productFormEl}
   initProductFormEvents(contextBtn, contextInput);
 }
 

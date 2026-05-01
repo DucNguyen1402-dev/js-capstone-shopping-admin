@@ -28,7 +28,7 @@ export async function fetchProducts() {
 
 export async function deleteData(id) {
   try {
-    const res = await axios.delete(
+    await axios.delete(
       `https://69ca67a6ba5984c44bf31972.mockapi.io/api/v1/phone/${id}`,
     );
   } catch (err) {
@@ -38,11 +38,19 @@ export async function deleteData(id) {
 
 export async function updateProduct(id, data) {
   try {
-    const res = await axios.put(
+    await axios.put(
       `https://69ca67a6ba5984c44bf31972.mockapi.io/api/v1/phone/${id}`,
       data,
     );
   } catch (err) {
     console.error("Something went wrong: ", err);
+  }
+}
+
+export async function addProduct(data) {
+  try {
+    await axios.post(URL, data);
+  } catch (err) {
+      throw err;
   }
 }

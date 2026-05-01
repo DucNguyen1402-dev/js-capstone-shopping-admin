@@ -1,9 +1,11 @@
+import {initCreateProductTriggerBtnEvent} from "./create-product-trigger-btn/index.js";
 import { initDropdownMobile } from "./mobile-nav/controller.js";
 import { initAllProductFormEvents } from "./product-form/init-events.js";
 import { productTableUI, productTableServices, initAllProductTableEvents } from "./product-table/index.js";
 import { fetchProducts, productState } from "./index.js";
 import { dispatch } from "./product-main-controller/controller.js";
 import {productInteractionState} from "./product-interaction-state.js";
+
 /* ======================================================
    1. INIT
    - Entry points for page setup
@@ -14,8 +16,10 @@ import {productInteractionState} from "./product-interaction-state.js";
  * Initialize static UI interactions (no data fetching)
  */
 function initPageInteractions() {
+  initCreateProductTriggerBtnEvent(dispatch);
   initDropdownMobile();
-  initAllProductFormEvents(dispatch);
+  const context = {dispatch, productList: productState.list} ;
+  initAllProductFormEvents(context);
 }
 
 /**

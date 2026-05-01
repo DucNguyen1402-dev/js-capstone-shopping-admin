@@ -18,4 +18,10 @@ export function initStatusInputEvent({
     status.value = "";
     statusUIHandler.renderStatusInputState(status);
   });
+   
+   status.addEventListener("reset", () => {
+    statusUIHandler.resetToNormalState(status);
+  });
+
+
 }

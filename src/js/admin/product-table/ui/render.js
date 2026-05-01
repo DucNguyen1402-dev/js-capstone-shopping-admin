@@ -30,9 +30,9 @@ const ProductRow = (item) => `
  " data-product-id=${item.id}
  data-product-variant = ${!item.isInvalid ? "valid" : "invalid"}
    >
-  <td class="product-id px-6 py-4 text-sm  font-mono tracking-wider ${item.isFieldInvalid("id") ? "border border-red-500" : ""}">${item.id}</td>
+  <td class="product-id px-8 py-4 text-sm">${item.id}</td>
   <td class="px-6 py-4 text-sm font-medium ${item.isFieldInvalid("name") ? "border border-red-500" : ""}">${item.name}</td>
-  <td class="px-6 py-4  text-sm ${item.isFieldInvalid("price") ? "border border-red-500" : ""}">${item.price.toLocaleString(
+  <td class="px-6 py-4  text-sm ${item.isFieldInvalid("price") ? "border border-red-500" : ""}">${item.price?.toLocaleString(
     "vn",
     {
       style: "currency",

@@ -2,6 +2,7 @@ export {
   fetchProducts,
   deleteData,
   updateProduct,
+  addProduct
 } from "../product/services/product.js";
 export {
   productState,

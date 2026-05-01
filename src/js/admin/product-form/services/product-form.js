@@ -1,16 +1,22 @@
-import {
-  setProductFormStateForUpdate,
-  fillForm,
-  setProductFormStateForAdd,
-  setProductFormToVisible,
-} from "../ui/form.js";
-
+import * as formUI from "../ui/form.js";
 import { productFormEl, productFormInputEl } from "../dom.js";
+import { inputValidators } from "../input-validator/index.js";
+import { inputUIHandlerMaping } from "../ui/input/index.js";
+import { productState } from "../dom.js";
+const context = {
+  productFormEl,
+  productFormInputEl,
+  formUI,
+  inputValidators,
+  inputUIHandlerMaping,
+  productState,
+};
 
+/*=========================================================
+         1. PRODUCT FORM SERVICE ORCHESTRATOR
+===========================================================*/
 
-/*=======================================
-      1. FORM ADD INITIALIZERS 
-=========================================*/
+/*============= 1.1 FORM UPDATE INITIALIZERS ============ */
 
 /**
  * Transforms a raw product object into a data model suitable for form inputs.
@@ -34,7 +40,7 @@ function productToFormModel(p) {
     screen: p.screen,
     backCamera: p.backCamera,
     frontCamera: p.frontCamera,
-    decs: p.desc,
+    desc: p.desc,
     type: p.type.toLowerCase(),
     stock: p.stock,
     status: p.status,
@@ -48,33 +54,31 @@ function productToFormModel(p) {
  * and populates all fields with existing product data.
  * @param {Object} product - The raw product entity to be edited.
  */
-function initProductFormUpdateVersion(product) {
-  const { productFormContainer } = productFormEl;
-  setProductFormToVisible(productFormContainer, true);
-  setProductFormStateForUpdate(productFormEl);
+function initProductFormUpdateVersion(product, { productFormEl, formUI }) {
+  const { productFormContainer, form } = productFormEl;
+  form.reset();
+  formUI.showForm(productFormContainer, true);
+  formUI.setUpdateMode(productFormEl);
   const formData = productToFormModel(product);
 
-  fillForm(productFormInputEl, formData);
+  setTimeout(() => {
+    formUI.fillForm(productFormInputEl, formData);
+  }, 0);
 }
 
-/*=======================================
-    2. FORM UPDATE INITIALIZERS 
-=========================================*/
-
+/*============= 1.2 FORM ADD INITIALIZERS  ============ */
 /**
  * Prepares the product form state for adding a new product.
  * * @param {Object} [product] - Optional initial data for the new product.
  */
-function initProductFormAddVersion() {
-  const { productFormContainer } = productFormEl;
-  setProductFormToVisible(productFormContainer, true);
-  setProductFormStateForAdd(productFormEl);
+function initProductFormAddVersion({ productFormEl, formUI }) {
+  const { productFormContainer, form } = productFormEl;
+  form.reset();
+  formUI.showForm(productFormContainer, true);
+  formUI.setAddMode(productFormEl);
 }
 
-/*===============================================
-      2. DATA EXTRACTION & VISIBILITY CONTROL
-================================================*/
-
+/*============= 1.3 DATA EXTRACTION  ============ */
 /**
  * Definition of the product data schema for consistent extraction.
  */
@@ -85,7 +89,7 @@ const PRODUCT_FIELDS = [
   "screen",
   "backCamera",
   "frontCamera",
-  "decs",
+  "desc",
   "type",
   "stock",
   "status",
@@ -105,7 +109,7 @@ function isNumberField(key) {
   return numberFields.has(key);
 }
 
-function getUpdateProduct() {
+function getUpdatedProduct({ productFormInputEl }) {
   return PRODUCT_FIELDS.reduce((acc, key) => {
     if (isNumberField(key)) {
       const value = productFormInputEl[key].valueAsNumber;
@@ -117,55 +121,164 @@ function getUpdateProduct() {
   }, {});
 }
 
-/*================================================
-       3. FORM VISIBILITY
-==================================================*/
+/*============= 1.4 FORM VISIBILITY ============ */
+
 /**
  * Resets and conceals the product form interface.
  * @description
  * Executes the visibility transition to hide the form container
  * from the active viewport.
  */
-function hideForm() {
+function hideForm({ productFormEl, formUI }) {
   const { productFormContainer } = productFormEl;
-  setProductFormToVisible(productFormContainer, false);
+  formUI.showForm(productFormContainer, false);
 }
 
-function checkFormExistence() {
+function checkFormExistence({ productFormEl }) {
   const { productFormContainer } = productFormEl;
   return productFormContainer.classList.contains("opacity-100");
 }
 
-/*================================================
-       4. EVENT TRIGGER
-==================================================*/
-
-function triggerStatusEvent(value) {
-  const {status} = productFormInputEl;
+/*============= 1.4 EVENT TRIGGER ============ */
+function triggerStatusEvent(value, { productFormInputEl }) {
+  const { status } = productFormInputEl;
   status.value = value;
   status.dispatchEvent(new Event("change"));
 }
 
+/*============= 1.5 EVENT TRIGGER ============ */
+function getFormData({ productFormInputEl }) {
+  return PRODUCT_FIELDS.reduce((acc, key) => {
+    acc[key] = productFormInputEl[key].value;
+    return acc;
+  }, {});
+}
+
+
+
+function normalizeFormDataTypes(data) {
+  return Object.keys(data).reduce((acc, key) => {
+    acc[key] = isNumberField(key)
+      ? Number(data[key])
+      : data[key];
+    return acc;
+  }, {});
+}
+
+
+/*============= 1.6 VALIDATE AND SHOW ERROR  ============ */
+
+let invalidInputs = [];
+let validInputs = [];
+
+function validateData(
+  data,
+  { inputValidators, productState, inputUIHandlerMaping },
+) {
+  const states = [];
+  for (const key in inputValidators) {
+    const validationFn = inputValidators[key];
+    const inputField = data[key];
+    states.push({ result: validationFn(inputField), field: key });
+  }
+
+  const hasDuplicated = productState.list.find(
+    (item) => item.nameLower === data["name"].toLowerCase(),
+  );
+
+  const hasInvalid = states.find((state) => !state.result.isValid);
+
+  if (hasInvalid || hasDuplicated) {
+    invalidInputs = states.filter((state) => !state.result.isValid);
+    validInputs = states.filter((state) => state.result.isValid);
+ hasDuplicated&&  invalidInputs.push({
+      result: {
+        issue: {
+          severity: "warning",
+          message:
+            "A product with this name already exists. Please check to avoid confusion.",
+        },
+      },
+      field: "name",
+    });
+
+    return false;
+  }
+
+  resetValidInputState(invalidInputs, inputUIHandlerMaping);
+  return true;
+}
+
+function resetValidInputState(validInputs, inputUIHandlerMaping) {
+  if (validInputs) {
+    validInputs.forEach((validInput) => {
+      inputUIHandlerMaping[validInput.field].resetValidationMessage(
+        validInput.field,
+      );
+    });
+  }
+}
+
+function showValidationErrors(validInputs, { inputUIHandlerMaping }) {
+  resetValidInputState(validInputs, inputUIHandlerMaping);
+
+  if (invalidInputs) {
+    invalidInputs.forEach((invalidInput) => {
+      inputUIHandlerMaping[invalidInput.field].renderValidationMessage(
+        invalidInput.field,
+        invalidInput.result.issue,
+      );
+    });
+  }
+}
 
 /**
  * ============================================
- *    5. PUBLIC SERVICE INTERFACE (EXPORTS)
+ *    2. SERVICE FACTORY
  * ============================================
- * @module Services/ProductForm
- * @description
- * Manages the lifecycle, state transitions, and data extraction for the
- * Product Form component. Acts as the primary bridge between the UI
- * implementation and the Main Controller's business logic.
  */
 
-/**
- * High-level API for form operations and data retrieval.
- */
-export const productFormServices = {
-  showFormEdit: initProductFormUpdateVersion,
-  showFormAdd: initProductFormAddVersion,
-  getUpdateProduct,
-  hideForm,
-  triggerStatusEvent,
-  checkFormExistence,
+const createProductFromServices = (context) => {
+  return {
+    showFormEdit: (product) => {
+      initProductFormUpdateVersion(product, context);
+    },
+    showFormAdd: () => {
+      initProductFormAddVersion(context);
+    },
+    getUpdatedProduct: () => {
+      return getUpdatedProduct(context);
+    },
+    hideForm: () => {
+      hideForm(context);
+    },
+    triggerStatusEvent: (value) => {
+      triggerStatusEvent(value, context);
+    },
+    checkFormExistence: () => {
+      checkFormExistence(context);
+    },
+    getFormData: () => {
+      return getFormData(context);
+    },
+    validateData: (data) => {
+      return validateData(data, context);
+    },
+    showValidationErrors: () => {
+      showValidationErrors(invalidInputs, context);
+    },
+    resetValidationErrors: () => {
+      resetValidationErrors(invalidInputs, context);
+    },
+    normalizeFormDataTypes: (data) =>{
+      return normalizeFormDataTypes(data);
+    }
+  };
 };
+
+/**
+ * ============================================
+ *    3. PUBLIC SERVICE INTERFACE (EXPORTS)
+ * ============================================
+ */
+export const productFormServices = createProductFromServices(context);

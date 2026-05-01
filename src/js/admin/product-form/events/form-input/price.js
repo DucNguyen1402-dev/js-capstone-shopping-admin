@@ -22,4 +22,8 @@ export function initPriceInputEvent({
       inputEl: priceInput,
     });
   });
+
+  priceInput.addEventListener("reset",() =>{
+     priceUIHandler.clearInputValidationState(priceInput);
+  });
 }

@@ -33,9 +33,9 @@ const ALL_SEVERITY_CLASSES = Object.values(SEVERITY_CLASSES).flat();
  */
 
 /* =============== 1.1 VALIDATION LOGIC ==================== */
-function renderNameValidationState({ isValid, issue, inputEl }) {
+function renderBackCameraValidationState({ isValid, issue, inputEl }) {
       
-  clearNameInputHighlight(inputEl);
+  clearBackCameraInputHighlight(inputEl);
 
   if (isValid) return;
 
@@ -50,8 +50,8 @@ function renderNameValidationState({ isValid, issue, inputEl }) {
  * 
  * @param {HTMLElement} inputEl - The target input element.
  */
-function clearNameInputHighlight(inputEl) {
-    if(!inputEl) return;
+function clearBackCameraInputHighlight(inputEl) {
+    if (!inputEl) return;
   inputEl.classList.remove(...ALL_SEVERITY_CLASSES);
 }
 
@@ -63,19 +63,18 @@ function clearNameInputHighlight(inputEl) {
  * @param {HTMLInputElement|null} inputEl - The input element to clear the validation state from.
  * @returns {void}
  */
-function clearInputValidationState(inputEl){
-    if(!inputEl) return;
+
+function clearInputValidationState(inputEl) {
+  if (!inputEl) return;
   inputEl.classList.remove(...ALL_SEVERITY_CLASSES);
 }
-
 
 /**
  * Interface for status-related UI updates.
  */
-export const nameUIHandler = {
-  renderNameValidationState,
+export const backCameraUIHandler = {
+  renderBackCameraValidationState,
   clearInputValidationState,
-  renderValidationMessage,
+  renderValidationMessage, 
   resetValidationMessage
 };
-

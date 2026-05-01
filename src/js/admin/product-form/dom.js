@@ -1,5 +1,5 @@
-import { getProductFormDOM, getProductFormInputDOM , getToastNotificationDOM, getProductFormInputWarningMessageDOM} from "../dom-factory.js";
-
+import { getProductFormDOM, getProductFormInputDOM , getToastNotificationDOM} from "../dom-factory.js";
+export {productState} from "../index.js";
 /**
  * The main container elements for the product form UI.
  * @type {Object}
@@ -12,4 +12,3 @@ export const productFormEl = getProductFormDOM();
  */
 export const productFormInputEl = getProductFormInputDOM();
 export const toastNotificationEl = getToastNotificationDOM();
-export const inputWarningMessageEl = getProductFormInputWarningMessageDOM();

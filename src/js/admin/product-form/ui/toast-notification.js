@@ -29,9 +29,13 @@ const ALL_POPUP_STATE = Object.values(POPUP_STATE).flat();
  * @param {HTMLElement} update - The popup DOM element to update.
  * @param {boolean} [visible=true] - Target visibility state.
  */
-export function setUpdatePopUpToVisible(update, visible = true){
-  update.classList.remove(...ALL_POPUP_STATE);
+export function setPopUpToVisible(el, visible = true){
+  el.classList.remove(...ALL_POPUP_STATE);
   const state = visible ? "visible" : "hidden";
-  update.classList.add(...POPUP_STATE[state]);
+  el.classList.add(...POPUP_STATE[state]);
 }
 
+
+export function setPopUpForError(el,message){
+  el.textContent = message;
+}

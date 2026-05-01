@@ -14,7 +14,7 @@ const ALL_CLASSES = Object.values(FORM_CONTAINER_CLASSES).flat();
  * @param {HTMLElement} productForm - The form element to target
  * @param {boolean} [visible=true] - Whether to show or hide the form
  */
-export function setProductFormToVisible(productForm, visible = true) {
+export function showForm(productForm, visible = true) {
   productForm.classList.remove(...ALL_CLASSES);
 
   const state = visible ? "visible" : "invisible";
@@ -26,8 +26,8 @@ export function setProductFormToVisible(productForm, visible = true) {
  * * @param {HTMLElement} submitBtn - The submit button element.
  * @param {boolean} [visible=true] - Whether the button should be shown.
  */
-function setProductFormSubmitBtnToVisible(submitBtn, visible = true) {
-  submitBtn.classList.toggle("hidden", !visible);
+function showSubmitBtn(createBtn, visible = true) {
+  createBtn.classList.toggle("hidden", !visible);
 }
 
 /**
@@ -35,7 +35,7 @@ function setProductFormSubmitBtnToVisible(submitBtn, visible = true) {
  * * @param {HTMLElement} updateBtn - The update button element.
  * @param {boolean} [visible=true] - Whether the button should be shown.
  */
-function setProductFormUpdateBtnToVisible(updateBtn, visible = true) {
+function showUpdateBtn(updateBtn, visible = true) {
   updateBtn.classList.toggle("hidden", !visible);
 }
 
@@ -47,9 +47,9 @@ function setProductFormUpdateBtnToVisible(updateBtn, visible = true) {
  * @param {HTMLElement} elements.updateBtn - The update button.
  * @param {HTMLElement} elements.title - The form heading element.
  */
-export function setProductFormStateForUpdate({ submitBtn, updateBtn, title }) {
-  setProductFormSubmitBtnToVisible(submitBtn, false);
-  setProductFormUpdateBtnToVisible(updateBtn, true);
+export function setUpdateMode({ createBtn, updateBtn, title }) {
+  showSubmitBtn(createBtn, false);
+  showUpdateBtn(updateBtn, true);
   title.textContent = "Update Product";
 }
 
@@ -61,9 +61,9 @@ export function setProductFormStateForUpdate({ submitBtn, updateBtn, title }) {
  * @param {HTMLElement} elements.updateBtn - The update button.
  * @param {HTMLElement} elements.title - The form heading element.
  */
-export function setProductFormStateForAdd({ submitBtn, updateBtn, title }) {
-  setProductFormSubmitBtnToVisible(submitBtn, true);
-  setProductFormUpdateBtnToVisible(updateBtn, false);
+export function setAddMode({ createBtn, updateBtn, title }) {
+  showSubmitBtn(createBtn, true);
+  showUpdateBtn(updateBtn, false);
   title.textContent = "Add New Product";
 }
 
@@ -78,3 +78,7 @@ export function fillForm(form, formData) {
   });
   form.status.dispatchEvent(new Event("change"));
 }
+
+
+
+

@@ -52,9 +52,6 @@ export class ProductModel {
    */
   get validators() {
     return {
-      id: () =>
-        !this.id || !ProductModel.REGEX.ID.test(this.id) || this.id.length < 3,
-
       name: () => !this.name || this.name.trim().length < 2,
 
       price: () => isNaN(this.price) || this.price <= 0,
@@ -64,15 +61,6 @@ export class ProductModel {
       backCamera: () => !this.backCamera || this.backCamera.trim() === "",
 
       frontCamera: () => !this.frontCamera || this.frontCamera.trim() === "",
-      img: () => {
-        if (!this.img) return true;
-        try {
-          const url = new URL(this.img);
-          return !/\.(jpg|jpeg|png|webp|gif|svg)$/i.test(url.pathname);
-        } catch {
-          return true;
-        }
-      },
       desc: () => !this.desc || this.desc.trim().length < 10,
 
       type: () => !this.type || this.type === "Select brand",

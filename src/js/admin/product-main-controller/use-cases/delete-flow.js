@@ -6,6 +6,6 @@ import {
  * Executes remote deletion and resets the pending context.
  * @param {Object} deletionState - Local state buffer.
  */
-export async function performDeleteAndUpdate(id) {
+export async function performDelete(id) {
   await deleteData(id);
 }

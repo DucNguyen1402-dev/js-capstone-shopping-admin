@@ -1,3 +1,4 @@
+import {renderValidationMessage, resetValidationMessage} from "./shared.js";
 /**
  * ==================================================
  *   1. REAL-TIME VALIDATION LOGIC (Event-based)
@@ -33,7 +34,7 @@ const ALL_SEVERITY_CLASSES = Object.values(SEVERITY_CLASSES).flat();
 
 /* =============== 1.1 VALIDATION LOGIC ==================== */
 function renderPriceValidationState({ isValid, issue, inputEl }) {
-  clearIssueInputHighlight(inputEl);
+  clearPriceInputHighlight(inputEl);
 
   if (isValid) return;
 
@@ -48,17 +49,32 @@ function renderPriceValidationState({ isValid, issue, inputEl }) {
  * 
  * @param {HTMLElement} inputEl - The target input element.
  */
-function clearIssueInputHighlight(inputEl) {
+function clearPriceInputHighlight(inputEl) {
+    if(!inputEl) return;
   inputEl.classList.remove(...ALL_SEVERITY_CLASSES);
 }
 
+
+/**
+ * Removes all validation severity classes from an input element.
+ * Typically used during form reset events to revert the UI to its initial state.
+ * 
+ * @param {HTMLInputElement|null} inputEl - The input element to clear the validation state from.
+ * @returns {void}
+ */
+function clearInputValidationState(inputEl){
+  if(!inputEl) return;
+ inputEl.classList.remove(...ALL_SEVERITY_CLASSES);
+}
+
+/**
+ * Interface for status-related UI updates.
+ */
 export const priceUIHandler = {
   renderPriceValidationState,
+  clearInputValidationState,
+  renderValidationMessage,
+  resetValidationMessage
 };
 
 
-/**
- * ==================================================
- *   2. SUBMIT VALIDATION LOGIC (Event-based)
- * ===================================================
- */

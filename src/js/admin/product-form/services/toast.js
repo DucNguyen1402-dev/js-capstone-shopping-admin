@@ -1,6 +1,7 @@
 import {
   setToastLoadingToVisible,
-  setUpdatePopUpToVisible,
+  setPopUpToVisible,
+  setPopUpForError
 } from "../ui/toast-notification.js";
 
 import { toastNotificationEl } from "../dom.js";
@@ -27,11 +28,29 @@ function hideToastLoading() {
  */
 function showTemporaryUpdateToast() {
   const { update } = toastNotificationEl;
-  setUpdatePopUpToVisible(update, true);
+  setPopUpToVisible(update, true);
 
   setTimeout(() => {
-    setUpdatePopUpToVisible(update, false);
+    setPopUpToVisible(update, false);
   }, 2500);
+}
+
+function showTemporaryAddToast() {
+  const { add } = toastNotificationEl;
+  setPopUpToVisible(add, true);
+
+  setTimeout(() => {
+    setPopUpToVisible(add, false);
+  }, 2500);
+}
+
+function showTemporaryErrorToast(message) {
+  const { error } = toastNotificationEl;
+  setPopUpForError(error, message);
+  setPopUpToVisible(error, true);
+  setTimeout(() => {
+    setPopUpToVisible(error, false);
+  }, 3500);
 }
 
 
@@ -43,6 +62,8 @@ function showTemporaryUpdateToast() {
  */
 export const toastServices = {
   showUpdateSuccess: showTemporaryUpdateToast,
+  showAddSuccess: showTemporaryAddToast,
+  showError: showTemporaryErrorToast,
   showLoading: showToastLoading,
   hideLoading: hideToastLoading,
 };

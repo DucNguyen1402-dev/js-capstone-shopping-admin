@@ -1,7 +1,14 @@
-import {initNameInputEvent} from "./name.js";
-import {initPriceInputEvent} from "./price.js";
-import { initStatusInputEvent } from "./status.js";
+import { initNameInputEvent } from "./name.js";
+import { initPriceInputEvent } from "./price.js";
+import { initImageInputEvent } from "./image.js";
+import {initScreenInputEvent} from "./screen.js";
+import {initBackCameraInputEvent} from "./back-camera.js";
+import {initFrontCameraInputEvent} from "./front-camera.js";
+import {initDescInputEvent} from "./description.js";
 import { initStockInputEvent } from "./stock.js";
+import { initStatusInputEvent } from "./status.js";
+import {initFormResetEvent} from "./form.js";
+
 
 /**
  * Initializes field-level input and validation events.
@@ -11,8 +18,19 @@ import { initStockInputEvent } from "./stock.js";
  * @param {Object} productFormInputUI - Mapping of input-specific DOM elements.
  */
 export function initFormInputEvents(context) {
-  initNameInputEvent(context);
-  initStatusInputEvent(context);
-  initStockInputEvent(context);
-  initPriceInputEvent(context);
+  const initializer = [
+    initNameInputEvent,
+    initPriceInputEvent,
+    initImageInputEvent,
+    initScreenInputEvent,
+    initBackCameraInputEvent,
+    initFrontCameraInputEvent,
+    initDescInputEvent,
+    initStockInputEvent,
+    initStatusInputEvent,
+    initFormResetEvent
+  ];
+
+  initializer.forEach((init) => init(context));
 }
+

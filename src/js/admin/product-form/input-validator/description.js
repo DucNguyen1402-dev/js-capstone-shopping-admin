@@ -9,34 +9,40 @@
  * Validation issues library for Product Name fields.
  * @type {Record<string, IssueDetail>}
  */
-const FIELD_ISSUES = {
+export const FIELD_ISSUES = {
   EMPTY: {
     type: "EMPTY",
-    severity: "error",
-    message: "Product name is required. Please enter a name.",
-  },
-  INVALID_NAME: {
-    type: "INVALID_NAME",
-    severity: "error",
+    severity: "warning",
     message:
-      "Special characters are not allowed. Please use only letters and numbers.",
+      "The description is empty. A good description helps increase sales!",
+  },
+  INVALID_TEXT: {
+    type: "INVALID_TEXT",
+    severity: "error",
+    message: "Only letters, numbers, and spaces are allowed.",
   },
   ONLY_NUMBERS: {
     type: "ONLY_NUMBERS",
-    severity: "error",
-    message: "Product name must contain at least one letter.",
+    severity: "warning",
+    message:
+      "Description consists only of numbers. Please check if this is correct.",
   },
-
   TOO_SHORT: {
     type: "TOO_SHORT",
     severity: "warning",
-    message: "This name is very short. Please verify if it's correct.",
+    message: "This description is quite brief. Consider adding more details.",
   },
   TOO_LONG: {
     type: "TOO_LONG",
     severity: "warning",
-    message: "This name is unusually long. Are you sure you want to use it?",
+    message:
+      "Description is very long (over 2000 chars). It might be hard for users to read.",
   },
+  DANGEROUS_CHAR:{
+    type: "DANGEROUS_CHAR",
+    severity: "error",
+    message: "Unsafe characters detected (e.g. <, >, {, }). Please remove them."
+  }
 };
 
 /**
@@ -45,18 +51,22 @@ const FIELD_ISSUES = {
  * @param {string} value - The product name string to be validated.
  * @returns {IssueDetail | null} The first issue encountered, or null if the name passes all checks.
  */
-const validateName = (value) => {
+const validateDescription= (value) => {
   const validators = [
     {
       isInvalid: (value) => value === "",
       issue: FIELD_ISSUES.EMPTY,
     },
     {
-      isInvalid: (value) => /[!@#$%^&*(),.?":{}|<>_]/.test(value),
-      issue: FIELD_ISSUES.INVALID_NAME,
+      isInvalid: (value) => /[<>{}]/.test(value),
+      issue: FIELD_ISSUES.DANGEROUS_CHAR,
     },
     {
-      isInvalid: (value) => !/[a-zA-ZÀ-ỹ]/.test(value),
+      isInvalid: (value) =>  !/^[a-zA-ZÀ-ỹ0-9\s,."'-]+$/.test(value),
+      issue: FIELD_ISSUES.INVALID_TEXT,
+    },
+    {
+      isInvalid: (value) => /^\d+$/.test(value.replace(/[\s.]/g, "")),
       issue: FIELD_ISSUES.ONLY_NUMBERS,
     },
     {
@@ -64,9 +74,10 @@ const validateName = (value) => {
       issue: FIELD_ISSUES.TOO_SHORT,
     },
     {
-      isInvalid: (value) => value.length > 50,
+      isInvalid: (value) => value.length > 2000,
       issue: FIELD_ISSUES.TOO_LONG,
     },
+  
   ];
 
   const firstIssue = validators.find((v) => v.isInvalid(value));
@@ -81,8 +92,8 @@ const validateName = (value) => {
  * @returns {{ isValid: boolean, issue: IssueDetail | null, canSubmit: boolean }}
  * An object containing the validity, the specific issue, and a submission flag.
  */
-export function runNameValidation(value) {
-  const issue = validateName(value);
+export function runDescriptionValidation(value) {
+  const issue = validateDescription(value);
   return {
     isValid: !issue,
     issue: issue || null,

@@ -20,10 +20,9 @@ function getStatusFromStock(value) {
     .value;
 }
 
-
 /**
  * Initializes stock input blur event listeners for validation and UI updates.
- * 
+ *
  * @param {Object} options - Configuration object.
  * @param {Function} options.dispatch - State management dispatch function.
  * @param {Object} options.productFormInputEl - Container for form input elements.
@@ -42,13 +41,19 @@ export function initStockInputEvent({
 
     const { isValid, issue } = inputValidators.stock(value);
     dispatch({
-        type: "TRIGGER_STATUS_EVENT",
-        payload: {
-          statusValue: isValid ? getStatusFromStock(value) : "unknown",
-        },
-      });
-    stockUIHandler.renderStockValidationState({ isValid, issue, inputEl: stockInput });
+      type: "TRIGGER_STATUS_EVENT",
+      payload: {
+        statusValue: isValid ? getStatusFromStock(value) : "unknown",
+      },
+    });
+    stockUIHandler.renderStockValidationState({
+      isValid,
+      issue,
+      inputEl: stockInput,
+    });
+  });
 
+  stockInput.addEventListener("reset", () => {
+    stockUIHandler.clearInputValidationState(stockInput);
   });
 }
-
