@@ -176,9 +176,7 @@
         <div
           class="fixed top-10 left-1/2 z-80 -translate-x-1/2 rounded-sm bg-rose-500 p-4 text-sm text-white opacity-0 shadow-md transition-opacity duration-200"
           data-toast="error"
-        >
-          
-        </div>
+        ></div>
 
         <div
           class="fixed top-10 left-1/2 z-20 -translate-x-1/2 rounded-sm bg-emerald-500 p-4 text-sm text-white opacity-0 shadow-md transition-opacity duration-200"
@@ -223,12 +221,22 @@
                       type="text"
                       placeholder="e.g. iPhone 11 Pro Max"
                       class="js-product-name-input w-full rounded-sm border border-gray-300 px-3 py-2 outline-none placeholder:text-sm focus:ring-1 focus:ring-blue-500"
+                      data-field-input="name"
+                      data-warning-consent="false"
                     />
-                    <p
-                      class="js-input-warning hidden rounded-sm px-2 py-1.5 text-sm text-white mt-1"
-                      data-role="warning"
-                      data-field="name"
-                    ></p>
+                    <div class="relative">
+                      <p
+                        class="js-input-warning mt-1 hidden rounded-sm px-2 py-1.5 text-sm"
+                        data-role="warning"
+                        data-field="name"
+                      ></p>
+                      <input
+                        type="checkbox"
+                        class="absolute top-3 left-2 hidden cursor-pointer accent-blue-500"
+                        data-role="warning-consent-checkbox"
+                        data-field="name"
+                      />
+                    </div>
                   </div>
 
                   <div class="flex flex-col gap-2">
@@ -240,30 +248,52 @@
                       type="number"
                       min="0"
                       placeholder="e.g. 39.400.000đ"
+                      data-field-input="price"
+                      data-warning-consent="false"
                       class="js-price-input w-full rounded-sm border border-gray-300 px-3 py-2 outline-none placeholder:text-sm focus:ring-1 focus:ring-blue-500"
                     />
-                   <p
-                      class="js-input-warning hidden rounded-sm px-2 py-1 text-sm text-white"
-                      data-role="warning"
-                      data-field="price"
-                    ></p>
+                    <div class="relative">
+                      <p
+                        class="js-input-warning mt-1 hidden rounded-sm px-2 py-1.5 text-sm"
+                        data-role="warning"
+                        data-field="price"
+                      ></p>
+
+                      <input
+                        type="checkbox"
+                        class="absolute top-3 left-2 hidden cursor-pointer accent-blue-500"
+                        data-role="warning-consent-checkbox"
+                        data-field="price"
+                      />
+                    </div>
                   </div>
 
                   <div class="flex flex-col gap-2">
-                    <label for="img" class="pl-1 text-sm text-gray-500"
+                    <label for="image" class="pl-1 text-sm text-gray-500"
                       >Image link:</label
                     >
                     <input
-                      id="img"
+                      id="image"
                       type="text"
                       placeholder="e.g. https://placehold.us/300x300"
                       class="js-product-image-input w-full rounded-sm border border-gray-300 px-3 py-2 outline-none placeholder:text-sm focus:ring-1 focus:ring-blue-500"
+                      data-field-input="image"
+                      data-warning-consent="false"
                     />
-                    <p
-                      class="js-input-warning hidden rounded-sm px-2 py-1 text-sm text-white"
-                      data-role="warning"
-                      data-field="image"
-                    ></p>
+                    <div class="relative">
+                      <p
+                        class="js-input-warning mt-1 hidden rounded-sm px-2 py-1.5 text-sm"
+                        data-role="warning"
+                        data-field="image"
+                      ></p>
+
+                      <input
+                        type="checkbox"
+                        class="absolute top-3 left-2 hidden cursor-pointer accent-blue-500"
+                        data-role="warning-consent-checkbox"
+                        data-field="image"
+                      />
+                    </div>
                   </div>
 
                   <div class="flex flex-col gap-2">
@@ -275,12 +305,23 @@
                       type="text"
                       placeholder="e.g. 6.7', OLED, 120Hz"
                       class="js-product-screen-input w-full rounded-sm border border-gray-300 px-3 py-2 outline-none placeholder:text-sm focus:ring-1 focus:ring-blue-500"
+                      data-field-input="screen"
+                      data-warning-consent="false"
                     />
-                     <p
-                      class="js-input-warning hidden rounded-sm px-2 py-1 text-sm text-white"
-                      data-role="warning"
-                      data-field="screen"
-                    ></p>
+                    <div class="relative">
+                      <p
+                        class="js-input-warning mt-1 hidden rounded-sm px-2 py-1.5 text-sm"
+                        data-role="warning"
+                        data-field="screen"
+                      ></p>
+
+                      <input
+                        type="checkbox"
+                        class="absolute top-3 left-2 hidden cursor-pointer accent-blue-500"
+                        data-role="warning-consent-checkbox"
+                        data-field="screen"
+                      />
+                    </div>
                   </div>
 
                   <div class="flex flex-col gap-2">
@@ -292,12 +333,22 @@
                       type="text"
                       placeholder="e.g. 48MP triple camera"
                       class="js-product-back-camera-input w-full rounded-sm border border-gray-300 px-3 py-2 outline-none placeholder:text-sm focus:ring-1 focus:ring-blue-500"
+                      data-field-input="backCamera"
+                      data-warning-consent="false"
                     />
-                   <p
-                      class="js-input-warning hidden rounded-sm px-2 py-1 text-sm text-white"
-                      data-role="warning"
-                      data-field="backCamera"
-                    ></p>
+                    <div class="relative">
+                      <p
+                        class="js-input-warning mt-1 hidden rounded-sm px-2 py-1.5 text-sm"
+                        data-role="warning"
+                        data-field="backCamera"
+                      ></p>
+                      <input
+                        type="checkbox"
+                        class="absolute top-3 left-2 hidden cursor-pointer accent-blue-500"
+                        data-role="warning-consent-checkbox"
+                        data-field="backCamera"
+                      />
+                    </div>
                   </div>
 
                   <div class="flex flex-col gap-2">
@@ -309,12 +360,22 @@
                       type="text"
                       placeholder="e.g. 12MP selfie"
                       class="js-product-front-camera-input w-full rounded-sm border border-gray-300 px-3 py-2 outline-none placeholder:text-sm focus:ring-1 focus:ring-blue-500"
+                      data-field-input="frontCamera"
+                      data-warning-consent="false"
                     />
-                   <p
-                      class="js-input-warning hidden rounded-sm px-2 py-1 text-sm text-white"
-                      data-role="warning"
-                      data-field="frontCamera"
-                    ></p>
+                    <div class="relative">
+                      <p
+                        class="js-input-warning mt-1 hidden rounded-sm px-2 py-1.5 text-sm"
+                        data-role="warning"
+                        data-field="frontCamera"
+                      ></p>
+                      <input
+                        type="checkbox"
+                        class="absolute top-3 left-2 hidden cursor-pointer accent-blue-500"
+                        data-role="warning-consent-checkbox"
+                        data-field="frontCamera"
+                      />
+                    </div>
                   </div>
 
                   <div class="flex flex-col gap-2">
@@ -326,12 +387,22 @@
                       type="text"
                       placeholder="Enter phone description..."
                       class="js-product-desc-input w-full rounded-sm border border-gray-300 px-3 py-2 outline-none placeholder:text-sm focus:ring-1 focus:ring-blue-500"
+                      data-field-input="desc"
+                      data-warning-consent="false"
                     />
-                   <p
-                      class="js-input-warning hidden rounded-sm px-2 py-1 text-sm text-white"
-                      data-role="warning"
-                      data-field="desc"
-                    ></p>
+                    <div class="relative">
+                      <p
+                        class="js-input-warning mt-1 hidden rounded-sm px-2 py-1.5 text-sm"
+                        data-role="warning"
+                        data-field="desc"
+                      ></p>
+                      <input
+                        type="checkbox"
+                        class="absolute top-3 left-2 hidden cursor-pointer accent-blue-500"
+                        data-role="warning-consent-checkbox"
+                        data-field="desc"
+                      />
+                    </div>
                   </div>
 
                   <div class="flex flex-col gap-2">
@@ -342,6 +413,8 @@
                       id="type"
                       class="js-product-type w-full cursor-pointer rounded-sm border border-gray-300 px-3 py-2 text-sm outline-none invalid:text-gray-500 focus:ring-1 focus:ring-blue-500"
                       required
+                      data-field-input="type"
+                      data-warning-consent="false"
                     >
                       <option value="" disable selected hidden>
                         Select type
@@ -357,11 +430,19 @@
                       </option>
                       <option value="oppo" class="text-gray-700">Oppo</option>
                     </select>
-                   <p
-                      class="js-input-warning hidden rounded-sm px-2 py-1 text-sm text-white"
-                      data-role="warning"
-                      data-field="type"
-                    ></p>
+                    <div class="relative">
+                      <p
+                        class="js-input-warning mt-1 hidden rounded-sm px-2 py-1.5 text-sm"
+                        data-role="warning"
+                        data-field="type"
+                      ></p>
+                      <input
+                        type="checkbox"
+                        class="absolute top-3 left-2 hidden cursor-pointer accent-blue-500"
+                        data-role="warning-consent-checkbox"
+                        data-field="type"
+                      />
+                    </div>
                   </div>
                   <div class="flex flex-col gap-2">
                     <label for="stock" class="pl-1 text-sm text-gray-500"
@@ -373,12 +454,23 @@
                       min="0"
                       placeholder="e.g. 20"
                       class="js-stock-input w-full rounded-sm border border-gray-300 px-3 py-2 outline-none placeholder:text-sm focus:ring-1 focus:ring-blue-500"
+                      data-field-input="stock"
+                      data-warning-consent="false"
                     />
-                    <p
-                      class="js-input-warning hidden rounded-sm px-2 py-1 text-sm text-white"
-                      data-role="warning"
-                      data-field="stock"
-                    ></p>
+                    <div class="relative">
+                      <p
+                        class="js-input-warning mt-1 hidden rounded-sm px-2 py-1.5 text-sm"
+                        data-role="warning"
+                        data-field="stock"
+                      ></p>
+
+                      <input
+                        type="checkbox"
+                        class="absolute top-3 left-2 hidden cursor-pointer accent-blue-500"
+                        data-role="warning-consent-checkbox"
+                        data-field="stock"
+                      />
+                    </div>
                   </div>
 
                   <div class="flex flex-col gap-2">
@@ -388,6 +480,8 @@
                     <select
                       id="type"
                       class="js-product-status w-full cursor-pointer rounded-sm border border-gray-300 px-3 py-2 text-sm outline-none invalid:text-gray-500 focus:ring-1 focus:ring-slate-900"
+                      data-field-input="status"
+                      data-warning-consent="false"
                       required
                     >
                       <option value="" disable selected hidden>
@@ -412,15 +506,22 @@
                         Unknown
                       </option>
                     </select>
-                    <p
-                      class="js-input-warning hidden rounded-sm px-2 py-1 text-sm text-white"
-                      data-role="warning"
-                      data-field="status"
-                    ></p>
+                    <div class="relative">
+                      <p
+                        class="js-input-warning hidden rounded-sm px-2 py-1.5 text-sm"
+                        data-role="warning"
+                        data-field="status"
+                      ></p>
+                      <input
+                        type="checkbox"
+                        class="absolute top-3 left-2 hidden cursor-pointer accent-blue-500"
+                        data-role="warning-consent-checkbox"
+                        data-field="status"
+                      />
+                    </div>
                   </div>
                 </div>
 
-              
                 <div class="mt-16 flex gap-2" data-modal-submit>
                   <button
                     type="button"

@@ -13,8 +13,8 @@
 const FIELD_ISSUES = {
   EMPTY: {
     type: "EMPTY",
-    severity: "warning",
-    message: "No screen information provided. please confirm if you want to leave it blank"
+    severity: "error",
+    message: "Screen information cannot be empty."
   },
   INVALID_FORMAT: {
     type: "INVALID_FORMAT",

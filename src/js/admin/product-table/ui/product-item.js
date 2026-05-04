@@ -8,6 +8,21 @@ function getProductItemById(id) {
   return product;
 }
 
+const ROW_CHANGED_CLASSES = {
+  added: "rgba(134, 239, 172, 1)",
+  updated: "rgba(99, 102, 241, 0.4)",
+};
+
+function highlightRowChanged(id, changed = "added") {
+  const row = document.querySelector(`[data-product-id="${id}"]`);
+  if (!row) return;
+  row.style.setProperty("--blink-color", ROW_CHANGED_CLASSES[changed]);
+
+  row.classList.remove("row-blink");
+  void row.offsetWidth;
+  row.classList.add("row-blink");
+}
+
 /**
  * ===========================================
  *   GROUP 1: Interaction Feedback (Temporary)
@@ -129,4 +144,5 @@ export const productItemUI = {
   applyActionFeedbackUI,
   getProductItemById,
   setRowEditorialMode,
+  highlightRowChanged,
 };

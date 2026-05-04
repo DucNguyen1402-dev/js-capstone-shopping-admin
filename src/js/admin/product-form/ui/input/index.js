@@ -24,7 +24,7 @@ export const inputUIHandler = {
 
 
 
-export const inputUIHandlerMaping = {
+export const inputUIHandlerMapping = {
     name: nameUIHandler,
     price: priceUIHandler,
     stock: stockUIHandler,

@@ -18,10 +18,11 @@ export function initStatusInputEvent({
     status.value = "";
     statusUIHandler.renderStatusInputState(status);
   });
-   
-   status.addEventListener("reset", () => {
+
+  status.addEventListener("reset", () => {
     statusUIHandler.resetToNormalState(status);
+    statusUIHandler.resetValidationMessage("status");
+    statusUIHandler.hideWarningMessage("status");
+    status.dataset.warningConsent = "false";
   });
-
-
 }

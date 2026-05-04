@@ -13,8 +13,8 @@
 const FIELD_ISSUES = {
   EMPTY: {
     type: "EMPTY",
-    severity: "warning",
-    message: "The type is requied! ",
+    severity: "error",
+    message: "The product type is requied! ",
   },
 };
 

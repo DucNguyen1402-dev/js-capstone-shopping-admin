@@ -5,9 +5,11 @@ import {initScreenInputEvent} from "./screen.js";
 import {initBackCameraInputEvent} from "./back-camera.js";
 import {initFrontCameraInputEvent} from "./front-camera.js";
 import {initDescInputEvent} from "./description.js";
+import {initTypeInputEvent} from "./type.js";
 import { initStockInputEvent } from "./stock.js";
 import { initStatusInputEvent } from "./status.js";
 import {initFormResetEvent} from "./form.js";
+
 
 
 /**
@@ -26,6 +28,7 @@ export function initFormInputEvents(context) {
     initBackCameraInputEvent,
     initFrontCameraInputEvent,
     initDescInputEvent,
+    initTypeInputEvent,
     initStockInputEvent,
     initStatusInputEvent,
     initFormResetEvent

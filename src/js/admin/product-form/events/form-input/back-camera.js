@@ -25,5 +25,8 @@ export function initBackCameraInputEvent({
 
   backCameraInput.addEventListener("reset", ()=>{
     backCameraUIHandler.clearInputValidationState(backCameraInput);
+    backCameraUIHandler.resetValidationMessage("backCamera");
+    backCameraUIHandler.hideWarningMessage("backCamera");
+    backCameraInput.dataset.warningConsent = "false";
   })
 }

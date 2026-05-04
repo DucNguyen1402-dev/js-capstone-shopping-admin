@@ -1,7 +1,7 @@
-import {getProductListTableDOM} from "../dom-factory.js";
+import {getProductListTableElements} from "../dom-factory.js";
 
 /**
  * The DOM elements associated with the product list table.
  * @type {Object}
  */
-export const productListTableEl = getProductListTableDOM();
+export const productListTableEl = getProductListTableElements();

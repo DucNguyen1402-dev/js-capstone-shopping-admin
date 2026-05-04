@@ -12,9 +12,9 @@
 export const FIELD_ISSUES = {
   EMPTY: {
     type: "EMPTY",
-    severity: "warning",
+    severity: "error",
     message:
-      "The description is empty. A good description helps increase sales!",
+      "Description cannot be empty.",
   },
   INVALID_TEXT: {
     type: "INVALID_TEXT",
@@ -23,14 +23,14 @@ export const FIELD_ISSUES = {
   },
   ONLY_NUMBERS: {
     type: "ONLY_NUMBERS",
-    severity: "warning",
+    severity: "error",
     message:
-      "Description consists only of numbers. Please check if this is correct.",
+      "Description cannot contain only numbers.",
   },
   TOO_SHORT: {
     type: "TOO_SHORT",
     severity: "warning",
-    message: "This description is quite brief. Consider adding more details.",
+    message: "This description is quite brief. are you sure?.",
   },
   TOO_LONG: {
     type: "TOO_LONG",

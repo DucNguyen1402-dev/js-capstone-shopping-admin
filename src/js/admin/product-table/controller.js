@@ -59,18 +59,29 @@ const createProductTableUI = (productListTableEl, uiToolkit) => ({
   setPendingProductRowUIState: (deleteId, action, eventType) => {
     setPendingProductRowUIState(deleteId, action, eventType, uiToolkit);
   },
-  showHighlightEditRow: (editId) => {
+  showHighlightEditRow: (id) => {
     const {productItemUI} = uiToolkit;
-     const product = productItemUI.getProductItemById(editId);
+     const product = productItemUI.getProductItemById(id);
     productItemUI.setRowEditorialMode(product);
   },
-  hideHighlightEditRow: (editId) =>{
+  hideHighlightEditRow: (id) =>{
      const {productItemUI} = uiToolkit;
-     const product = productItemUI.getProductItemById(editId);
+     const product = productItemUI.getProductItemById(id);
      const actionBtns = itemActionUI.getActionBtns(product);
       itemActionUI.setActionButtonsContrast(actionBtns);
     productItemUI.setRowEditorialMode(product, false);
-  }
+  },
+  highlightUpdatedRow: (id)=>{
+    const {productItemUI} = uiToolkit;
+    productItemUI.highlightRowChanged(id, "updated");
+  },
+  highlightAddedRow: ({ oldList, newList }) => {
+  const {productItemUI} = uiToolkit;
+  const oldIds = new Set(oldList.map(item => item.id));
+  const newProduct = newList.find(item => !oldIds.has(item.id));
+
+  productItemUI.highlightRowChanged(newProduct.id, "added");
+}
 });
 
 

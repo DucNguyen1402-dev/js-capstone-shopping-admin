@@ -33,6 +33,7 @@ export function initNameInputEvent({
       };
     }
 
+  
     nameUIHandler.renderNameValidationState({
       isValid,
       issue,
@@ -42,5 +43,10 @@ export function initNameInputEvent({
 
   nameInput.addEventListener("reset", () => {
     nameUIHandler.clearInputValidationState(nameInput);
+    nameUIHandler.resetValidationMessage("name");
+    nameUIHandler.hideWarningMessage("name");
+    nameInput.dataset.warningConsent = "false";
   });
+
+
 }

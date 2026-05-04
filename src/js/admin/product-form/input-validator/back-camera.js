@@ -13,8 +13,8 @@
 const FIELD_ISSUES = {
   EMPTY: {
     type: "EMPTY",
-    severity: "warning",
-    message: "No back camera specs provided. Please confirm if you want to leave it blank."
+    severity: "error",
+    message: "Back camera specs cannot be empty."
   },
   INVALID_FORMAT: {
     type: "INVALID_FORMAT",

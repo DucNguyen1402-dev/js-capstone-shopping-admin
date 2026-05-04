@@ -27,5 +27,8 @@ export function initImageInputEvent({
 
   imageInput.addEventListener("reset", ()=>{
     imageUIHandler.clearInputValidationState(imageInput);
+      imageUIHandler.resetValidationMessage("image");
+    imageUIHandler.hideWarningMessage("image");
+    imageInput.dataset.warningConsent = "false";
   })
 }

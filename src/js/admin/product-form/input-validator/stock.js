@@ -12,8 +12,8 @@
 const FIELD_ISSUES = {
   EMPTY: {
     type: "EMPTY",
-    message: "Missing stock amount. Please confirm if you want to leave it blank.",
-     severity: "warning"
+    message: "Stock amount cannot be empty.",
+     severity: "error"
   },
   INVALID_NUMBER: {
     type: "INVALID_NUMBER",

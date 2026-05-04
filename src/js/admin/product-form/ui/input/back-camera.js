@@ -1,4 +1,4 @@
-import {renderValidationMessage, resetValidationMessage} from "./shared.js";
+import {renderValidationMessage, resetValidationMessage, hideWarningMessage} from "./shared.js";
 /**
  * ==================================================
  *   1. REAL-TIME VALIDATION LOGIC (Event-based)
@@ -69,6 +69,15 @@ function clearInputValidationState(inputEl) {
   inputEl.classList.remove(...ALL_SEVERITY_CLASSES);
 }
 
+
+
+function resetInputValidationState(field){
+  const inputEl = document.querySelector(`[data-field-input="${field}"]`);
+  if(!inputEl) return;
+ inputEl.classList.remove(...ALL_SEVERITY_CLASSES);
+}
+
+
 /**
  * Interface for status-related UI updates.
  */
@@ -76,5 +85,7 @@ export const backCameraUIHandler = {
   renderBackCameraValidationState,
   clearInputValidationState,
   renderValidationMessage, 
-  resetValidationMessage
+  resetValidationMessage,
+  hideWarningMessage,
+  resetInputValidationState
 };

@@ -1,4 +1,4 @@
-import {renderValidationMessage,resetValidationMessage} from "./shared.js";
+import {renderValidationMessage,resetValidationMessage, hideWarningMessage} from "./shared.js";
 /**
  * Removes all status-specific CSS classes from an element.
  * * @param {HTMLElement} el - The element to clear classes from.
@@ -26,13 +26,23 @@ function renderTypeInputState(el) {
   currentStatusState = value;
 }
 
+function resetInputValidationState(field){
+  const inputEl = document.querySelector(`[data-field-input="${field}"]`);
+  if(!inputEl) return;
+ inputEl.classList.remove(...ALL_SEVERITY_CLASSES);
+}
+
+
+
 /**
  * Interface for status-related UI updates.
  */
 export const typeUIHandler = {
   renderTypeInputState,
   renderValidationMessage,
-  resetValidationMessage
+  resetValidationMessage,
+  hideWarningMessage,
+  resetInputValidationState,
   
 };
 

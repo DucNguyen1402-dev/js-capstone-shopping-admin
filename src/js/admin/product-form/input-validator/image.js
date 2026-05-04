@@ -13,8 +13,8 @@
 const FIELD_ISSUES = {
   EMPTY: {
     type: "EMPTY",
-    severity: "warning",
-    message: "No image link provided. A default placeholder will be used."
+    severity: "error",
+    message: "Image link cannot be empty."
   },
   INVALID_URL: {
     type: "INVALID_URL",

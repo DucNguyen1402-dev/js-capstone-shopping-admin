@@ -1,10 +1,15 @@
 import { $ } from "../shared/dom-utils.js";
 
 
-
+/** @type {HTMLElement} Main trigger to open the product creation form. */
 export const createProductTriggerBtn = $('[data-action="open-create-product-form"]');
 
-export function getDropdownButtonDOM() {
+
+/**
+ * Retrieves DOM elements for the mobile navigation dropdown.
+ * @returns {Object} Collection of dropdown control elements.
+ */
+export function getDropdownButtonElements() {
   return {
     dropDownOpen: $(".js-open-btn"),
     dropDownClose: $(".js-close-btn"),
@@ -12,7 +17,12 @@ export function getDropdownButtonDOM() {
   };
 }
 
-export function getProductListTableDOM() {
+
+/**
+ * Retrieves DOM elements related to the product list and its management tools.
+ * @returns {Object} Elements for table, deletion modal, sorting, searching, and filtering.
+ */
+export function getProductListTableElements() {
   return {
     productListTable: $(".js-products-list-table"),
     deleteModal: $(".js-delete-modal"),
@@ -25,7 +35,11 @@ export function getProductListTableDOM() {
   };
 }
 
-export function getProductFormDOM() {
+/**
+ * Retrieves DOM elements for the product creation and editing form.
+ * @returns {Object} Form container, action buttons, and header elements.
+ */
+export function getProductFormElements() {
   return {
     productFormContainer: $(".js-product-form-container"),
     form: $(".js-product-form"),
@@ -37,7 +51,11 @@ export function getProductFormDOM() {
   };
 }
 
-export function getToastNotificationDOM() {
+/**
+ * Retrieves DOM elements for various toast notification states.
+ * @returns {Object} Container and specific status toast elements.
+ */
+export function getToastNotificationElements() {
   return {
     container: $("[data-toast-container]"),
     loading: $("[data-toast='loading']"),
@@ -47,7 +65,11 @@ export function getToastNotificationDOM() {
   };
 }
 
-export function getProductFormInputDOM() {
+/**
+ * Retrieves all input fields within the product form.
+ * @returns {Object} Collection of form inputs for product specifications.
+ */
+export function getProductFormInputElements() {
   return {
     name: $(".js-product-name-input"),
     price: $(".js-price-input"),

@@ -1,11 +1,13 @@
+/** --- API Services --- */
 export {
   fetchProducts,
   deleteData,
   updateProduct,
   addProduct
 } from "../product/services/product.js";
+
+/** --- State Management --- */
 export {
-  productState,
-  getCurrentLength,
+  productState
 } from "../product/store/product-state.js";
 

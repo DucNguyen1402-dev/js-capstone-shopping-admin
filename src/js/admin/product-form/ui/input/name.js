@@ -1,4 +1,4 @@
-import {renderValidationMessage, resetValidationMessage} from "./shared.js";
+import {renderValidationMessage, resetValidationMessage, hideWarningMessage} from "./shared.js";
 /**
  * ==================================================
  *   1. REAL-TIME VALIDATION LOGIC (Event-based)
@@ -34,7 +34,6 @@ const ALL_SEVERITY_CLASSES = Object.values(SEVERITY_CLASSES).flat();
 
 /* =============== 1.1 VALIDATION LOGIC ==================== */
 function renderNameValidationState({ isValid, issue, inputEl }) {
-      
   clearNameInputHighlight(inputEl);
 
   if (isValid) return;
@@ -68,6 +67,12 @@ function clearInputValidationState(inputEl){
   inputEl.classList.remove(...ALL_SEVERITY_CLASSES);
 }
 
+function resetInputValidationState(field){
+  const inputEl = document.querySelector(`[data-field-input="${field}"]`);
+  if(!inputEl) return;
+ inputEl.classList.remove(...ALL_SEVERITY_CLASSES);
+}
+
 
 /**
  * Interface for status-related UI updates.
@@ -76,6 +81,8 @@ export const nameUIHandler = {
   renderNameValidationState,
   clearInputValidationState,
   renderValidationMessage,
-  resetValidationMessage
+  resetValidationMessage,
+  hideWarningMessage,
+  resetInputValidationState
 };
 

@@ -5,6 +5,7 @@ const FORM_CONTAINER_CLASSES = {
   visible: ["opacity-100", "pointer-events-auto"],
   invisible: ["opacity-0", "pointer-events-none"],
 };
+
 /**
  * Flattened array of all classes for resetting state
  */
@@ -19,6 +20,7 @@ export function showForm(productForm, visible = true) {
 
   const state = visible ? "visible" : "invisible";
   productForm.classList.add(...FORM_CONTAINER_CLASSES[state]);
+  document.body.classList.toggle("overflow-hidden", visible);
 }
 
 /**
@@ -80,5 +82,7 @@ export function fillForm(form, formData) {
 }
 
 
-
-
+export function resetConsentField(field) {
+  const input = document.querySelector(`[data-field-input = ${field}]`);
+  input.dataset.warningConsent = "false";
+}

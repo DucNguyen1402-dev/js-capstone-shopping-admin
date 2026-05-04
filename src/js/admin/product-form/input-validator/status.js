@@ -13,9 +13,14 @@
 const FIELD_ISSUES = {
   EMPTY: {
     type: "EMPTY",
-    severity: "warning",
+    severity: "error",
     message: "The status option is requied! ",
   },
+  UNKNOWN: {
+    type: "UNKNOWN",
+    severity: "warning",
+    message: "The status value is unrecognized. Please confirm if you want to proceed."
+  }
 };
 
 /**
@@ -29,6 +34,10 @@ const validateStatus= (value) => {
     {
       isInvalid: (value) => value === "",
       issue: FIELD_ISSUES.EMPTY,
+    },
+      {
+      isInvalid: (value) => value === "unknown",
+      issue: FIELD_ISSUES.UNKNOWN,
     },
   ];
 

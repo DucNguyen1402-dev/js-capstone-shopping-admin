@@ -13,8 +13,8 @@ const FIELD_ISSUES = {
   EMPTY: {
     type: "EMPTY",
     message:
-      "No price entered. This product will be shown as 'Free' or 'Contact for price'.",
-    severity: "warning",
+      "Please enter a price. This field cannot be left blank.",
+    severity: "error",
   },
   INVALID_NUMBER: {
     type: "INVALID_NUMBER",

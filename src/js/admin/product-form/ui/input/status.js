@@ -1,5 +1,7 @@
-import {renderValidationMessage, resetValidationMessage} from "./shared.js";
-/**
+import {renderValidationMessage, resetValidationMessage, hideWarningMessage} from "./shared.js";
+/**,
+ * hideWarningMessage
+ * 
  * CSS class mapping for different product stock statuses.
  * @type {Object.<string, string[]>}
  */
@@ -52,6 +54,7 @@ function resetToNormalState(inputEl) {
   inputEl.classList.remove("text-white",...STATUS_CLASSES[currentStatusState]);
 }
 
+
 /**
  * Interface for status-related UI updates.
  */
@@ -59,5 +62,7 @@ export const statusUIHandler = {
   renderStatusInputState,
   resetToNormalState,
   renderValidationMessage,
-  resetValidationMessage
+  resetValidationMessage,
+  hideWarningMessage,
 };
+

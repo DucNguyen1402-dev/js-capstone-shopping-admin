@@ -56,3 +56,4 @@ function getListByFilter(type, productList) {
   const list = productList.filter((p) => p.type?.toLowerCase() === type);
   return list;
 }
+

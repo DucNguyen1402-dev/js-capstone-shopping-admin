@@ -37,7 +37,7 @@ export class ProductModel {
     this.screen = screen;
     this.backCamera = backCamera;
     this.frontCamera = frontCamera;
-    this.img = img;
+    this.image = img;
     this.desc = desc;
     this.type = type;
     this.stock = stock;
@@ -54,7 +54,7 @@ export class ProductModel {
     return {
       name: () => !this.name || this.name.trim().length < 2,
 
-      price: () => isNaN(this.price) || this.price <= 0,
+      price: () => isNaN(this.price) || this.price < 0,
 
       screen: () => !this.screen || this.screen.trim() === "",
 
@@ -67,8 +67,6 @@ export class ProductModel {
 
       stock: () =>
         isNaN(this.stock) || this.stock < 0 || !Number.isInteger(this.stock),
-
-      status: () => !this.status || this.status.trim() === "",
     };
   }
 
