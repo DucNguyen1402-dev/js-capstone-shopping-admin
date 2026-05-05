@@ -1,4 +1,8 @@
-import {renderValidationMessage, resetValidationMessage,hideWarningMessage} from "./shared.js";
+import {
+  renderValidationMessage,
+  resetValidationMessage,
+  hideWarningMessage,
+} from "./shared.js";
 /**
  * ==================================================
  *   1. REAL-TIME VALIDATION LOGIC (Event-based)
@@ -25,7 +29,7 @@ const ALL_SEVERITY_CLASSES = Object.values(SEVERITY_CLASSES).flat();
  */
 /**
  * Updates the input element's visual state based on validation severity.
- * 
+ *
  * @param {Object} params - The validation state.
  * @param {boolean} params.isValid - Whether the input is valid.
  * @param {Object} params.issue - The issue details (contains severity).
@@ -46,18 +50,17 @@ function renderStockValidationState({ isValid, issue, inputEl }) {
 
 /**
  * Removes all validation-related CSS classes from the input element.
- * 
+ *
  * @param {HTMLElement} inputEl - The target input element.
  */
 function clearStockInputHighlight(inputEl) {
   inputEl.classList.remove(...ALL_SEVERITY_CLASSES);
 }
 
-
 /**
  * Removes all validation severity classes from an input element.
  * Typically used during form reset events to revert the UI to its initial state.
- * 
+ *
  * @param {HTMLInputElement|null} inputEl - The input element to clear the validation state from.
  * @returns {void}
  */
@@ -66,10 +69,28 @@ function clearInputValidationState(inputEl) {
   inputEl.classList.remove(...ALL_SEVERITY_CLASSES);
 }
 
-function resetInputValidationState(field){
+/**
+ * Removes all severity-related CSS classes from a specific input field
+ * to reset its visual validation state.
+ *
+ * @param {string} field - The unique identifier for the data-field-input attribute.
+ */
+function resetInputValidationState(field) {
   const inputEl = document.querySelector(`[data-field-input="${field}"]`);
-  if(!inputEl) return;
- inputEl.classList.remove(...ALL_SEVERITY_CLASSES);
+  if (!inputEl) return;
+  inputEl.classList.remove(...ALL_SEVERITY_CLASSES);
+}
+
+/**
+ * Resets the validation state and UI feedback for a specific input element.
+ *
+ * @param {HTMLElement} inputEl - The input element to be reset.
+ */
+function reset(inputEl) {
+  clearInputValidationState(inputEl);
+  resetValidationMessage("stock");
+  hideWarningMessage("stock");
+  inputEl.dataset.warningConsent = "false";
 }
 
 /**
@@ -77,16 +98,9 @@ function resetInputValidationState(field){
  */
 export const stockUIHandler = {
   renderStockValidationState,
-  clearInputValidationState,
   renderValidationMessage,
   resetValidationMessage,
   hideWarningMessage,
-  resetInputValidationState
+  resetInputValidationState,
+  reset,
 };
-
-
-/**
- * ==================================================
- *   2. SUBMIT VALIDATION LOGIC (Event-based)
- * ===================================================
- */

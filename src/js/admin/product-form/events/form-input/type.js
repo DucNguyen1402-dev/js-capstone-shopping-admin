@@ -11,8 +11,6 @@ export function initTypeInputEvent({
   const { type } = productFormInputEl;
 
   type.addEventListener("reset", () => {
-    typeUIHandler.resetValidationMessage("type");
-    typeUIHandler.hideWarningMessage("type");
-    type.dataset.warningConsent = "false";
+    typeUIHandler.reset(type);
   });
 }

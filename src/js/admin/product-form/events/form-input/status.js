@@ -19,10 +19,9 @@ export function initStatusInputEvent({
     statusUIHandler.renderStatusInputState(status);
   });
 
+  
   status.addEventListener("reset", () => {
-    statusUIHandler.resetToNormalState(status);
-    statusUIHandler.resetValidationMessage("status");
-    statusUIHandler.hideWarningMessage("status");
+    statusUIHandler.reset(status);
     status.dataset.warningConsent = "false";
   });
 }

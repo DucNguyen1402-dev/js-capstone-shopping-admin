@@ -17,7 +17,7 @@ export function initNameInputEvent({
   nameInput.addEventListener("blur", () => {
     const value = nameInput.value.trim();
     let { isValid, issue } = inputValidators.name(value);
- 
+
     let isDuplicated = false;
     const inputLower = value.toLowerCase();
     isValid &&
@@ -33,7 +33,6 @@ export function initNameInputEvent({
       };
     }
 
-  
     nameUIHandler.renderNameValidationState({
       isValid,
       issue,
@@ -42,11 +41,6 @@ export function initNameInputEvent({
   });
 
   nameInput.addEventListener("reset", () => {
-    nameUIHandler.clearInputValidationState(nameInput);
-    nameUIHandler.resetValidationMessage("name");
-    nameUIHandler.hideWarningMessage("name");
-    nameInput.dataset.warningConsent = "false";
+    nameUIHandler.reset(nameInput);
   });
-
-
 }

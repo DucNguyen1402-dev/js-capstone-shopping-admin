@@ -7,7 +7,14 @@ import {
   productTableServices,
 } from "../product-table/index.js";
 import * as useCases from "./use-cases/index.js";
-import { productState, fetchProducts } from "../index.js";
+import {
+  fetchProducts,
+  deleteData,
+  updateProduct,
+  addProduct,
+  productState,
+} from "../index.js";
+
 import { productInteractionState } from "../product-interaction-state.js";
 import * as errorHanlders from "../utils/error-handlers.js";
 import * as productData from "../domain/productDataUtils.js";
@@ -74,27 +81,10 @@ const productOrchestrator = {
     );
     return filteredList;
   },
-  getDisplayProducts({
-    displayContext,
-    services: { productTableServices },
-    useCases,
-  }) {
-    const {
-      list,
-      interaction: { deleteId, filterType, sortStrategy },
-    } = displayContext;
-
-    const withoutDeleted = list.filter((item) => item.id !== deleteId);
-
-    const sorted = productTableServices.getSortedProducts(
-      sortStrategy,
-      withoutDeleted,
-    );
-
-    return filterType === "all"
-      ? sorted
-      : useCases.getFilterProducts(filterType, sorted);
-  },
+  getFilterProducts(productType, productList){
+     const list = productList.filter((p) => p.type?.toLowerCase() === productType);
+     return list;
+}
 };
 
 /**
@@ -179,7 +169,7 @@ export async function dispatch(action) {
     },
     useCases,
     errorHanlders,
-    api: { fetchProducts },
+    api: { fetchProducts, deleteData, updateProduct, addProduct },
   };
   await actionHandler(context);
 }
@@ -206,6 +196,40 @@ function handleDeleteRequest({ action, states }) {
 
 /* ======== 2. PRODUCT DELETE CONFIRM ======== */
 /**
+ * Calculates the final display list by excluding the pending deleted item,
+ * then applying sorting and category filtering.
+ * @param {Object} params - The display context and helper logic.
+ * @param {Object} params.displayContext - Contains the raw list and interaction states (deleteId, filterType, sortStrategy).
+ * @param {Object} params.services - Table services for sorting logic.
+ * @param {Object} params.useCases - Business logic for product filtering.
+ * @returns {Array} The processed list of products ready for UI rendering.
+ */
+function getDisplayProducts({
+  displayContext,
+  services: { productTableServices },
+  productOrchestrator
+}) {
+  const {
+    list,
+    interaction: { deleteId, filterType, sortStrategy },
+  } = displayContext;
+
+  // 1. Exclude the product currently flagged for deletion
+  const withoutDeleted = list.filter((item) => item.id !== deleteId);
+
+  // 2. Apply the active sorting strategy
+  const sorted = productTableServices.getSortedProducts(
+    sortStrategy,
+    withoutDeleted,
+  );
+
+  // 3. Apply category filtering logic
+  return filterType === "all"
+    ? sorted
+    : productOrchestrator.getFilterProducts(filterType, sorted);
+}
+
+/**
  * Executes the final deletion of a product and refreshes the management table.
  * @param {Object} params - The dispatch context.
  * @param {Object} params.states - Application states for tracking deletion ID and current list.
@@ -221,7 +245,7 @@ async function handleDeleteConfirm({
   services,
   controller,
   useCases,
-  api: { fetchProducts },
+  api: { fetchProducts, deleteData },
 }) {
   const { productInteractionState, productState } = states;
   const { componentUIHandler } = ui;
@@ -230,7 +254,7 @@ async function handleDeleteConfirm({
     componentServices: { productTableServices },
   } = services;
 
-  await useCases.performDelete(productInteractionState.deleteId);
+  await deleteData(productInteractionState.deleteId);
   await fetchProducts();
 
   const baseList = productInteractionState.isSearching
@@ -246,10 +270,10 @@ async function handleDeleteConfirm({
     },
   };
 
-  const finalDisplayList = productOrchestrator.getDisplayProducts({
+  const finalDisplayList = getDisplayProducts({
     displayContext,
     services: { productTableServices },
-    useCases,
+    productOrchestrator
   });
 
   await productOrchestrator.refreshProductListWithState(finalDisplayList);
@@ -368,9 +392,9 @@ function handleProductEditStart({ action, states, ui, services }) {
  * @param {Object} data - The new product data.
  * @returns {Promise<void>}
  */
-async function submitUpdate(editId, data, toastServices, useCases) {
+async function submitUpdate(editId, data, toastServices, updateProduct) {
   toastServices.showLoading();
-  await useCases.submitProductUpdate(editId, data);
+  await updateProduct(editId, data);
   toastServices.hideLoading();
 }
 
@@ -442,8 +466,8 @@ async function handleProductUpdateSubmitted({
   ui,
   services,
   controller,
-  useCases,
   domain: { productData },
+  api: {updateProduct}
 }) {
   const { productInteractionState, productState } = states;
   const {
@@ -478,7 +502,7 @@ async function handleProductUpdateSubmitted({
     return;
   }
   // 3. API Submission
-  await submitUpdate(editId, normalizedData, toastServices, useCases);
+  await submitUpdate(editId, normalizedData, toastServices, updateProduct);
 
   // 4. State & UI Cleanup
   productInteractionState.formState.reset();
@@ -596,10 +620,14 @@ function handleSearchProductRequest({
   const filteredList = productOrchestrator.getCurrentFilteredList(
     productState.list,
   );
+  const sortedList = productTableServices.getSortedProducts(
+    productInteractionState.sortPriceStrategy,
+    filteredList,
+  );
 
   const { isSearching, resultList } = getSearchResult(
     action.payload.inputValue,
-    filteredList,
+    sortedList,
     useCases,
   );
   // Sync internal search state
@@ -609,7 +637,7 @@ function handleSearchProductRequest({
   if (isSearching && resultList.length === 0) {
     productTableUI.renderNotFoundState();
   } else {
-    productTableUI.renderDefaultTableOrder(resultList);
+    productTableUI.renderRawOrderOfList(resultList);
   }
 }
 
@@ -624,7 +652,7 @@ function handleSearchProductRequest({
  * @param {Object} params.ui - UI handlers to render the filtered list.
  * @param {Object} params.services - Table services for sorting and filtering logic.
  */
-function handleTableFilterRequest({ action, states, ui, services, useCases }) {
+function handleTableFilterRequest({ action, states, ui, services, controller }) {
   const { productInteractionState, productState } = states;
   const {
     componentUIHandler: { productTableUI },
@@ -632,21 +660,23 @@ function handleTableFilterRequest({ action, states, ui, services, useCases }) {
   const {
     componentServices: { productTableServices },
   } = services;
+  const {productOrchestrator} = controller;
   const { productType } = action.payload;
 
   // Determine the source list based on active search or default sorted list
   let baseList = productInteractionState.isSearching
     ? productInteractionState.searchResults
-    : productTableServices.getSortedProducts(
-        productInteractionState.sortPriceStrategy,
-        productState.list,
-      );
+    : productState.list;
 
+  const sortedList = productTableServices.getSortedProducts(
+    productInteractionState.sortPriceStrategy,
+    baseList,
+  );
   // Apply category filter logic
   const finalDisplayList =
     productType === "all"
-      ? baseList
-      : useCases.getFilterProducts(productType, baseList);
+      ? sortedList
+      : productOrchestrator.getFilterProducts(productType, sortedList);
 
   // Update internal states
   productInteractionState.filterType = productType;
@@ -742,6 +772,7 @@ async function handleCreateNewProduct({
   useCases,
   domain: { productData },
   errorHanlders,
+  api: {addProduct}
 }) {
   const { productState } = states;
   const oldList = [...productState.list];
@@ -773,7 +804,7 @@ async function handleCreateNewProduct({
   const norminalizeData = productFormServices.normalizeFormDataTypes(data);
   try {
     toastServices.showLoading();
-    await useCases.performAddProduct(norminalizeData);
+    await addProduct(norminalizeData);
 
     // 3. Post-creation cleanup and data refresh
     await refreshAfterCreation({

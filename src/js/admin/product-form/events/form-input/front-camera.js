@@ -25,9 +25,7 @@ export function initFrontCameraInputEvent({
   });
 
   frontCameraInput.addEventListener("reset", ()=>{
-    frontCameraUIHandler.clearInputValidationState(frontCameraInput);
-    frontCameraUIHandler.resetValidationMessage("frontCamera");
-    frontCameraUIHandler.hideWarningMessage("frontCamera");
+    frontCameraUIHandler.reset(frontCameraInput);
     frontCameraInput.dataset.warningConsent = "false";
   })
 }

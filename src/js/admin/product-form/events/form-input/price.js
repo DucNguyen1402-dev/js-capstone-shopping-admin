@@ -24,9 +24,7 @@ export function initPriceInputEvent({
   });
   
   priceInput.addEventListener("reset",() =>{
-     priceUIHandler.clearInputValidationState(priceInput);
-     priceUIHandler.resetValidationMessage("price");
-    priceUIHandler.hideWarningMessage("price");
+     priceUIHandler.reset(priceInput);
      priceInput.dataset.warningConsent = "false";
   });
 }

@@ -14,7 +14,6 @@ export function initProductFormUpdateVersion(
   formUI.showForm(productFormContainer, true);
   formUI.setUpdateMode(productFormEl);
   const formData = productToFormModel(product);
-
   setTimeout(() => {
     formUI.fillForm(productFormInputEl, formData);
   }, 0);

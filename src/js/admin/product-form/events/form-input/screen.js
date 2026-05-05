@@ -25,9 +25,7 @@ export function initScreenInputEvent({
   });
 
   screenInput.addEventListener("reset", () =>{
-    screenUIHandler.clearInputValidationState(screenInput);
-       screenUIHandler.resetValidationMessage("screen");
-    screenUIHandler.hideWarningMessage("screen");
+    screenUIHandler.reset(screenInput);
     screenInput.dataset.warningConsent = "false";
   });
 }

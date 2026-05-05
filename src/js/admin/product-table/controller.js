@@ -6,19 +6,18 @@ import {
 } from "./ui/render.js";
 
 import { itemActionUI } from "./ui/item-actions.js";
-import { productItemUI, } from "./ui/product-item.js";
+import { productItemUI } from "./ui/product-item.js";
 
 /**
  * UI Service Bundle for the Product Table.
- * @description 
- * Groups sub-modules (Action buttons and Row items) into a single 
+ * @description
+ * Groups sub-modules (Action buttons and Row items) into a single
  * dependency object to be injected into the main Table UI factory.
  */
 const uiToolkit = {
   itemActionUI,
   productItemUI,
 };
-
 
 /**
  * Renders the initial table view with a default sorting order.
@@ -60,36 +59,34 @@ const createProductTableUI = (productListTableEl, uiToolkit) => ({
     setPendingProductRowUIState(deleteId, action, eventType, uiToolkit);
   },
   showHighlightEditRow: (id) => {
-    const {productItemUI} = uiToolkit;
-     const product = productItemUI.getProductItemById(id);
+    const { productItemUI } = uiToolkit;
+    const product = productItemUI.getProductItemById(id);
     productItemUI.setRowEditorialMode(product);
   },
-  hideHighlightEditRow: (id) =>{
-     const {productItemUI} = uiToolkit;
-     const product = productItemUI.getProductItemById(id);
-     const actionBtns = itemActionUI.getActionBtns(product);
-      itemActionUI.setActionButtonsContrast(actionBtns);
+  hideHighlightEditRow: (id) => {
+    const { productItemUI } = uiToolkit;
+    const product = productItemUI.getProductItemById(id);
+    const actionBtns = itemActionUI.getActionBtns(product);
+    itemActionUI.setActionButtonsContrast(actionBtns);
     productItemUI.setRowEditorialMode(product, false);
   },
-  highlightUpdatedRow: (id)=>{
-    const {productItemUI} = uiToolkit;
+  highlightUpdatedRow: (id) => {
+    const { productItemUI } = uiToolkit;
     productItemUI.highlightRowChanged(id, "updated");
   },
   highlightAddedRow: ({ oldList, newList }) => {
-  const {productItemUI} = uiToolkit;
-  const oldIds = new Set(oldList.map(item => item.id));
-  const newProduct = newList.find(item => !oldIds.has(item.id));
+    const { productItemUI } = uiToolkit;
+    const oldIds = new Set(oldList.map((item) => item.id));
+    const newProduct = newList.find((item) => !oldIds.has(item.id));
 
-  productItemUI.highlightRowChanged(newProduct.id, "added");
-}
+    productItemUI.highlightRowChanged(newProduct.id, "added");
+  },
 });
-
-
 
 /**
  * Executes the UI cleanup sequence for a canceled deletion.
- * @description 
- * Coordinates between action buttons and the row container to remove 
+ * @description
+ * Coordinates between action buttons and the row container to remove
  * visual "pending" states. Targeted at specific row components.
  * @param {string|number} deleteId - The unique identifier of the target product.
  * @param {Object} dependencies - UI interfaces for actions and row items.
@@ -111,11 +108,10 @@ function setPendingProductRowUIState(
   productItemUI.applyActionFeedbackUI(product, action, eventType);
 }
 
-
 /**
  * Main Product Table UI Instance.
- * @description 
- * Created via a factory function (createProductTableUI) by injecting the 
+ * @description
+ * Created via a factory function (createProductTableUI) by injecting the
  * table's root DOM element and the required UI service handlers.
  * Exposes the public API for controlling the entire table component.
  */

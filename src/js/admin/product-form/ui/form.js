@@ -81,7 +81,11 @@ export function fillForm(form, formData) {
   form.status.dispatchEvent(new Event("change"));
 }
 
-
+/**
+ * Resets the warning consent state of an input element to false.
+ *
+ * @param {string} field - The unique identifier for the data-field-input attribute.
+ */
 export function resetConsentField(field) {
   const input = document.querySelector(`[data-field-input = ${field}]`);
   input.dataset.warningConsent = "false";

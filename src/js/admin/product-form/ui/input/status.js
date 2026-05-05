@@ -1,7 +1,11 @@
-import {renderValidationMessage, resetValidationMessage, hideWarningMessage} from "./shared.js";
+import {
+  renderValidationMessage,
+  resetValidationMessage,
+  hideWarningMessage,
+} from "./shared.js";
 /**,
  * hideWarningMessage
- * 
+ *
  * CSS class mapping for different product stock statuses.
  * @type {Object.<string, string[]>}
  */
@@ -20,7 +24,7 @@ const STATUS_CLASSES = {
  */
 function clearCurrentStatusClasses(el, statusState) {
   if (!statusState) return;
-  el.classList.remove("text-white",...STATUS_CLASSES[statusState]);
+  el.classList.remove("text-white", ...STATUS_CLASSES[statusState]);
 }
 
 /** @type {string|null} Tracks the current status value to clear specific classes. */
@@ -28,7 +32,7 @@ let currentStatusState = null;
 
 /**
  * Updates the status input's visual state by applying value-specific CSS classes.
- * 
+ *
  * @param {HTMLSelectElement|HTMLInputElement} el - The status input element.
  */
 function renderStatusInputState(el) {
@@ -41,28 +45,37 @@ function renderStatusInputState(el) {
   currentStatusState = value;
 }
 
-
 /**
  * Removes all validation severity classes from an input element.
  * Typically used during form reset events to revert the UI to its initial state.
- * 
+ *
  * @param {HTMLInputElement|null} inputEl - The input element to clear the validation state from.
  * @returns {void}
  */
 function resetToNormalState(inputEl) {
   if (!currentStatusState || !inputEl) return;
-  inputEl.classList.remove("text-white",...STATUS_CLASSES[currentStatusState]);
+  inputEl.classList.remove("text-white", ...STATUS_CLASSES[currentStatusState]);
 }
 
+/**
+ * Resets the validation state and UI feedback for a specific input element.
+ *
+ * @param {HTMLElement} inputEl - The input element to be reset.
+ */
+function reset(inputEl) {
+  resetToNormalState(inputEl);
+  resetValidationMessage("status");
+  hideWarningMessage("status");
+  inputEl.dataset.warningConsent = "false";
+}
 
 /**
  * Interface for status-related UI updates.
  */
 export const statusUIHandler = {
   renderStatusInputState,
-  resetToNormalState,
   renderValidationMessage,
   resetValidationMessage,
   hideWarningMessage,
+  reset,
 };
-

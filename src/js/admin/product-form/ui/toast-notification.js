@@ -35,7 +35,12 @@ export function setPopUpToVisible(el, visible = true){
   el.classList.add(...POPUP_STATE[state]);
 }
 
-
+/**
+ * Updates the text content of a popup element to display an error message.
+ * 
+ * @param {HTMLElement} el - The element where the error message will be rendered.
+ * @param {string} message - The error message to be displayed.
+ */
 export function setPopUpForError(el,message){
   el.textContent = message;
 }

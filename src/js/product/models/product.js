@@ -25,7 +25,7 @@ export class ProductModel {
     screen,
     backCamera,
     frontCamera,
-    img,
+    image,
     desc,
     type,
     stock,
@@ -37,7 +37,7 @@ export class ProductModel {
     this.screen = screen;
     this.backCamera = backCamera;
     this.frontCamera = frontCamera;
-    this.image = img;
+    this.image = image;
     this.desc = desc;
     this.type = type;
     this.stock = stock;

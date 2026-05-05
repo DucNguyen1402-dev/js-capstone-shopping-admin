@@ -25,9 +25,7 @@ export function initDescInputEvent({
   });
 
   descInput.addEventListener("reset", () => {
-    descUIHandler.clearInputValidationState(descInput);
-    descUIHandler.resetValidationMessage("desc");
-    descUIHandler.hideWarningMessage("desc");
+    descUIHandler.reset(descInput);
     descInput.dataset.warningConsent = "false";
   });
 }

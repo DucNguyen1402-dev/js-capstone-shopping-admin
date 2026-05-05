@@ -54,9 +54,7 @@ export function initStockInputEvent({
   });
 
   stockInput.addEventListener("reset", () => {
-    stockUIHandler.clearInputValidationState(stockInput);
-    stockUIHandler.resetValidationMessage("stock");
-    stockUIHandler.hideWarningMessage("stock");
+    stockUIHandler.reset(stockInput);
     stockInput.dataset.warningConsent = "false";
   });
 }

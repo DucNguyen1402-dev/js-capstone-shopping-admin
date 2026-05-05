@@ -16,7 +16,11 @@ const uiToolkit = {
  * Acts as a bridge to wire UI elements from 'productListTableUI'
  * with the central dispatch logic.
  */
-export function initAllProductTableEvents({ productState, productInteractionState, dispatch }) {
+export function initAllProductTableEvents({
+  productState,
+  productInteractionState,
+  dispatch,
+}) {
   const context = {
     productState,
     productInteractionState,
