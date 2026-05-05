@@ -1,5 +1,5 @@
 import { getProductFormElements, getProductFormInputElements , getToastNotificationElements} from "../dom-factory.js";
-export {productState} from "../index.js";
+export {productState} from "../../index.js";
 /**
  * The main container elements for the product form UI.
  * @type {Object}

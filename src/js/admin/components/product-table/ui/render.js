@@ -15,8 +15,14 @@ const STATUS_TEXT = {
   lowStock: "Low stock",
   outOfStock: "Out of stock",
   discontinuted: "discontinuted",
-  comingSoon: "Comming soon",
+  comingSoon: "Coming soon",
 };
+
+function getPriceLabel(price, status) {
+  if (status === "comingSoon") return "Coming soon";
+  if (price == null) return "N/A";
+  return price.toLocaleString("en-US", { style: "currency", currency: "USD" });
+}
 
 /**
  * Generates the HTML string for a single table row.
@@ -32,14 +38,9 @@ const ProductRow = (item) => `
    >
   <td class="product-id px-8 py-4 text-sm">${item.id}</td>
   <td class="px-6 py-4 text-sm font-medium ${item.isFieldInvalid("name") ? "border border-red-500" : ""}">${item.name}</td>
-  <td class="px-6 py-4  text-sm ${item.isFieldInvalid("price") ? "border border-red-500" : ""}">${item.price?.toLocaleString(
-    "vn",
-    {
-      style: "currency",
-      currency: "VND",
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    },
+  <td class="px-6 py-4  text-sm ${item.isFieldInvalid("price") ? "border border-red-500" : ""}">${getPriceLabel(
+    item.price,
+    item.status,
   )}</td>
   <td class="px-6 py-4 text-sm text-gray-600 ${item.isFieldInvalid("type") ? "border border-red-500" : ""}">
     <div class="flex h-6 w-20 items-center justify-center rounded-full bg-blue-100 text-xs font-semibold text-blue-700">

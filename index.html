@@ -1,259 +1,206 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <!-- Meta & SEO -->
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PhoneShop - Premium Mobile Store</title>
-    <meta
-      name="description"
-      content="A modern e-commerce platform built with Vanilla JS, Tailwind, and RESTful API. Features include a dynamic shopping cart and a comprehensive admin inventory management system."
-    />
-    <link rel="icon" href="./src/assets/icon/customer-favicon.png" />
 
-    <!-- Open Graph (SEO & Social) -->
-    <meta property="og:title" content="PhoneShop - E-commerce Platform" />
-    <meta
-      property="og:description"
-      content="Premium mobile phone shop with Tailwind CSS. Fast, responsive, and easy to use."
-    />
-    <meta
-      property="og:image"
-      content="https://js-capstone-shopping-admin.vercel.app/src/assets/og/og-img.png"
-    />
-    <meta
-      property="og:url"
-      content="https://js-capstone-shopping-admin.vercel.app/"
-    />
-    <meta property="og:type" content="website" />
+<head>
+  <!-- Meta & SEO -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PhoneShop - Premium Mobile Store</title>
+  <meta name="description"
+    content="A modern e-commerce platform built with Vanilla JS, Tailwind, and RESTful API. Features include a dynamic shopping cart and a comprehensive admin inventory management system." />
+  <link rel="icon" href="./src/assets/icon/customer-favicon.png" />
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
-      rel="stylesheet"
-    />
+  <!-- Open Graph (SEO & Social) -->
+  <meta property="og:title" content="PhoneShop - E-commerce Platform" />
+  <meta property="og:description"
+    content="Premium mobile phone shop with Tailwind CSS. Fast, responsive, and easy to use." />
+  <meta property="og:image" content="https://js-capstone-shopping-admin.vercel.app/src/assets/og/og-img.png" />
+  <meta property="og:url" content="https://js-capstone-shopping-admin.vercel.app/" />
+  <meta property="og:type" content="website" />
 
-    <!-- Font Awesome 6 -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-    />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+    rel="stylesheet" />
 
-    <link rel="stylesheet" href="./dist/output.css" />
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
-    <!--Axios -->
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.11.0/axios.min.js"
-      integrity="sha512-h9644v03pHqrIHThkvXhB2PJ8zf5E9IyVnrSfZg8Yj8k4RsO4zldcQc4Bi9iVLUCCsqNY0b4WXVV4UB+wbWENA=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    ></script>
-  </head>
-  <body class="bg-gray-50 font-sans antialiased">
-    <!-- ========== HEADER ========== -->
-    <header class="sticky top-0 z-50 bg-white shadow-md py-8">
-      <div class="container mx-auto px-4">
-        <div class="flex flex-wrap items-center justify-around gap-3">
-          <!-- Logo -->
-          <div class="flex items-center gap-2" id="logo">
-            <div
-              class="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600"
-            >
-              <i class="fas fa-mobile-alt text-sm text-white"></i>
-            </div>
-            <span class="text-3xl font-bold text-gray-800"
-              >Phone<span class="text-blue-600">Shop</span></span
-            >
+  <link rel="stylesheet" href="./dist/output.css" />
+
+  <!--Axios -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.11.0/axios.min.js"
+    integrity="sha512-h9644v03pHqrIHThkvXhB2PJ8zf5E9IyVnrSfZg8Yj8k4RsO4zldcQc4Bi9iVLUCCsqNY0b4WXVV4UB+wbWENA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+
+<body class="bg-gray-50 font-sans antialiased">
+  <!-- ========== HEADER ========== -->
+  <header class="sticky top-0 z-50 bg-white py-8 shadow-md">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-wrap items-center justify-around gap-3">
+        <!-- Logo -->
+        <div class="flex items-center gap-2" id="logo">
+          <div class="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600">
+            <i class="fas fa-mobile-alt text-sm text-white"></i>
           </div>
+          <span class="text-3xl font-bold text-gray-800">Phone<span class="text-blue-600">Shop</span></span>
+        </div>
 
-          <!-- Menu ngang (center) -->
-          <ul class="mx-auto hidden gap-14 font-medium text-gray-600 md:flex">
-            <li><a href="#" class="transition hover:text-blue-600">Home</a></li>
-            <li>
-              <a href="#" class="transition hover:text-blue-600">Phones</a>
-            </li>
-            <li>
-              <a href="#" class="transition hover:text-blue-600">Accessories</a>
-            </li>
-            <li><a href="#" class="transition hover:text-blue-600">Sale</a></li>
-            <li>
-              <a href="#" class="transition hover:text-blue-600">Contact</a>
-            </li>
-          </ul>
+        <!-- Menu ngang (center) -->
+        <ul class="mx-auto hidden gap-14 font-medium text-gray-600 md:flex">
+          <li><a href="#" class="transition hover:text-blue-600">Home</a></li>
+          <li>
+            <a href="#" class="transition hover:text-blue-600">Phones</a>
+          </li>
+          <li>
+            <a href="#" class="transition hover:text-blue-600">Accessories</a>
+          </li>
+          <li><a href="#" class="transition hover:text-blue-600">Sale</a></li>
+          <li>
+            <a href="#" class="transition hover:text-blue-600">Contact</a>
+          </li>
+        </ul>
 
-          <!-- Icons: Cart + User -->
-          <div class="flex items-center gap-10">
-            <div class="relative cursor-pointer" id="cartIconBtn">
-              <i
-                class="fas fa-shopping-cart text-xl text-gray-600 transition hover:text-blue-600"
-              ></i>
-              <span
-                id="cartCount"
-                class="absolute -top-2 -right-3 hidden rounded-full bg-red-500 px-1.5 py-0.5 text-xs text-white"
-                >0</span
-              >
-            </div>
-            <!-- User icon - login feature coming soon -->
-            <div class="cursor-pointer " id="userIconBtn">
-              <a href="./login.html">
-                <i
-                  class="fas fa-user-circle text-2xl text-gray-600 transition hover:text-blue-600"
-                ></i>
-              </a>
-            </div>
+        <!-- Icons: Cart + User -->
+        <div class="flex items-center gap-10">
+          <div class="relative cursor-pointer" id="cartIconBtn">
+            <i class="fas fa-shopping-cart text-xl text-gray-600 transition hover:text-blue-600"></i>
+            <span id="cartCount"
+              class="absolute -top-2 -right-3 hidden rounded-full bg-red-500 px-1.5 py-0.5 text-xs text-white">0</span>
+          </div>
+          <!-- User icon - login feature coming soon -->
+          <div class="cursor-pointer" id="userIconBtn">
+            <a href="./login.html">
+              <i class="fas fa-user-circle text-2xl text-gray-600 transition hover:text-blue-600"></i>
+            </a>
           </div>
         </div>
       </div>
-    </header>
+    </div>
+  </header>
 
-    <!-- ========== MAIN CONTENT ========== -->
-    <main class="container mx-auto px-4 py-8">
-      <!-- Thanh tìm kiếm + bộ lọc + sắp xếp -->
-      <div class="mb-8 rounded-xl bg-white p-4 shadow-sm">
-        <div class="flex flex-col gap-4 md:flex-row">
-          <!-- Ô tìm kiếm -->
-          <div class="flex-1">
-            <div class="relative">
-              <i
-                class="fas fa-search absolute top-1/2 left-3 -translate-y-1/2 text-gray-400"
-              ></i>
-              <input
-                type="text"
-                id="searchInput"
-                placeholder="Search by name, description..."
-                class="w-full rounded-lg border border-gray-300 py-2 pr-4 pl-10 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
-              />
-            </div>
-          </div>
-
-          <!-- Lọc theo danh mục -->
-          <div class="w-full md:w-48">
-            <select
-              id="filterSelect"
-              class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:outline-none"
-            >
-              <option value="all">All categories</option>
-              <option value="iphone">iPhone</option>
-              <option value="samsung">Samsung</option>
-              <option value="xiaomi">Xiaomi</option>
-              <option value="oppo">OPPO</option>
-            </select>
-          </div>
-
-          <!-- Lọc theo khoảng giá -->
-          <div class="w-full md:w-48">
-            <select
-              id="priceRangeFilter"
-              class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:outline-none"
-            >
-              <option value="all">All prices</option>
-              <option value="under300">Under $300 (Budget)</option>
-              <option value="300-700">$300 – $700 (Mid-range)</option>
-              <option value="700-1000">$700 – $1,000 (Upper mid)</option>
-              <option value="above1000">Above $1,000 (Flagship)</option>
-            </select>
-          </div>
-
-          <!-- Sắp xếp theo giá -->
-          <div class="w-full md:w-48">
-            <select
-              id="sortSelect"
-              class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:outline-none"
-            >
-              <option value="default">Sort: Featured</option>
-              <option value="priceAsc">Price: Low to High</option>
-              <option value="priceDesc">Price: High to Low</option>
-            </select>
+  <!-- ========== MAIN CONTENT ========== -->
+  <main class="container mx-auto px-4 py-8">
+    <!-- Thanh tìm kiếm + bộ lọc + sắp xếp -->
+    <div class="mb-8 rounded-xl bg-white p-4 shadow-sm">
+      <div class="flex flex-col gap-4 md:flex-row">
+        <!-- Ô tìm kiếm -->
+        <div class="flex-1">
+          <div class="relative">
+            <i class="fas fa-search absolute top-1/2 left-3 -translate-y-1/2 text-gray-400"></i>
+            <input type="text" id="searchInput" placeholder="Search by name, description..."
+              class="w-full rounded-lg border border-gray-300 py-2 pr-4 pl-10 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" />
           </div>
         </div>
-      </div>
 
-      <!-- Loading spinner -->
-      <div id="loadingSpinner" class="py-12 text-center">
-        <i class="fas fa-spinner fa-spin text-4xl text-blue-600"></i>
-        <p class="mt-2 text-gray-500">Loading products...</p>
-      </div>
+        <!-- Lọc theo danh mục -->
+        <div class="w-full md:w-48">
+          <select id="filterSelect"
+            class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:outline-none">
+            <option value="all">All categories</option>
+            <option value="iphone">iPhone</option>
+            <option value="samsung">Samsung</option>
+            <option value="xiaomi">Xiaomi</option>
+            <option value="oppo">OPPO</option>
+          </select>
+        </div>
 
-      <!-- Grid sản phẩm -->
-      <div
-        id="productGrid"
-        class="grid hidden grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-      >
-        <!-- Products will be rendered here -->
-      </div>
+        <!-- Lọc theo khoảng giá -->
+        <div class="w-full md:w-48">
+          <select id="priceRangeFilter"
+            class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:outline-none">
+            <option value="all">All prices</option>
+            <option value="under300">Under $300 (Budget)</option>
+            <option value="300-700">$300 – $700 (Mid-range)</option>
+            <option value="700-1000">$700 – $1,000 (Upper mid)</option>
+            <option value="above1000">Above $1,000 (Flagship)</option>
+          </select>
+        </div>
 
-      <!-- Thông báo không có sản phẩm -->
-      <div id="noProductsMsg" class="hidden py-12 text-center">
-        <i class="fas fa-box-open mb-3 text-5xl text-gray-400"></i>
-        <p class="text-gray-500">No products found</p>
+        <!-- Sắp xếp theo giá -->
+        <div class="w-full md:w-48">
+          <select id="sortSelect"
+            class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:outline-none">
+            <option value="default">Sort: Featured</option>
+            <option value="priceAsc">Price: Low to High</option>
+            <option value="priceDesc">Price: High to Low</option>
+          </select>
+        </div>
       </div>
-    </main>
+    </div>
 
-    <!-- ========== SIDEBAR GIỎ HÀNG ========== -->
-    <div
-      id="cartOverlay"
-      class="bg-opacity-50 fixed inset-0 z-50 hidden bg-black"
-    >
-      <div
-        id="cartSidebar"
-        class="absolute top-0 right-0 h-full w-full max-w-md translate-x-full transform bg-white shadow-2xl transition-transform duration-300"
-      >
-        <div class="flex h-full flex-col">
-          <!-- Header -->
-          <div class="flex items-center justify-between border-b p-4">
-            <h2 class="text-xl font-bold">
-              <i class="fas fa-shopping-cart mr-2 text-blue-600"></i>
-              Your Cart
-            </h2>
-            <button
-              id="closeCartBtn"
-              class="cursor-pointer text-2xl text-gray-500 hover:text-gray-700"
-            >
-              &times;
+    <!-- Loading spinner -->
+    <div id="loadingSpinner" class="py-12 text-center">
+      <i class="fas fa-spinner fa-spin text-4xl text-blue-600"></i>
+      <p class="mt-2 text-gray-500">Loading products...</p>
+    </div>
+
+    <!-- Grid sản phẩm -->
+    <div id="productGrid" class="grid hidden grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+      <!-- Products will be rendered here -->
+    </div>
+
+    <!-- Thông báo không có sản phẩm -->
+    <div id="noProductsMsg" class="hidden py-12 text-center">
+      <i class="fas fa-box-open mb-3 text-5xl text-gray-400"></i>
+      <p class="text-gray-500">No products found</p>
+    </div>
+  </main>
+
+  <!-- ========== SIDEBAR GIỎ HÀNG ========== -->
+  <div id="cartOverlay" class="bg-opacity-50 fixed inset-0 z-50 hidden bg-black">
+    <div id="cartSidebar"
+      class="absolute top-0 right-0 h-full w-full max-w-md translate-x-full transform bg-white shadow-2xl transition-transform duration-300">
+      <div class="flex h-full flex-col">
+        <!-- Header -->
+        <div class="flex items-center justify-between border-b p-4">
+          <h2 class="text-xl font-bold">
+            <i class="fas fa-shopping-cart mr-2 text-blue-600"></i>
+            Your Cart
+          </h2>
+          <button id="closeCartBtn" class="cursor-pointer text-2xl text-gray-500 hover:text-gray-700">
+            &times;
+          </button>
+        </div>
+
+        <!-- Cart items -->
+        <div id="cartItemsList" class="flex-1 space-y-3 overflow-y-auto p-4">
+          <div class="py-12 text-center text-gray-500">Cart is empty</div>
+        </div>
+
+        <!-- Footer -->
+        <div class="border-t p-4">
+          <div class="mb-3 flex justify-between text-lg font-bold">
+            <span>Total:</span>
+            <span id="cartTotal" class="text-red-600">0$</span>
+          </div>
+          <div class="flex gap-3">
+            <button id="clearCartBtn"
+              class="flex-1 cursor-pointer rounded-lg bg-red-500 py-3 font-semibold text-white transition hover:bg-red-600">
+              <i class="fas fa-trash-alt mr-2"></i>Clear All
+            </button>
+            <button id="checkoutBtn"
+              class="flex-1 cursor-pointer rounded-lg bg-blue-600 py-3 font-semibold text-white transition hover:bg-blue-700">
+              Checkout
             </button>
           </div>
-
-          <!-- Cart items -->
-          <div id="cartItemsList" class="flex-1 space-y-3 overflow-y-auto p-4">
-            <div class="py-12 text-center text-gray-500">Cart is empty</div>
-          </div>
-
-          <!-- Footer -->
-          <div class="border-t p-4">
-            <div class="mb-3 flex justify-between text-lg font-bold">
-              <span>Total:</span>
-              <span id="cartTotal" class="text-red-600">0$</span>
-            </div>
-            <div class="flex gap-3">
-              <button
-                id="clearCartBtn"
-                class="flex-1 cursor-pointer rounded-lg bg-red-500 py-3 font-semibold text-white transition hover:bg-red-600"
-              >
-                <i class="fas fa-trash-alt mr-2"></i>Clear All
-              </button>
-              <button
-                id="checkoutBtn"
-                class="flex-1 cursor-pointer rounded-lg bg-blue-600 py-3 font-semibold text-white transition hover:bg-blue-700"
-              >
-                Checkout
-              </button>
-            </div>
-          </div>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- Toast thông báo -->
-    <div
-      id="toast"
-      class="pointer-events-none fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-full bg-gray-800 px-5 py-2 text-sm text-white opacity-0 transition-opacity duration-300"
-    >
-      <span id="toastMsg"></span>
-    </div>
+  <!-- Toast thông báo -->
+  <div id="toast"
+    class="pointer-events-none fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-full bg-gray-800 px-5 py-2 text-sm text-white opacity-0 transition-opacity duration-300">
+    <span id="toastMsg"></span>
+  </div>
 
-    <!-- Import controller.js -->
-    <script type="module" src="./src/js/customer/controller.js"></script>
-  </body>
+  <!-- Import controller.js -->
+  <script type="module" src="./src/js/customer/controller.js"></script>
+</body>
+
 </html>
+

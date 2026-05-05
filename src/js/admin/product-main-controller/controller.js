@@ -1,11 +1,11 @@
 import {
   productFormServices,
   toastServices,
-} from "../product-form/services/index.js";
+} from "../components/product-form/services/index.js";
 import {
   productTableUI,
   productTableServices,
-} from "../product-table/index.js";
+} from "../components/product-table/index.js";
 import * as useCases from "./use-cases/index.js";
 import {
   fetchProducts,
@@ -17,7 +17,7 @@ import {
 
 import { productInteractionState } from "../product-interaction-state.js";
 import * as errorHanlders from "../utils/error-handlers.js";
-import * as productData from "../domain/productDataUtils.js";
+import * as productData from "../utils/productDataUtils.js";
 
 /**
  * =========================================================

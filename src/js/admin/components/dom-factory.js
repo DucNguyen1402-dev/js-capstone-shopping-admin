@@ -1,4 +1,4 @@
-import { $ } from "../shared/dom-utils.js";
+import { $ } from "../index.js";
 
 
 /** @type {HTMLElement} Main trigger to open the product creation form. */

@@ -1,1 +1,0 @@
-export {PHONE_API_URL} from "../config/api-config.js";
