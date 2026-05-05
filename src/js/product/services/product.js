@@ -1,7 +1,6 @@
 import { ProductModel } from "../models/product.js";
 import { productState } from "../store/product-state.js";
-const URL = "https://69ca67a6ba5984c44bf31972.mockapi.io/api/v1/phone";
-
+import {PHONE_API_URL} from "../index.js";
 /**
  * Transforms a raw data item from the API into a ProductModel instance.
  * @function toProductModel
@@ -42,7 +41,7 @@ const toProductModel = (item) =>
  */
 export async function fetchProducts() {
   try {
-    const { data } = await axios.get(URL);
+    const { data } = await axios.get(PHONE_API_URL);
     productState.list = data.map(toProductModel);
   } catch (error) {
     console.error("Failed to fetch product list:", error);
@@ -96,7 +95,7 @@ export async function updateProduct(id, data) {
  */
 export async function addProduct(data) {
   try {
-    await axios.post(URL, data);
+    await axios.post(PHONE_API_URL, data);
   } catch (err) {
       throw err;
   }
