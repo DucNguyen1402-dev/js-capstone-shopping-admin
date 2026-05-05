@@ -4,7 +4,7 @@
     <!-- Meta & SEO -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PhoneShop Management</title>
+    <title>PhoneShop - Premium Mobile Store</title>
     <meta
       name="description"
       content="A modern e-commerce platform built with Vanilla JS, Tailwind, and RESTful API. Features include a dynamic shopping cart and a comprehensive admin inventory management system."
@@ -12,57 +12,206 @@
     <link rel="icon" href="./src/assets/icon/customer-favicon.png" />
 
     <!-- Open Graph (SEO & Social) -->
-    <meta property="og:title" content="Base - Tailwind CSS Startup Template" />
-
+    <meta property="og:title" content="PhoneShop - E-commerce Platform" />
     <meta
       property="og:description"
-      content="Base is a premium Tailwind CSS startup template. Features essential sections, optimized speed, and easy customization."
+      content="Premium mobile phone shop with Tailwind CSS. Fast, responsive, and easy to use."
     />
-
     <meta
       property="og:image"
       content="https://js-capstone-shopping-admin.vercel.app/src/assets/og/og-img.png"
     />
-
     <meta
       property="og:url"
       content="https://js-capstone-shopping-admin.vercel.app/"
     />
-
     <meta property="og:type" content="website" />
 
-    <!-- google font -->
-
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lexend:wght@100..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Mozilla+Headline:wght@200..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
       rel="stylesheet"
     />
 
-    <!-- font Awsome link -->
+    <!-- Font Awesome 6 -->
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
-      integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
     />
 
-    <!-- App CSS -->
-    <link rel="stylesheet" href="./dist/output.css" />
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-    <!--Axios -->
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.11.0/axios.min.js"
-      integrity="sha512-h9644v03pHqrIHThkvXhB2PJ8zf5E9IyVnrSfZg8Yj8k4RsO4zldcQc4Bi9iVLUCCsqNY0b4WXVV4UB+wbWENA=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    ></script>
+    <!-- Axios -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.11.0/axios.min.js"></script>
 
-    <!-- App Scripts -->
-    <script type="module" src="./src/js/customer/controller.js"></script>
+    <style>
+      /* Custom styles */
+      .product-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      .product-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+      }
+      .cart-badge {
+        transition: all 0.2s ease;
+      }
+    </style>
   </head>
-  <body></body>
-</html>
+  <body class="bg-gray-50 font-sans antialiased">
 
+    <!-- ========== HEADER ========== -->
+    <header class="bg-white shadow-md sticky top-0 z-50 py-4">
+      <div class="container mx-auto px-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <!-- Logo -->
+          <div class="flex items-center gap-2" id="logo">
+            <div class="bg-blue-600 rounded-full w-8 h-8 flex items-center justify-center">
+              <i class="fas fa-mobile-alt text-white text-sm"></i>
+            </div>
+            <span class="text-xl font-bold text-gray-800">Phone<span class="text-blue-600">Shop</span></span>
+          </div>
+
+          <!-- Menu ngang (center) -->
+          <ul class="hidden md:flex gap-8 text-gray-600 font-medium mx-auto">
+            <li><a href="#" class="hover:text-blue-600 transition">Home</a></li>
+            <li><a href="#" class="hover:text-blue-600 transition">Phones</a></li>
+            <li><a href="#" class="hover:text-blue-600 transition">Accessories</a></li>
+            <li><a href="#" class="hover:text-blue-600 transition">Sale</a></li>
+            <li><a href="#" class="hover:text-blue-600 transition">Contact</a></li>
+          </ul>
+
+          <!-- Icons: Cart + User -->
+          <div class="flex items-center gap-4">
+            <div class="relative cursor-pointer" id="cartIconBtn">
+              <i class="fas fa-shopping-cart text-xl text-gray-600 hover:text-blue-600 transition"></i>
+              <span id="cartCount" class="absolute -top-2 -right-3 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5 hidden">0</span>
+            </div>
+            <!-- User icon - login feature coming soon -->
+            <div class="cursor-pointer" id="userIconBtn">
+              <i class="fas fa-user-circle text-xl text-gray-600 hover:text-blue-600 transition"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ========== MAIN CONTENT ========== -->
+    <main class="container mx-auto px-4 py-8">
+      <!-- Thanh tìm kiếm + bộ lọc + sắp xếp -->
+      <div class="bg-white rounded-xl shadow-sm p-4 mb-8">
+        <div class="flex flex-col md:flex-row gap-4">
+          <!-- Ô tìm kiếm -->
+          <div class="flex-1">
+            <div class="relative">
+              <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+              <input
+                type="text"
+                id="searchInput"
+                placeholder="Search by name, description..."
+                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+
+          <!-- Lọc theo danh mục -->
+          <div class="w-full md:w-48">
+            <select id="filterSelect" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+              <option value="all">All categories</option>
+              <option value="iPhone">iPhone</option>
+              <option value="Samsung">Samsung</option>
+              <option value="Xiaomi">Xiaomi</option>
+              <option value="OPPO">OPPO</option>
+              <option value="Vivo">Vivo</option>
+            </select>
+          </div>
+
+          <!-- Lọc theo khoảng giá -->
+          <div class="w-full md:w-48">
+            <select id="priceRangeFilter" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+              <option value="all">All prices</option>
+              <option value="under5">Under 5,000,000₫</option>
+              <option value="5-10">5,000,000₫ - 10,000,000₫</option>
+              <option value="10-20">10,000,000₫ - 20,000,000₫</option>
+              <option value="above20">Above 20,000,000₫</option>
+            </select>
+          </div>
+
+          <!-- Sắp xếp theo giá -->
+          <div class="w-full md:w-48">
+            <select id="sortSelect" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+              <option value="default">Sort: Featured</option>
+              <option value="priceAsc">Price: Low to High</option>
+              <option value="priceDesc">Price: High to Low</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading spinner -->
+      <div id="loadingSpinner" class="text-center py-12">
+        <i class="fas fa-spinner fa-spin text-4xl text-blue-600"></i>
+        <p class="mt-2 text-gray-500">Loading products...</p>
+      </div>
+
+      <!-- Grid sản phẩm -->
+      <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 hidden">
+        <!-- Products will be rendered here -->
+      </div>
+
+      <!-- Thông báo không có sản phẩm -->
+      <div id="noProductsMsg" class="text-center py-12 hidden">
+        <i class="fas fa-box-open text-5xl text-gray-400 mb-3"></i>
+        <p class="text-gray-500">No products found</p>
+      </div>
+    </main>
+
+    <!-- ========== SIDEBAR GIỎ HÀNG ========== -->
+    <div id="cartOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+      <div id="cartSidebar" class="absolute right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl transform translate-x-full transition-transform duration-300">
+        <div class="flex flex-col h-full">
+          <!-- Header -->
+          <div class="flex justify-between items-center p-4 border-b">
+            <h2 class="text-xl font-bold">
+              <i class="fas fa-shopping-cart text-blue-600 mr-2"></i>
+              Your Cart
+            </h2>
+            <button id="closeCartBtn" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+          </div>
+
+          <!-- Cart items -->
+          <div id="cartItemsList" class="flex-1 overflow-y-auto p-4 space-y-3">
+            <div class="text-center py-12 text-gray-500">Cart is empty</div>
+          </div>
+
+          <!-- Footer -->
+          <div class="border-t p-4">
+            <div class="flex justify-between text-lg font-bold mb-3">
+              <span>Total:</span>
+              <span id="cartTotal" class="text-red-600">0₫</span>
+            </div>
+            <div class="flex gap-3">
+              <button id="clearCartBtn" class="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold py-3 rounded-lg transition">
+                <i class="fas fa-trash-alt mr-2"></i>Clear All
+              </button>
+              <button id="checkoutBtn" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition">
+                Checkout
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast thông báo -->
+    <div id="toast" class="fixed bottom-5 left-1/2 -translate-x-1/2 bg-gray-800 text-white px-5 py-2 rounded-full text-sm z-50 opacity-0 transition-opacity duration-300 pointer-events-none">
+      <span id="toastMsg"></span>
+    </div>
+
+    <!-- Import controller.js -->
+    <script type="module" src="./src/js/customer/controller.js"></script>
+  </body>
+</html>
