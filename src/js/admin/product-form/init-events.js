@@ -1,5 +1,8 @@
 import {initProductFormEvents} from "./events/index.js";
-import {productFormUI, productFormInputUI} from "./dom.js";
+import {productFormEl, productFormInputEl} from "./dom.js";
+import {inputValidators} from "./input-validator/index.js";
+import {inputUIHandler, inputUIHandlerMapping} from "./ui/input/index.js";
+
 /**
  * Hooks the form's internal events to the global controller logic.
  * @description 
@@ -7,8 +10,9 @@ import {productFormUI, productFormInputUI} from "./dom.js";
  * Only this function needs to be exposed for event initialization.
  * @param {Function} dispatch - The central state/action manager.
  */
-export function initAllProductFormEvents(dispatch) {
-  initProductFormEvents(dispatch, productFormUI, productFormInputUI);
+export function initAllProductFormEvents({dispatch, productList}) {
+
+  const contextBtn = {dispatch, productFormEl, productFormInputEl};
+  const contextInput ={dispatch, productFormInputEl, inputValidators, inputUIHandlerMapping, inputUIHandler, productList, productFormEl}
+  initProductFormEvents(contextBtn, contextInput);
 }
-
-

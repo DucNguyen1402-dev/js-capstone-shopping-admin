@@ -1,0 +1,1 @@
+export {initCreateProductTriggerBtnEvent} from "./event.js";

@@ -22,11 +22,10 @@ const PRODUCT_SORT_STRATEGIES = {
   price_desc: (a, b) => b.price - a.price,
 };
 
-
 /**
  * Sorts the product collection based on a predefined strategy.
- * @description 
- * Uses 'PRODUCT_SORT_STRATEGIES' to look up the sorting logic. 
+ * @description
+ * Uses 'PRODUCT_SORT_STRATEGIES' to look up the sorting logic.
  * Creates a shallow copy of the list to maintain immutability.
  * @param {string} sortStrategy - Key for the sorting strategy (e.g., 'price-asc').
  * @param {Array} productList - The product collection to be sorted.
@@ -43,7 +42,7 @@ function getSortedProducts(sortStrategy, productList) {
 
 /**
  * Filters the product collection based on a specific category type.
- * @description 
+ * @description
  * Provides a filtered subset of data. Returns the full list if the type is 'all'.
  * Expects 'type' to be pre-validated and normalized.
  * @param {string} type - The filter category (e.g., 'all', 'laptop', 'phone').
