@@ -77,8 +77,6 @@
   }
 }
 
-
-
 .row-blink {
   animation: blinkHighlight 0.6s ease-in-out 3;
 }
@@ -87,4 +85,18 @@
   50% {
     background-color: var(--blink-color);
   }
+}
+
+/* Custom styles */
+.product-card {
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+.cart-badge {
+  transition: all 0.2s ease;
 }

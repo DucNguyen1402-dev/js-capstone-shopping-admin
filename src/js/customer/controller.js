@@ -1,42 +1,21 @@
-// ========== IMPORT CÁC HÀM HELPER ==========
-import { $, $all, $e } from '../shared/dom-utils.js';
-
-// ========== CẤU HÌNH ==========
-const API_URL = "https://69ca679fba5984c44bf31927.mockapi.io/api/v1/phone";
+import * as DOMElements from "./dom.js";
 
 // ========== BIẾN LƯU TRỮ ==========
 let danhSachSP = [];      // Toàn bộ sản phẩm từ API
 let gioHang = [];         // Giỏ hàng
 
-// ========== LẤY CÁC PHẦN TỬ DOM ==========
-const productGrid = $('#productGrid');
-const loadingSpinner = $('#loadingSpinner');
-const noProductsMsg = $('#noProductsMsg');
-const searchInput = $('#searchInput');
-const filterSelect = $('#filterSelect');
-const priceRangeFilter = $('#priceRangeFilter');
-const sortSelect = $('#sortSelect');
-const cartCountSpan = $('#cartCount');
-const cartOverlay = $('#cartOverlay');
-const cartSidebar = $('#cartSidebar');
-const cartItemsList = $('#cartItemsList');
-const cartTotalSpan = $('#cartTotal');
-const closeCartBtn = $('#closeCartBtn');
-const cartIconBtn = $('#cartIconBtn');
-const checkoutBtn = $('#checkoutBtn');
-const clearCartBtn = $('#clearCartBtn');
-const userIconBtn = $('#userIconBtn');  // <-- THÊM DÒNG NÀY
-const toast = $('#toast');
-const toastMsg = $('#toastMsg');
+
+// ========== CẤU HÌNH ==========
+const API_URL = "https://69ca679fba5984c44bf31927.mockapi.io/api/v1/phone";
 
 // ========== HIỂN THỊ THÔNG BÁO ==========
 const showToast = (message) => {
-    toastMsg.textContent = message;
-    toast.classList.remove('opacity-0');
-    toast.classList.add('opacity-100');
+    DOMElements.toastMsg.textContent = message;
+    DOMElements.toast.classList.remove('opacity-0');
+    DOMElements.toast.classList.add('opacity-100');
     setTimeout(() => {
-        toast.classList.remove('opacity-100');
-        toast.classList.add('opacity-0');
+        DOMElements.toast.classList.remove('opacity-100');
+        DOMElements.toast.classList.add('opacity-0');
     }, 2000);
 };
 
@@ -66,12 +45,12 @@ const tinhTongTien = () => {
 const updateCartUI = () => {
     const totalItems = gioHang.reduce((sum, item) => sum + item.quantity, 0);
     if (totalItems > 0) {
-        cartCountSpan.classList.remove('hidden');
-        cartCountSpan.textContent = totalItems;
+        DOMElements.cartCountSpan.classList.remove('hidden');
+        DOMElements.cartCountSpan.textContent = totalItems;
     } else {
-        cartCountSpan.classList.add('hidden');
+        DOMElements.cartCountSpan.classList.add('hidden');
     }
-    cartTotalSpan.textContent = `${tinhTongTien().toLocaleString('vi-VN')}₫`;
+    DOMElements.cartTotalSpan.textContent = `${tinhTongTien().toLocaleString('vi-VN')}₫`;
     renderCartItems();
 };
 
@@ -90,7 +69,7 @@ const clearAllCart = () => {
 // ========== HIỂN THỊ GIỎ HÀNG TRONG SIDEBAR ==========
 const renderCartItems = () => {
     if (gioHang.length === 0) {
-        cartItemsList.innerHTML = `
+        DOMElements.cartItemsList.innerHTML = `
             <div class="text-center py-12">
                 <i class="fas fa-shopping-basket text-5xl text-gray-300 mb-3"></i>
                 <p class="text-gray-500">Cart is empty</p>
@@ -113,18 +92,18 @@ const renderCartItems = () => {
                 </div>
                 <div class="flex flex-col items-end gap-2">
                     <div class="flex items-center gap-2">
-                        <button class="decrement-cart w-7 h-7 bg-gray-200 rounded-full hover:bg-gray-300 transition" data-id="${item.id}">-</button>
+                        <button class="decrement-cart w-7 h-7 bg-gray-200 rounded-full hover:bg-gray-300 transition cursor-pointer" data-id="${item.id}">-</button>
                         <span class="w-8 text-center font-semibold">${item.quantity}</span>
-                        <button class="increment-cart w-7 h-7 bg-gray-200 rounded-full hover:bg-gray-300 transition" data-id="${item.id}">+</button>
+                        <button class="increment-cart w-7 h-7 bg-gray-200 rounded-full hover:bg-gray-300 transition cursor-pointer" data-id="${item.id}">+</button>
                     </div>
-                    <button class="delete-cart text-red-500 text-xs hover:text-red-700" data-id="${item.id}">
-                        <i class="fas fa-trash-alt"></i> Remove
+                    <button class="delete-cart text-red-500 text-xs hover:text-red-700 cursor-pointer" data-id="${item.id}">
+                        <i class="fas fa-trash-alt "></i> Remove
                     </button>
                 </div>
             </div>
         `;
     }
-    cartItemsList.innerHTML = html;
+    DOMElements.cartItemsList.innerHTML = html;
     
     // Xử lý tăng số lượng
     document.querySelectorAll('.increment-cart').forEach(btn => {
@@ -192,9 +171,9 @@ const themVaoGioHang = (product) => {
 
 // ========== LỌC SẢN PHẨM ==========
 const filterProducts = () => {
-    const searchTerm = searchInput.value.toLowerCase();
-    const filterType = filterSelect.value;
-    const priceRange = priceRangeFilter.value;
+    const searchTerm = DOMElements.searchInput.value.toLowerCase();
+    const filterType = DOMElements.filterSelect.value;
+    const priceRange = DOMElements.priceRangeFilter.value;
     
     let filtered = [...danhSachSP];
     
@@ -227,7 +206,7 @@ const filterProducts = () => {
     }
     
     // Sắp xếp
-    const sortValue = sortSelect.value;
+    const sortValue = DOMElements.sortSelect.value;
     if (sortValue === 'priceAsc') {
         filtered.sort((a, b) => a.price - b.price);
     } else if (sortValue === 'priceDesc') {
@@ -242,12 +221,12 @@ const filterProducts = () => {
 // ========== RENDER DANH SÁCH SẢN PHẨM ==========
 const renderDanhSachSP = (danhSach) => {
     if (danhSach.length === 0) {
-        productGrid.innerHTML = '';
-        noProductsMsg.classList.remove('hidden');
+        DOMElements.productGrid.innerHTML = '';
+        DOMElements.noProductsMsg.classList.remove('hidden');
         return;
     }
     
-    noProductsMsg.classList.add('hidden');
+    DOMElements.noProductsMsg.classList.add('hidden');
     
     let html = '';
     for (let i = 0; i < danhSach.length; i++) {
@@ -269,14 +248,14 @@ const renderDanhSachSP = (danhSach) => {
                         <span class="text-sm text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">${type}</span>
                         <span class="text-xl font-bold text-red-600">${price.toLocaleString('vi-VN')}₫</span>
                     </div>
-                    <button class="add-to-cart-btn w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition flex items-center justify-center gap-2" data-id="${phone.id}" data-name="${phone.name}" data-price="${price}" data-image="${imgUrl}" data-type="${type}">
+                    <button class="add-to-cart-btn w-full mt-4 bg-blue-600 hover:bg-blue-700 cursor-pointer text-white font-semibold py-2 rounded-lg transition flex items-center justify-center gap-2" data-id="${phone.id}" data-name="${phone.name}" data-price="${price}" data-image="${imgUrl}" data-type="${type}">
                         <i class="fas fa-cart-plus"></i> Add to Cart
                     </button>
                 </div>
             </div>
         `;
     }
-    productGrid.innerHTML = html;
+    DOMElements.productGrid.innerHTML = html;
     
     // Gắn sự kiện cho nút Add to Cart
     document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
@@ -295,62 +274,62 @@ const renderDanhSachSP = (danhSach) => {
 
 // ========== LẤY DỮ LIỆU TỪ API ==========
 const layDanhSachSP = async () => {
-    loadingSpinner.classList.remove('hidden');
-    productGrid.classList.add('hidden');
-    noProductsMsg.classList.add('hidden');
+    DOMElements.loadingSpinner.classList.remove('hidden');
+    DOMElements.productGrid.classList.add('hidden');
+    DOMElements.noProductsMsg.classList.add('hidden');
     
     try {
         const response = await axios.get(API_URL);
         danhSachSP = response.data;
         
-        loadingSpinner.classList.add('hidden');
-        productGrid.classList.remove('hidden');
+        DOMElements.loadingSpinner.classList.add('hidden');
+        DOMElements.productGrid.classList.remove('hidden');
         
         filterProducts();
         
     } catch (error) {
         console.error('Lỗi tải dữ liệu:', error);
-        loadingSpinner.classList.add('hidden');
-        productGrid.classList.add('hidden');
-        noProductsMsg.classList.remove('hidden');
-        noProductsMsg.innerHTML = '<i class="fas fa-exclamation-triangle text-4xl text-red-500 mb-3"></i><p class="text-red-500">Failed to load data! Please try again later.</p>';
+        DOMElements.loadingSpinner.classList.add('hidden');
+        DOMElements.productGrid.classList.add('hidden');
+        DOMElements.noProductsMsg.classList.remove('hidden');
+        DOMElements.noProductsMsg.innerHTML = '<i class="fas fa-exclamation-triangle text-4xl text-red-500 mb-3"></i><p class="text-red-500">Failed to load data! Please try again later.</p>';
     }
 };
 
 // ========== MỞ/ĐÓNG GIỎ HÀNG ==========
 const openCartSidebar = () => {
-    cartOverlay.classList.remove('hidden');
+    DOMElements.cartOverlay.classList.remove('hidden');
     setTimeout(() => {
-        cartSidebar.classList.remove('translate-x-full');
-        cartSidebar.classList.add('translate-x-0');
+        DOMElements.cartSidebar.classList.remove('translate-x-full');
+        DOMElements.cartSidebar.classList.add('translate-x-0');
     }, 10);
     renderCartItems();
 };
 
 const closeCartSidebar = () => {
-    cartSidebar.classList.remove('translate-x-0');
-    cartSidebar.classList.add('translate-x-full');
+    DOMElements.cartSidebar.classList.remove('translate-x-0');
+    DOMElements.cartSidebar.classList.add('translate-x-full');
     setTimeout(() => {
-        cartOverlay.classList.add('hidden');
+        DOMElements.cartOverlay.classList.add('hidden');
     }, 300);
 };
 
 // ========== KHỞI TẠO SỰ KIỆN ==========
 const initEvents = () => {
-    searchInput.addEventListener('input', filterProducts);
-    filterSelect.addEventListener('change', filterProducts);
-    priceRangeFilter.addEventListener('change', filterProducts);
-    sortSelect.addEventListener('change', filterProducts);
+    DOMElements.searchInput.addEventListener('input', filterProducts);
+    DOMElements.filterSelect.addEventListener('change', filterProducts);
+    DOMElements.priceRangeFilter.addEventListener('change', filterProducts);
+    DOMElements.sortSelect.addEventListener('change', filterProducts);
     
-    cartIconBtn.addEventListener('click', openCartSidebar);
-    closeCartBtn.addEventListener('click', closeCartSidebar);
-    clearCartBtn.addEventListener('click', clearAllCart);
+    DOMElements.cartIconBtn.addEventListener('click', openCartSidebar);
+    DOMElements.closeCartBtn.addEventListener('click', closeCartSidebar);
+    DOMElements.clearCartBtn.addEventListener('click', clearAllCart);
     
-    cartOverlay.addEventListener('click', (e) => {
+    DOMElements.cartOverlay.addEventListener('click', (e) => {
         if (e.target === cartOverlay) closeCartSidebar();
     });
     
-    checkoutBtn.addEventListener('click', () => {
+    DOMElements.checkoutBtn.addEventListener('click', () => {
         if (gioHang.length === 0) {
             showToast('Cart is empty! Add some products first.');
             return;
@@ -364,7 +343,7 @@ const initEvents = () => {
     
     // ========== USER ICON - TÍNH NĂNG ĐANG PHÁT TRIỂN ==========
     if (userIconBtn) {
-        userIconBtn.addEventListener('click', () => {
+        DOMElements.userIconBtn.addEventListener('click', () => {
             showToast('🔐 Login feature is coming soon!');
         });
     }
