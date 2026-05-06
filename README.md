@@ -6,45 +6,16 @@ An e-commerce project consisting of two main modules: a Customer Shopping Interf
 
 ---
 
-<!-- ## 📸 Preview
-
-<b>🖥️ </b> <br>
-
-<div align="center">
-<img src="" width="80%" alt="Desktop screenshot"/>
-</div>
-
-<b>📱/b> <br>
-
-<div align="center">
-   <img src="" width="250" alt="Mobile Screenshot"/>
-</div>
-
-<b>/b> <br>
-
-<div align="center">
-<img src="" width="80%" alt="Desktop screenshot"/>
-</div>
-
-<b></b> <br>
-
-<div align="center">
-   <img src="" width="250" alt="Mobile Screenshot"/>
-</div> -->
-
 ## ⚙️ Tech Stack
 
 - JavaScript (ES6+) 
 
-- SASS/SCSS with Responsive Web
+- Tailwind with responsive web
 
 - API: MockAPI & Axios Architecture
 
-- bject-Oriented Programming (OOP) 
+- object-Oriented Programming (OOP) 
 
-
-
-<!-- ## 🗝️ Key Features -->
 
 
 ## 🛠️ Quick Start
@@ -71,8 +42,8 @@ npm run dev
 
 - [![Gmail](https://img.shields.io/badge/Gmail-D14836?style=flat-square&logo=gmail&logoColor=white)](hoangduc140220@gmail.com)
 
-<!-- **Nam Long**
+**Nam Long**
 
-- [![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white)](https://github.com/DucNguyen1402-dev)
+- [![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white)](https://github.com/longnguyennam0705-a11y)
 
-- [![Gmail](https://img.shields.io/badge/Gmail-D14836?style=flat-square&logo=gmail&logoColor=white)](hoangduc140220@gmail.com) -->
+- [![Gmail](https://img.shields.io/badge/Gmail-D14836?style=flat-square&logo=gmail&logoColor=white)](longnguyennam0705@gmail.com)
