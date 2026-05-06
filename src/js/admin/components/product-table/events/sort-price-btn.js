@@ -37,7 +37,7 @@ function handleSortPriceOnClick(sortPriceIcon, dispatch) {
  * * @param {Function} dispatch - The dispatcher function for state communication.
  */
 export function initSortPriceBtn({
-  productInteractionState ={},
+  productInteractionState: {productFilterState, productSearchState},
   dispatch,
   tableEl = {},
 }) {
@@ -45,11 +45,12 @@ export function initSortPriceBtn({
 
   sortPriceBtn.addEventListener("click", (e) => {
     if (
-      productInteractionState.filteredCount <= 1 ||
-      (productInteractionState.isSearching &&
-        productInteractionState.searchResults.length <= 1)
+      productFilterState.filteredCount <= 1 ||
+      (productSearchState.isSearching &&
+        productSearchState.searchResultIds.size <= 1)
     )
       return;
     handleSortPriceOnClick(sortPriceIcon, dispatch);
   });
 }
+
