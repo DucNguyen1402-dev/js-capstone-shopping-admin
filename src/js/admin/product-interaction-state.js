@@ -18,7 +18,7 @@ export const productSortedState = {
 
 export const productSearchState = {
   isSearching: false,
-  searchResultIds: [],
+  searchResultIds: new Set([]),
 
 };
 
