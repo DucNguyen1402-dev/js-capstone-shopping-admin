@@ -143,22 +143,30 @@ export function renderDanhSachSP({
     <img src="${imgUrl}" alt="${phone.name}" class="max-h-36 object-contain"
       onerror="this.src = 'https://placehold.co/300x200?text=Phone'" />
   </div>
-  <div class="bg-gray-50 p-4">
-    <h3 class="truncate text-lg font-bold" title="${phone.name}">
+  <div class="bg-gray-50 p-4 min-h-85 flex flex-col justify-between">
+    <div>
+    <div class="min-h-14">
+    <h3 class= text-lg font-bold line-clamp-2" title="${phone.name}">
       ${phone.name}
     </h3>
-    <p class="mt-6 text-sm text-gray-500">
+    </div>
+    <div class="mt-1 min-h-15">
+    <p class="text-sm text-gray-500">
       ${desc.substring(0, 60)}${desc.length > 60 ? "..." : ""}
     </p>
-  
-    <div class="mt-6 flex flex-wrap items-center justify-between gap-2">
+    </div>
+    <div class ="mt-2 flex gap-2 text-sm text-gray-500 min-h-10 rounded-sm overflow-hidden">
+    <span class="bg-gray-200/60 p-0.75 w-full">${phone.screen}</span>
+    </div>
+    <div class="mt-6 flex flex-wrap items-center justify-between gap-2 ">
       <span class="rounded-full bg-blue-50 px-2 py-0.5 text-sm text-blue-600">${type}</span>
      <span class="${
        phone.status === "comingSoon"
          ? "text-green-500 font-medium"
-         : "text-xl font-bold text-red-600"}"> ${getPriceLabel(phone.price, phone.status)}</span>
+         : "text-xl font-bold text-red-600"
+     }"> ${getPriceLabel(phone.price, phone.status)}</span>
     </div>
-    <div class="mt-6 flex items-center gap-3 text-sm">
+    <div class="mt-8 flex items-center gap-3 text-sm">
       <div class="flex items-center gap-1 font-medium text-yellow-500">
         <i class="fa-solid fa-star text-xs"></i>
         <span class="text-gray-800"> ${getStarLabel(phone.sold)} </span>
@@ -168,10 +176,12 @@ export function renderDanhSachSP({
 
       <span class="text-gray-500"> ${phone.sold} sold </span>
     </div>
+    </div>
     <button
       class="add-to-cart-btn mt-6 flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-blue-600 py-2 font-semibold text-white transition hover:bg-blue-700"
       data-id="${phone.id}" data-name="${phone.name}" data-price="${price}" data-image="${imgUrl}" data-type="${type}">
-      <i class="fas fa-cart-plus">Add to Cart</i>
+      <span class="fas fa-cart-plus"></span>
+      <span>Add to Cart</span>
     </button>
   </div>
 </div>
