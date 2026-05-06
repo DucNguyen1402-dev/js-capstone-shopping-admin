@@ -73,6 +73,7 @@ const productOrchestrator = {
     search: productSearchState,
     sort: productSortedState,
   },
+  useCases,
 
   async refreshProductList(count) {
     this.ui.renderSkeleton(count);
@@ -105,10 +106,7 @@ const productOrchestrator = {
 
   applySortedType(list) {
     const sortStrategy = this.interaction.sort.sortPriceStrategy;
-    return productTableServices.getSortedProducts(
-      sortStrategy,
-      list,
-    );
+    return productTableServices.getSortedProducts(sortStrategy, list);
   },
 };
 
@@ -567,18 +565,19 @@ function handleProductSortChanged({
 }
 
 /* ======== 9. PRODUCT SEARCH REQUEST ======== */
-
-//INTERNAL HELPER
 /**
- * Processes the search input and returns the appropriate search state and result list.
- * @param {string} inputValue - The search query from the user.
- * @param {Array} filteredList - The product list after applying current filters.
- * @returns {Object} An object containing:
- * @returns {boolean} returns.isSearching - Whether the search mode is active.
- * @returns {Array} returns.resultList - The list of products matching the search/filter criteria.
+ * Resolve search result from keyword.
+ *
+ * @param {string} searchValue
+ * @param {Array<Object>} list
+ * @returns {{ state: 'NOT_FOUND' | 'EMPTY' | 'DEFAULT', list: Array<Object> }}
+ *
+ * - NOT_FOUND: keyword present, no match → []
+ * - EMPTY: no keyword → original list
+ * - DEFAULT: keyword present, has match → filtered list
  */
-function resolveProductSearch({ searchValue, list, useCases }) {
-  const { state, list: searchList } = useCases.resolveProductSearch(
+function resolveProductSearch(searchValue, list) {
+  const { state, list: searchList } = this.useCases.resolveProductSearch(
     searchValue,
     list,
   );
@@ -592,7 +591,6 @@ function resolveProductSearch({ searchValue, list, useCases }) {
   return mapping[state] || mapping.DEFAULT;
 }
 
-//MAIN HANDLER
 /**
  * Handles product search requests by filtering the master list and performing a keyword search.
  * Manages both internal search state and UI transitions between results and "Not Found" states.
@@ -630,17 +628,17 @@ function handleSearchProductRequest({
   );
 
   // Resolve search state and compute matching results
-  const { isSearching, resultList } = resolveProductSearch({
-    searchValue: action.payload.inputValue,
+  const { isSearching, resultList } = productOrchestrator.resolveProductSearch(
+    action.payload.inputValue,
     list,
-    useCases,
-  });
+  );
 
   // Sync internal search state
   productSearchState.isSearching = isSearching;
   productSearchState.searchResultIds = new Set(
     resultList.map((item) => item.id),
   );
+  productSearchState.searchValue = action.payload.inputValue;
 
   // UI Branching: Show "Not Found" or render the list
   if (isSearching && resultList.length === 0) {
@@ -733,7 +731,49 @@ function handleOpenAddProductForm({ states, services }) {
 }
 
 /* ======== 10. CREATE NEW PRODUCT ======== */
+/**
+ * Derive search result list from current product state.
+ *
+ * Applies filter + sort pipeline, then resolves search result.
+ *
+ * @returns {Array<Object>} Filtered & searched product list
+ */
+function deriveSearchList({
+  productOrchestrator,
+  useCases,
+  productSearchState,
+}) {
+  const transformers = [
+    (list) => productOrchestrator.applyFilter(list),
+    (list) => productOrchestrator.applySortedType(list),
+  ];
 
+  const list = transformers.reduce(
+    (list, fn) => fn(list),
+    productOrchestrator.getProductList(),
+  );
+
+  const { list: searchList } = useCases.resolveProductSearch(
+    productSearchState.searchValue,
+    list,
+  );
+
+  productSearchState.searchResultIds = new Set(
+    searchList.map((item) => item.id),
+  );
+  return searchList;
+}
+
+/**
+ * Find the newly added product by comparing previous IDs.
+ *
+ * @param {Set<string|number>} prevIds - IDs before update
+ * @param {Array<Object>} list - Current product list
+ * @returns {Object|undefined} The new product (if found)
+ */
+function findNewProduct(prevIds, list) {
+  return list.find((item) => !prevIds.has(item.id));
+}
 /**
  * Clean up the UI and refresh the product list after a successful creation.
  * Hides the form and loading indicators, updates the list via the orchestrator,
@@ -750,6 +790,7 @@ async function refreshAfterCreation({
   componentUIHandler: { productTableUI },
   controller: { productOrchestrator, createTransformers },
   api: { fetchProducts },
+  useCases,
 }) {
   const previousProductIds = new Set(
     productOrchestrator.getProductList().map((item) => item.id),
@@ -759,23 +800,27 @@ async function refreshAfterCreation({
   productFormServices.hideForm();
   toastServices.hideLoading();
 
+  // handle list for display
   const currentProductList = productOrchestrator.getProductList();
 
-  const newlyAddedProduct = currentProductList.find(
-    (product) => !previousProductIds.has(product.id),
+  const newlyAddedProduct = findNewProduct(
+    previousProductIds,
+    currentProductList,
   );
 
-  productSearchState.searchResultIds.add(newlyAddedProduct.id);
-
-  const transformers = createTransformers();
-  const list = transformers.reduce(
-    (list, transformer) => transformer(list),
-    productOrchestrator.getProductList(),
-  );
-
-  productTableUI.renderRawOrderOfList(list);
+  const searchList = deriveSearchList({
+    productOrchestrator,
+    useCases,
+    productSearchState,
+  });
+  productTableUI.renderRawOrderOfList(searchList);
   toastServices.showAddSuccess();
-  productTableUI.highlightAddedRow(newlyAddedProduct.id);
+
+  const isVisible = searchList.some(
+    (item) => item.id === newlyAddedProduct?.id,
+  );
+
+  isVisible && productTableUI.highlightAddedRow(newlyAddedProduct.id);
 }
 /**
  * Processes the creation of a new product.
@@ -836,9 +881,11 @@ async function handleCreateNewProduct({
       componentUIHandler,
       controller,
       api: { fetchProducts },
+      useCases,
     });
   } catch (error) {
     toastServices.hideLoading();
+    console.log(error);
     const errorMessage = errorHanlders.getFriendlyErrorMessage(error);
     toastServices.showError(errorMessage);
   }

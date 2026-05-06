@@ -7,6 +7,7 @@ import {
 
 import { itemActionUI } from "./ui/item-actions.js";
 import { productItemUI } from "./ui/product-item.js";
+import {loadingSpinnerUI} from "./ui/loading-spinner.js";
 
 /**
  * UI Service Bundle for the Product Table.
@@ -14,9 +15,12 @@ import { productItemUI } from "./ui/product-item.js";
  * Groups sub-modules (Action buttons and Row items) into a single
  * dependency object to be injected into the main Table UI factory.
  */
+
+const tableEl = {}
 const uiToolkit = {
   itemActionUI,
   productItemUI,
+  loadingSpinnerUI
 };
 
 /**
@@ -78,6 +82,11 @@ const createProductTableUI = (productListTableEl, uiToolkit) => ({
     const { productItemUI } = uiToolkit;
     productItemUI.highlightRowChanged(id, "added");
   },
+  hideLoadingSpinner: ()=>{
+    const {loadingSpinnerUI} = uiToolkit;
+    const {loadingSpinner} = productListTableEl;
+    loadingSpinnerUI.hideLoadingSpinner(loadingSpinner, false);
+  }
 });
 
 /**

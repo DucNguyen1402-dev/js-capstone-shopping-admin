@@ -31,7 +31,8 @@ export function getProductListTableElements() {
     sortPriceBtn: $(".js-sort-price-btn"),
     sortPriceIcon: $(".js-sort-icon"),
     searchInput: $(".js-search-product-input"),
-    filterInput: $(".js-filter-product")
+    filterInput: $(".js-filter-product"),
+    loadingSpinner: $('[data-role="loading"]'),
   };
 }
 

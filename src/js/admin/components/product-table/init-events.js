@@ -25,7 +25,7 @@ export function initAllProductTableEvents({
     productState,
     productInteractionState,
     dispatch,
-    tableEl: productListTableEl,
+    tableEl: productListTableEl, 
     uiToolkit,
   };
   initProductTableEvents(context);
