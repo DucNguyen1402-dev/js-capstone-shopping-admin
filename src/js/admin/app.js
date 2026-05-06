@@ -101,6 +101,7 @@ async function initProductTablePage({ ui, states, actions, eventSetup, api }) {
   const { fetchProducts } = api;
   const { dispatch } = actions;
 
+  productTableUI.hideLoadingSpinner();
   productTableUI.renderSkeleton();
   await fetchProducts();
   productTableUI.renderDefaultTableOrder(productState.list);

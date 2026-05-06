@@ -646,6 +646,29 @@
               </tr>
             </thead>
             <tbody class="js-products-list-table divide-y divide-gray-100">
+              <tr>
+                <td colspan="100%" class="py-16" data-role="loading">
+                  <div
+                    class="flex flex-col items-center justify-center gap-3 text-gray-500"
+                  >
+                    <!-- Spinner -->
+                    <div
+                      class="h-10 w-10 animate-spin rounded-full border-4 border-blue-200 border-t-blue-600"
+                    ></div>
+
+                    <!-- Text -->
+                    <p class="text-sm font-medium tracking-wide">
+                      Loading products...
+                    </p>
+
+                    <!-- Subtle hint -->
+                    <span class="text-xs text-gray-400">
+                      Please wait a moment
+                    </span>
+                  </div>
+                </td>
+              </tr>
+
               <div
                 class="js-delete-modal pointer-events-none fixed inset-0 z-50 flex items-center justify-center bg-black/60 opacity-0 transition-opacity duration-200"
               >

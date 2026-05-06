@@ -19,7 +19,7 @@ export const productSortedState = {
 export const productSearchState = {
   isSearching: false,
   searchResultIds: new Set([]),
-
+  searchValue: "",
 };
 
 export const productFormState = {
