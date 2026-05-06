@@ -7,7 +7,15 @@ import {
 } from "./components/product-table/index.js";
 import { fetchProducts, productState } from "./index.js";
 import { dispatch } from "./product-main-controller/controller.js";
-import { productInteractionState } from "./product-interaction-state.js";
+import {
+  productFilterState,
+  productSearchState,
+} from "./product-interaction-state.js";
+
+const productInteractionState = {
+  productFilterState,
+  productSearchState
+};
 
 /**
  * Global application context representing the product management module.
@@ -76,7 +84,7 @@ function initProductFormPage({ states, actions, eventSetup }) {
   initAllProductFormEvents(context);
 }
 
-/** 
+/**
  * Initializes the product table page, including data fetching, rendering, and event binding.
  * @param {Object} product - The product module context.
  * @param {Object} product.ui - UI rendering components.
@@ -88,7 +96,7 @@ function initProductFormPage({ states, actions, eventSetup }) {
  */
 async function initProductTablePage({ ui, states, actions, eventSetup, api }) {
   const { productTableUI } = ui;
-  const { productInteractionState, productState } = states;
+  const { productInteractionState :{productFilterState}, productState } = states;
   const { initAllProductTableEvents } = eventSetup;
   const { fetchProducts } = api;
   const { dispatch } = actions;
@@ -96,7 +104,7 @@ async function initProductTablePage({ ui, states, actions, eventSetup, api }) {
   productTableUI.renderSkeleton();
   await fetchProducts();
   productTableUI.renderDefaultTableOrder(productState.list);
-  productInteractionState.filteredCount = productState.list.length;
+  productFilterState.filteredCount = productState.list.length;
   const context = { productState, productInteractionState, dispatch };
   initAllProductTableEvents(context);
 }
@@ -108,7 +116,7 @@ async function initProductTablePage({ ui, states, actions, eventSetup, api }) {
  */
 
 async function initApp() {
-  const {product} = context;
+  const { product } = context;
   initProductFormPage(product);
   await initProductTablePage(product);
   initPageInteractions(product);

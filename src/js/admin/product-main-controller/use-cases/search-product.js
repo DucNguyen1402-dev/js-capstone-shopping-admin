@@ -22,7 +22,7 @@ export function resolveProductSearch(inputValue, productList) {
   if (inputValue === "") {
     return {
       state: "EMPTY",
-      list: [],
+      list: productList,
     };
   }
 

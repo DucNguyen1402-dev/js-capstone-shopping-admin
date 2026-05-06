@@ -74,12 +74,9 @@ const createProductTableUI = (productListTableEl, uiToolkit) => ({
     const { productItemUI } = uiToolkit;
     productItemUI.highlightRowChanged(id, "updated");
   },
-  highlightAddedRow: ({ oldList, newList }) => {
+  highlightAddedRow: (id) => {
     const { productItemUI } = uiToolkit;
-    const oldIds = new Set(oldList.map((item) => item.id));
-    const newProduct = newList.find((item) => !oldIds.has(item.id));
-
-    productItemUI.highlightRowChanged(newProduct.id, "added");
+    productItemUI.highlightRowChanged(id, "added");
   },
 });
 

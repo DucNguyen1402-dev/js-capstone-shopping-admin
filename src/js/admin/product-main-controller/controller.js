@@ -15,7 +15,13 @@ import {
   productState,
 } from "../index.js";
 
-import { productInteractionState } from "../product-interaction-state.js";
+import {
+  productUIState,
+  productFilterState,
+  productFormState,
+  productSearchState,
+  productSortedState,
+} from "../product-interaction-state.js";
 import * as errorHanlders from "../utils/error-handlers.js";
 import * as productData from "../utils/productDataUtils.js";
 
@@ -62,7 +68,11 @@ const productOrchestrator = {
   ui: productTableUI,
   state: productState,
   services: productTableServices,
-  interaction: productInteractionState,
+  interaction: {
+    filter: productFilterState,
+    search: productSearchState,
+    sort: productSortedState,
+  },
 
   async refreshProductList(count) {
     this.ui.renderSkeleton(count);
@@ -74,18 +84,39 @@ const productOrchestrator = {
     await fetchProducts();
     this.ui.renderRawOrderOfList(list);
   },
-  getCurrentFilteredList(list) {
-    const filteredList = this.services.getListByFilter(
-      this.interaction.filterType,
+
+  getProductList() {
+    return this.state.list;
+  },
+  applySearch(list) {
+    const searchState = this.interaction.search;
+    if (!searchState.isSearching) return list;
+    return list.filter((item) => searchState.searchResultIds.has(item.id));
+  },
+
+  applyFilter(list) {
+    const filterState = this.interaction.filter;
+    const filterType = filterState.filterType;
+    if (filterType === "all") return list;
+
+    const filterList = list.filter((p) => p.type?.toLowerCase() === filterType);
+    return filterList;
+  },
+
+  applySortedType(list) {
+    const sortStrategy = this.interaction.sort.sortPriceStrategy;
+    return productTableServices.getSortedProducts(
+      sortStrategy,
       list,
     );
-    return filteredList;
   },
-  getFilterProducts(productType, productList){
-     const list = productList.filter((p) => p.type?.toLowerCase() === productType);
-     return list;
-}
 };
+
+const createTransformers = () => [
+  (list) => productOrchestrator.applySearch(list),
+  (list) => productOrchestrator.applyFilter(list),
+  (list) => productOrchestrator.applySortedType(list),
+];
 
 /**
  * ==========================================================
@@ -152,8 +183,11 @@ export async function dispatch(action) {
   const context = {
     action,
     states: {
-      productInteractionState,
-      productState,
+      productUIState,
+      productFilterState,
+      productFormState,
+      productSearchState,
+      productSortedState,
     },
     ui: {
       componentUIHandler,
@@ -163,6 +197,7 @@ export async function dispatch(action) {
     },
     controller: {
       productOrchestrator,
+      createTransformers,
     },
     domain: {
       productData,
@@ -190,44 +225,11 @@ export async function dispatch(action) {
  * @param {Object} params.states - Application states.
  */
 function handleDeleteRequest({ action, states }) {
-  const { productInteractionState } = states;
-  productInteractionState.deleteId = action.payload.id;
+  const { productUIState } = states;
+  productUIState.deleteId = action.payload.id;
 }
 
 /* ======== 2. PRODUCT DELETE CONFIRM ======== */
-/**
- * Calculates the final display list by excluding the pending deleted item,
- * then applying sorting and category filtering.
- * @param {Object} params - The display context and helper logic.
- * @param {Object} params.displayContext - Contains the raw list and interaction states (deleteId, filterType, sortStrategy).
- * @param {Object} params.services - Table services for sorting logic.
- * @param {Object} params.useCases - Business logic for product filtering.
- * @returns {Array} The processed list of products ready for UI rendering.
- */
-function getDisplayProducts({
-  displayContext,
-  services: { productTableServices },
-  productOrchestrator
-}) {
-  const {
-    list,
-    interaction: { deleteId, filterType, sortStrategy },
-  } = displayContext;
-
-  // 1. Exclude the product currently flagged for deletion
-  const withoutDeleted = list.filter((item) => item.id !== deleteId);
-
-  // 2. Apply the active sorting strategy
-  const sorted = productTableServices.getSortedProducts(
-    sortStrategy,
-    withoutDeleted,
-  );
-
-  // 3. Apply category filtering logic
-  return filterType === "all"
-    ? sorted
-    : productOrchestrator.getFilterProducts(filterType, sorted);
-}
 
 /**
  * Executes the final deletion of a product and refreshes the management table.
@@ -247,36 +249,26 @@ async function handleDeleteConfirm({
   useCases,
   api: { fetchProducts, deleteData },
 }) {
-  const { productInteractionState, productState } = states;
+  const { productUIState } = states;
   const { componentUIHandler } = ui;
-  const { productOrchestrator } = controller;
+  const { productOrchestrator, createTransformers } = controller;
   const {
     componentServices: { productTableServices },
   } = services;
 
-  await deleteData(productInteractionState.deleteId);
+  const deleteId = productUIState.deleteId;
+  await deleteData(deleteId);
   await fetchProducts();
 
-  const baseList = productInteractionState.isSearching
-    ? productInteractionState.searchResults
-    : productState.list;
+  const transformers = createTransformers();
+  const list = transformers.reduce(
+    (list, transformer) => transformer(list),
+    productOrchestrator.getProductList(),
+  );
 
-  const displayContext = {
-    list: baseList,
-    interaction: {
-      deleteId: productInteractionState.deleteId,
-      filterType: productInteractionState.filterType,
-      sortStrategy: productInteractionState.sortPriceStrategy,
-    },
-  };
+  const withoutDeleted = list.filter((item) => item.id !== deleteId);
 
-  const finalDisplayList = getDisplayProducts({
-    displayContext,
-    services: { productTableServices },
-    productOrchestrator
-  });
-
-  await productOrchestrator.refreshProductListWithState(finalDisplayList);
+  await productOrchestrator.refreshProductListWithState(withoutDeleted);
 }
 
 /* ======== 3. PRODUCT CANCEL DELETION ======== */
@@ -291,13 +283,13 @@ function handleCancelDelete({ action, states, ui }) {
   const {
     componentUIHandler: { productTableUI },
   } = ui;
-  const { productInteractionState } = states;
+  const { productUIState } = states;
 
   productTableUI.setPendingProductRowUIState(
-    productInteractionState.deleteId,
+    productUIState.deleteId,
     action.payload.action,
   );
-  productInteractionState.deleteId = null;
+  productUIState.deleteId = null;
 }
 
 /* ======== 4. PRODUCT EDIT HOVER  ======== */
@@ -309,12 +301,12 @@ function handleCancelDelete({ action, states, ui }) {
  * @param {Object} params.ui - UI handlers for row state manipulation.
  */
 function handleEditHover({ action, states, ui }) {
-  const { productInteractionState } = states;
+  const { productUIState } = states;
   const {
     componentUIHandler: { productTableUI },
   } = ui;
 
-  if (productInteractionState.onEditForm) return;
+  if (productUIState.onEditForm) return;
   productTableUI.setPendingProductRowUIState(
     action.payload.id,
     action.payload.action,
@@ -331,7 +323,7 @@ function handleEditHover({ action, states, ui }) {
  * @param {Object} params.services - Component services for form visibility.
  */
 function handleCloseForm({ action, states, ui, services }) {
-  const { productInteractionState } = states;
+  const { productUIState } = states;
   const {
     componentUIHandler: { productTableUI },
   } = ui;
@@ -340,9 +332,9 @@ function handleCloseForm({ action, states, ui, services }) {
   } = services;
 
   productFormServices.hideForm();
-  if (!productInteractionState.editId) return;
-  productTableUI.hideHighlightEditRow(productInteractionState.editId);
-  productInteractionState.onEditForm = false;
+  if (!productUIState.editId) return;
+  productTableUI.hideHighlightEditRow(productUIState.editId);
+  productUIState.onEditForm = false;
 }
 
 /* ======== 6. PRODUCT EDIT STARTED ======== */
@@ -356,7 +348,7 @@ function handleCloseForm({ action, states, ui, services }) {
  * @param {Object} params.services - Component services to manage form visibility and data.
  */
 function handleProductEditStart({ action, states, ui, services }) {
-  const { productInteractionState } = states;
+  const { productUIState, productFormState } = states;
   const {
     componentUIHandler: { productTableUI },
   } = ui;
@@ -365,19 +357,19 @@ function handleProductEditStart({ action, states, ui, services }) {
   } = services;
 
   if (
-    productInteractionState.formState.onDraft &
-    (productInteractionState.formState.mode === "editing" &&
-      action.payload.id === productInteractionState.editId)
+    productFormState.onDraft &
+    (productFormState.mode === "editing" &&
+      action.payload.id === productUIState.editId)
   ) {
     productFormServices.openEditFormWithState(action.payload.product);
   } else {
     productFormServices.openEditFormFresh(action.payload.product);
 
-    productInteractionState.formState.onDraft = true;
-    productInteractionState.formState.mode = "editing";
-    productInteractionState.editId = action.payload.id;
+    productFormState.onDraft = true;
+    productFormState.mode = "editing";
+    productUIState.editId = action.payload.id;
   }
-  productInteractionState.onEditForm = true;
+  productUIState.onEditForm = true;
   productTableUI.showHighlightEditRow(action.payload.id);
 }
 
@@ -392,9 +384,15 @@ function handleProductEditStart({ action, states, ui, services }) {
  * @param {Object} data - The new product data.
  * @returns {Promise<void>}
  */
-async function submitUpdate(editId, data, toastServices, updateProduct) {
+async function submitUpdateAndRefresh({
+  editId,
+  data,
+  toastServices,
+  updateProduct,
+}) {
   toastServices.showLoading();
   await updateProduct(editId, data);
+  await fetchProducts();
   toastServices.hideLoading();
 }
 
@@ -402,34 +400,22 @@ async function submitUpdate(editId, data, toastServices, updateProduct) {
  * Resets the UI and state after a successful update.
  * @param {Object} params
  * @param {string|number} params.editId - The ID of the product.
- * @param {Object} params.productInteractionState - Contain state of the editing process.
+ * @param {Object} params.productUIState - Contain state of the editing process.
  * @param {Object} params.productTableUI - UI utilities for the product table.
  * @param {Object} params.productFormServices - Service handling form visibility.
+ * @param {Object} params.productFormState - Contain state of form for reset.
  */
 function cleanupAfterUpdate({
   editId,
-  productInteractionState,
+  productUIState,
   productTableUI,
   productFormServices,
+  productFormState,
 }) {
   productTableUI.hideHighlightEditRow(editId);
-  productInteractionState.editId = null;
+  productUIState.editId = null;
   productFormServices.hideForm();
-}
-
-/**
- * Refreshes the product list and displays a success notification.
- * @async
- * @param {Object} componentUIHandler - Utilities for UI manipulation.
- * @returns {Promise<void>}
- */
-async function refreshProductList(
-  productState,
-  productOrchestrator,
-  toastServices,
-) {
-  await productOrchestrator.refreshProductList(productState.list.length);
-  toastServices.showUpdateSuccess();
+  productFormState.reset();
 }
 
 /**
@@ -467,21 +453,25 @@ async function handleProductUpdateSubmitted({
   services,
   controller,
   domain: { productData },
-  api: {updateProduct}
+  api: { updateProduct, fetchProducts },
 }) {
-  const { productInteractionState, productState } = states;
+  const { productUIState, productFormState } = states;
   const {
     componentUIHandler: { productTableUI },
   } = ui;
   const {
     componentServices: { productFormServices, toastServices },
   } = services;
-  const { productOrchestrator } = controller;
-  const editId = productInteractionState.editId;
+
+  const { productOrchestrator, createTransformers } = controller;
+  const editId = productUIState.editId;
+
+  const productList = productOrchestrator.getProductList();
 
   // 1. Prepare and detect changes
   const rawData = productFormServices.getFormData();
-  const currentProduct = productState.list.find((item) => item.id === editId);
+  const currentProduct = productList.find((item) => item.id === editId);
+
   const { normalizedData, changedFields, changedRawData } = prepareUpdateData(
     rawData,
     currentProduct,
@@ -489,9 +479,7 @@ async function handleProductUpdateSubmitted({
   );
 
   // 2. Validate only changed data
-  const currentNameProductList = productData.getNameProductList(
-    productState.list,
-  );
+  const currentNameProductList = productData.getNameProductList(productList);
   const results = productFormServices.validateData(
     changedRawData,
     currentNameProductList,
@@ -501,20 +489,41 @@ async function handleProductUpdateSubmitted({
     toastServices.showError("Data invalid! Check your form");
     return;
   }
-  // 3. API Submission
-  await submitUpdate(editId, normalizedData, toastServices, updateProduct);
 
-  // 4. State & UI Cleanup
-  productInteractionState.formState.reset();
-  cleanupAfterUpdate({
+  // 3. Submit update request and refresh product data from server
+  await submitUpdateAndRefresh({
     editId,
-    productInteractionState,
-    productTableUI,
-    productFormServices,
+    data: normalizedData,
+    toastServices,
+    updateProduct,
+    fetchProducts,
   });
 
-  // 5. Refresh and Visual Feedback
-  await refreshProductList(productState, productOrchestrator, toastServices);
+  // 4. Reset UI and interaction state after update
+  cleanupAfterUpdate({
+    editId,
+    productUIState,
+    productTableUI,
+    productFormServices,
+    productFormState,
+  });
+
+  // 5. Define transformation pipeline (search → filter → sort)
+  const transformers = createTransformers();
+
+  //6. Build final display list from base data through pipeline
+  const list = transformers.reduce(
+    (list, transformer) => transformer(list),
+    productOrchestrator.getProductList(),
+  );
+
+  // 7. Render updated list in original order context
+  productTableUI.renderRawOrderOfList(list);
+
+  // 8. Show success notification
+  toastServices.showUpdateSuccess();
+
+  // 9. Highlight the updated row in UI
   productTableUI.highlightUpdatedRow(editId);
 }
 
@@ -533,9 +542,9 @@ function handleProductSortChanged({
   states,
   ui,
   services,
-  controller: { productOrchestrator },
+  controller: { productOrchestrator, createTransformers },
 }) {
-  const { productInteractionState, productState } = states;
+  const { productSortedState } = states;
   const {
     componentUIHandler: { productTableUI },
   } = ui;
@@ -544,24 +553,17 @@ function handleProductSortChanged({
   } = services;
 
   // Update sorting state
-  productInteractionState.sortPriceStrategy = action.payload.sortStrategy;
+  productSortedState.sortPriceStrategy = action.payload.sortStrategy;
 
-  // Determine the base list: either current search results or the full product list
-  const baseList = productInteractionState.isSearching
-    ? productInteractionState.searchResults
-    : productState.list;
-
-  // Apply current filters to the base list
-  const filteredList = productOrchestrator.getCurrentFilteredList(baseList);
-
-  // Apply the sorting strategy to the filtered results
-  const sortedList = productTableServices.getSortedProducts(
-    action.payload.sortStrategy,
-    filteredList,
+  // 5. Define transformation pipeline (search → filter → sort)
+  const transformers = createTransformers();
+  //6. Build final display list from base data through pipeline
+  const list = transformers.reduce(
+    (list, transformer) => transformer(list),
+    productOrchestrator.getProductList(),
   );
-
   // Render the final sorted and filtered list
-  productTableUI.renderRawOrderOfList(sortedList);
+  productTableUI.renderRawOrderOfList(list);
 }
 
 /* ======== 9. PRODUCT SEARCH REQUEST ======== */
@@ -575,20 +577,20 @@ function handleProductSortChanged({
  * @returns {boolean} returns.isSearching - Whether the search mode is active.
  * @returns {Array} returns.resultList - The list of products matching the search/filter criteria.
  */
-const getSearchResult = (inputValue, filteredList, useCases) => {
-  const { state, list } = useCases.resolveProductSearch(
-    inputValue,
-    filteredList,
+function resolveProductSearch({ searchValue, list, useCases }) {
+  const { state, list: searchList } = useCases.resolveProductSearch(
+    searchValue,
+    list,
   );
 
   const mapping = {
     NOT_FOUND: { isSearching: true, resultList: [] },
-    EMPTY: { isSearching: false, resultList: filteredList },
-    DEFAULT: { isSearching: true, resultList: list },
+    EMPTY: { isSearching: false, resultList: searchList },
+    DEFAULT: { isSearching: true, resultList: searchList },
   };
 
   return mapping[state] || mapping.DEFAULT;
-};
+}
 
 //MAIN HANDLER
 /**
@@ -608,7 +610,7 @@ function handleSearchProductRequest({
   useCases,
   controller: { productOrchestrator },
 }) {
-  const { productInteractionState, productState } = states;
+  const { productSearchState } = states;
   const {
     componentUIHandler: { productTableUI },
   } = ui;
@@ -616,23 +618,30 @@ function handleSearchProductRequest({
     componentServices: { productTableServices },
   } = services;
 
-  // Apply filters to the master list before searching
-  const filteredList = productOrchestrator.getCurrentFilteredList(
-    productState.list,
-  );
-  const sortedList = productTableServices.getSortedProducts(
-    productInteractionState.sortPriceStrategy,
-    filteredList,
+  // Define transformation pipeline (filter → sort)
+  const transformers = [
+    (list) => productOrchestrator.applyFilter(list),
+    (list) => productOrchestrator.applySortedType(list),
+  ];
+  // Build base list after applying filter and sort
+  const list = transformers.reduce(
+    (list, transformer) => transformer(list),
+    productOrchestrator.getProductList(),
   );
 
-  const { isSearching, resultList } = getSearchResult(
-    action.payload.inputValue,
-    sortedList,
+  // Resolve search state and compute matching results
+  const { isSearching, resultList } = resolveProductSearch({
+    searchValue: action.payload.inputValue,
+    list,
     useCases,
-  );
+  });
+
   // Sync internal search state
-  productInteractionState.isSearching = isSearching;
-  productInteractionState.searchResults = resultList;
+  productSearchState.isSearching = isSearching;
+  productSearchState.searchResultIds = new Set(
+    resultList.map((item) => item.id),
+  );
+
   // UI Branching: Show "Not Found" or render the list
   if (isSearching && resultList.length === 0) {
     productTableUI.renderNotFoundState();
@@ -652,40 +661,37 @@ function handleSearchProductRequest({
  * @param {Object} params.ui - UI handlers to render the filtered list.
  * @param {Object} params.services - Table services for sorting and filtering logic.
  */
-function handleTableFilterRequest({ action, states, ui, services, controller }) {
-  const { productInteractionState, productState } = states;
+function handleTableFilterRequest({
+  action,
+  states,
+  ui,
+  services,
+  controller,
+}) {
+  const { productFilterState } = states;
   const {
     componentUIHandler: { productTableUI },
   } = ui;
   const {
     componentServices: { productTableServices },
   } = services;
-  const {productOrchestrator} = controller;
+  const { productOrchestrator, createTransformers } = controller;
   const { productType } = action.payload;
 
-  // Determine the source list based on active search or default sorted list
-  let baseList = productInteractionState.isSearching
-    ? productInteractionState.searchResults
-    : productState.list;
-
-  const sortedList = productTableServices.getSortedProducts(
-    productInteractionState.sortPriceStrategy,
-    baseList,
-  );
-  // Apply category filter logic
-  const finalDisplayList =
-    productType === "all"
-      ? sortedList
-      : productOrchestrator.getFilterProducts(productType, sortedList);
-
   // Update internal states
-  productInteractionState.filterType = productType;
+  productFilterState.filterType = productType;
 
+  const transformers = createTransformers();
+
+  const list = transformers.reduce(
+    (list, transformer) => transformer(list),
+    productOrchestrator.getProductList(),
+  );
   // Syncing the length of the filtered results
-  productInteractionState.filteredCount = finalDisplayList.length;
+  productFilterState.filteredCount = list.length;
 
   // Refresh the table UI with the final list
-  productTableUI.renderRawOrderOfList(finalDisplayList);
+  productTableUI.renderRawOrderOfList(list);
 }
 
 /* ======== 10. STATUS EVENT TRIGGER ======== */
@@ -716,16 +722,13 @@ function handleOpenAddProductForm({ states, services }) {
   const {
     componentServices: { productFormServices },
   } = services;
-  const { productInteractionState } = states;
-  if (
-    productInteractionState.formState.onDraft &
-    (productInteractionState.formState.mode === "adding")
-  ) {
+  const { productFormState } = states;
+  if (productFormState.onDraft & (productFormState.mode === "adding")) {
     productFormServices.openAddFormWithState();
   } else {
     productFormServices.openAddFormFresh();
-    productInteractionState.formState.onDraft = true;
-    productInteractionState.formState.mode = "adding";
+    productFormState.onDraft = true;
+    productFormState.mode = "adding";
   }
 }
 
@@ -742,16 +745,37 @@ function handleOpenAddProductForm({ states, services }) {
  * @returns {Promise<void>}
  */
 async function refreshAfterCreation({
-  productFormServices,
-  toastServices,
-  productOrchestrator,
+  states: { productSearchState },
+  componentServices: { productFormServices, toastServices },
+  componentUIHandler: { productTableUI },
+  controller: { productOrchestrator, createTransformers },
+  api: { fetchProducts },
 }) {
+  const previousProductIds = new Set(
+    productOrchestrator.getProductList().map((item) => item.id),
+  );
+
+  await fetchProducts();
   productFormServices.hideForm();
   toastServices.hideLoading();
 
-  // Refresh data with the updated list length
-  await productOrchestrator.refreshProductList(productState.list.length + 1);
+  const currentProductList = productOrchestrator.getProductList();
+
+  const newlyAddedProduct = currentProductList.find(
+    (product) => !previousProductIds.has(product.id),
+  );
+
+  productSearchState.searchResultIds.add(newlyAddedProduct.id);
+
+  const transformers = createTransformers();
+  const list = transformers.reduce(
+    (list, transformer) => transformer(list),
+    productOrchestrator.getProductList(),
+  );
+
+  productTableUI.renderRawOrderOfList(list);
   toastServices.showAddSuccess();
+  productTableUI.highlightAddedRow(newlyAddedProduct.id);
 }
 /**
  * Processes the creation of a new product.
@@ -772,22 +796,21 @@ async function handleCreateNewProduct({
   useCases,
   domain: { productData },
   errorHanlders,
-  api: {addProduct}
+  api: { addProduct, fetchProducts },
 }) {
-  const { productState } = states;
-  const oldList = [...productState.list];
+  const { productFormState } = states;
   const {
     componentServices: { productFormServices, toastServices },
   } = services;
-  const { productOrchestrator } = controller;
   const {
     componentUIHandler: { productTableUI },
   } = ui;
+  const { productOrchestrator } = controller;
 
   // 1. Validation logic
   const data = productFormServices.getFormData();
   const currentNameProductList = productData.getNameProductList(
-    productState.list,
+    productOrchestrator.getProductList(),
   );
   const results = productFormServices.validateData(
     data,
@@ -800,7 +823,7 @@ async function handleCreateNewProduct({
   }
 
   // 2. Submission and State Management
-  productInteractionState.formState.reset();
+  productFormState.reset();
   const norminalizeData = productFormServices.normalizeFormDataTypes(data);
   try {
     toastServices.showLoading();
@@ -808,16 +831,15 @@ async function handleCreateNewProduct({
 
     // 3. Post-creation cleanup and data refresh
     await refreshAfterCreation({
-      productFormServices,
-      toastServices,
-      productOrchestrator,
+      states,
+      componentServices,
+      componentUIHandler,
+      controller,
+      api: { fetchProducts },
     });
   } catch (error) {
     toastServices.hideLoading();
     const errorMessage = errorHanlders.getFriendlyErrorMessage(error);
-    console.log(errorMessage);
     toastServices.showError(errorMessage);
   }
-  // 4. Visual feedback for the new entry
-  productTableUI.highlightAddedRow({ oldList, newList: productState.list });
 }
