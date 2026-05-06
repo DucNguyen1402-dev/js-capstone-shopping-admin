@@ -6,7 +6,7 @@ const STATUS_CLASSES = {
   inStock: "bg-green-500",
   lowStock: "bg-yellow-500",
   outOfStock: "bg-rose-500",
-  discontinuted: "bg-gray-500",
+  discontinued: "bg-gray-500",
   comingSoon: "bg-blue-500",
 };
 
@@ -14,9 +14,15 @@ const STATUS_TEXT = {
   inStock: "In stock",
   lowStock: "Low stock",
   outOfStock: "Out of stock",
-  discontinuted: "discontinuted",
-  comingSoon: "Comming soon",
+  discontinued: "discontinued",
+  comingSoon: "Coming soon",
 };
+
+function getPriceLabel(price, status) {
+  if (status === "comingSoon") return "Coming soon";
+  if (price == null) return "N/A";
+  return price.toLocaleString("en-US", { style: "currency", currency: "USD" });
+}
 
 /**
  * Generates the HTML string for a single table row.
@@ -32,14 +38,9 @@ const ProductRow = (item) => `
    >
   <td class="product-id px-8 py-4 text-sm">${item.id}</td>
   <td class="px-6 py-4 text-sm font-medium ${item.isFieldInvalid("name") ? "border border-red-500" : ""}">${item.name}</td>
-  <td class="px-6 py-4  text-sm ${item.isFieldInvalid("price") ? "border border-red-500" : ""}">${item.price?.toLocaleString(
-    "vn",
-    {
-      style: "currency",
-      currency: "VND",
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    },
+  <td class="px-6 py-4  text-sm ${item.isFieldInvalid("price") ? "border border-red-500" : ""}">${getPriceLabel(
+    item.price,
+    item.status,
   )}</td>
   <td class="px-6 py-4 text-sm text-gray-600 ${item.isFieldInvalid("type") ? "border border-red-500" : ""}">
     <div class="flex h-6 w-20 items-center justify-center rounded-full bg-blue-100 text-xs font-semibold text-blue-700">
@@ -52,7 +53,7 @@ const ProductRow = (item) => `
         <span class="${item.isFieldInvalid("stock") ? "bg-black" : STATUS_CLASSES[item.status]} inline-block h-4 w-4 cursor-pointer rounded-full border-2 border-gray-50 "></span>
         <div
           class="absolute bottom-full left-1/2 z-50 mb-2 w-max -translate-x-1/2 rounded bg-gray-900 px-2 py-1 text-xs text-white opacity-0 transition-opacity duration-400 group-hover:opacity-100">
-          ${STATUS_TEXT[item.status]}
+          ${item.isFieldInvalid("stock")? "undefined" : STATUS_TEXT[item.status]}
         </div>
       </div>
       <span

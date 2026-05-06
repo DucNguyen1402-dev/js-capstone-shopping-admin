@@ -1,10 +1,10 @@
-import { initCreateProductTriggerBtnEvent } from "./create-product-trigger-btn/index.js";
-import { initDropdownMobile } from "./mobile-nav/controller.js";
-import { initAllProductFormEvents } from "./product-form/init-events.js";
+import { initCreateProductTriggerBtnEvent } from "./components/create-product-trigger-btn/index.js";
+import { initDropdownMobile } from "./components/mobile-nav/controller.js";
+import { initAllProductFormEvents } from "./components/product-form/init-events.js";
 import {
   productTableUI,
   initAllProductTableEvents,
-} from "./product-table/index.js";
+} from "./components/product-table/index.js";
 import { fetchProducts, productState } from "./index.js";
 import { dispatch } from "./product-main-controller/controller.js";
 import { productInteractionState } from "./product-interaction-state.js";

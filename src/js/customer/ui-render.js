@@ -29,7 +29,15 @@ export function renderCartItems({
                 <div class="flex-1">
                     <h4 class="font-semibold text-sm">${item.name}</h4>
                     <p class="text-xs text-gray-500">${item.type || "Phone"}</p>
-                    <p class="text-red-600 font-bold text-sm mt-1">${item.price.toLocaleString("en-US", { style: "currency", currency: "USD" })}</p>
+                    <p class="text-red-600 font-bold text-sm mt-1">${item.price.toLocaleString(
+                      "en-US",
+                      {
+                        style: "currency",
+                        currency: "USD",
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      },
+                    )}</p>
                 </div>
                 <div class="flex flex-col items-end gap-2">
                     <div class="flex items-center gap-2">
@@ -89,6 +97,25 @@ export function renderCartItems({
 }
 
 // ========== RENDER DANH SÁCH SẢN PHẨM ==========
+
+function getPriceLabel(price, status) {
+  if (status === "comingSoon") return "Coming soon";
+  if (price == null) return "N/A";
+  return price.toLocaleString("en-US", { style: "currency", currency: "USD" });
+}
+const STAR_RULES = [
+  { max: 0, value: 0 },
+  { max: 50, value: 4 },
+  { max: 100, value: 4.5 },
+  { max: 150, value: 4.9 },
+  { max: Infinity, value: 5 },
+];
+
+function getStarLabel(sold) {
+  const rule = STAR_RULES.find((r) => sold <= r.max);
+  return rule?.value ?? 0;
+}
+
 export function renderDanhSachSP({
   state: { danhSach },
   handlers: { themVaoGioHang },
@@ -111,22 +138,53 @@ export function renderDanhSachSP({
     const desc = phone.desc || phone.description || "High quality product";
 
     html += `
-            <div class="product-card bg-white rounded-xl shadow-md hover:shadow-xl overflow-hidden transition-all duration-300">
-                <div class="bg-gray-50 p-4 h-48 flex items-center justify-center">
-                    <img src="${imgUrl}" alt="${phone.name}" class="max-h-36 object-contain" onerror="this.src='https://placehold.co/300x200?text=Phone'">
-                </div>
-                <div class="p-4">
-                    <h3 class="font-bold text-lg truncate" title="${phone.name}">${phone.name}</h3>
-                    <p class="text-sm text-gray-500 mt-1">${desc.substring(0, 60)}${desc.length > 60 ? "..." : ""}</p>
-                    <div class="mt-2 flex flex-wrap items-center justify-between gap-2">
-                        <span class="text-sm text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">${type}</span>
-                        <span class="text-xl font-bold text-red-600">${price.toLocaleString("en-US", { style: "currency", currency: "USD" })}</span>
-                    </div>
-                    <button class="add-to-cart-btn w-full mt-4 bg-blue-600 hover:bg-blue-700 cursor-pointer text-white font-semibold py-2 rounded-lg transition flex items-center justify-center gap-2" data-id="${phone.id}" data-name="${phone.name}" data-price="${price}" data-image="${imgUrl}" data-type="${type}">
-                        <i class="fas fa-cart-plus"></i> Add to Cart
-                    </button>
-                </div>
-            </div>
+           <div class="product-card overflow-hidden rounded-xl bg-white shadow-md transition-all duration-300 hover:shadow-xl">
+  <div class="flex h-48 items-center justify-center p-4">
+    <img src="${imgUrl}" alt="${phone.name}" class="max-h-36 object-contain"
+      onerror="this.src = 'https://placehold.co/300x200?text=Phone'" />
+  </div>
+  <div class="bg-gray-50 p-4 min-h-85 flex flex-col justify-between">
+    <div>
+    <div class="min-h-14">
+    <h3 class= text-lg font-bold line-clamp-2" title="${phone.name}">
+      ${phone.name}
+    </h3>
+    </div>
+    <div class="mt-1 min-h-15">
+    <p class="text-sm text-gray-500">
+      ${desc.substring(0, 60)}${desc.length > 60 ? "..." : ""}
+    </p>
+    </div>
+    <div class ="mt-2 flex gap-2 text-sm text-gray-500 min-h-10 rounded-sm overflow-hidden">
+    <span class="bg-gray-200/60 p-0.75 w-full">${phone.screen}</span>
+    </div>
+    <div class="mt-6 flex flex-wrap items-center justify-between gap-2 ">
+      <span class="rounded-full bg-blue-50 px-2 py-0.5 text-sm text-blue-600">${type}</span>
+     <span class="${
+       phone.status === "comingSoon"
+         ? "text-green-500 font-medium"
+         : "text-xl font-bold text-red-600"
+     }"> ${getPriceLabel(phone.price, phone.status)}</span>
+    </div>
+    <div class="mt-8 flex items-center gap-3 text-sm">
+      <div class="flex items-center gap-1 font-medium text-yellow-500">
+        <i class="fa-solid fa-star text-xs"></i>
+        <span class="text-gray-800"> ${getStarLabel(phone.sold)} </span>
+      </div>
+
+      <span class="text-gray-300">|</span>
+
+      <span class="text-gray-500"> ${phone.sold} sold </span>
+    </div>
+    </div>
+    <button
+      class="add-to-cart-btn mt-6 flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-blue-600 py-2 font-semibold text-white transition hover:bg-blue-700"
+      data-id="${phone.id}" data-name="${phone.name}" data-price="${price}" data-image="${imgUrl}" data-type="${type}">
+      <span class="fas fa-cart-plus"></span>
+      <span>Add to Cart</span>
+    </button>
+  </div>
+</div>
         `;
   }
   DOMElements.productGrid.innerHTML = html;

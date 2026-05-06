@@ -13,7 +13,7 @@ const STATUS_CLASSES = {
   inStock: ["bg-green-500"],
   lowStock: ["bg-yellow-500"],
   outOfStock: ["bg-rose-500"],
-  discontinuted: ["bg-gray-500"],
+  discontinued: ["bg-gray-500"],
   comingSoon: ["bg-blue-500"],
   unknown: ["bg-slate-900/50"],
 };

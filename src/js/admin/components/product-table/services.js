@@ -32,12 +32,14 @@ const PRODUCT_SORT_STRATEGIES = {
  * @returns {Array|undefined} A new sorted array, or undefined if strategy is invalid.
  */
 function getSortedProducts(sortStrategy, productList) {
-  const sorter = PRODUCT_SORT_STRATEGIES[sortStrategy];
+ const comparator = PRODUCT_SORT_STRATEGIES[sortStrategy];
+  if (!comparator) return [];
 
-  if (!sorter) return;
-  const sortedList = [...productList].sort(sorter);
-
-  return sortedList;
+  return [...productList].sort((a, b) => {
+    if (a.price == null) return 1;
+    if (b.price == null) return -1;
+    return comparator(a, b);
+  });
 }
 
 /**
