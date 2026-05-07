@@ -178,8 +178,10 @@ export function renderDanhSachSP({
     </div>
     </div>
     <button
-      class="add-to-cart-btn mt-6 flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-blue-600 py-2 font-semibold text-white transition hover:bg-blue-700"
-      data-id="${phone.id}" data-name="${phone.name}" data-price="${price}" data-image="${imgUrl}" data-type="${type}">
+      class="add-to-cart-btn mt-6 flex w-full  items-center cursor-pointer justify-center gap-2 rounded-lg bg-blue-600 py-2 font-semibold text-white transition  ${phone.status === "comingSoon" ? "opacity-50" : "hover:bg-blue-700"}"
+      data-id="${phone.id}" data-name="${phone.name}" data-price="${price}" data-image="${imgUrl}" data-type="${type}"
+      data-disabled = ${phone.status === "comingSoon" ? "true" : "false"} 
+      >
       <span class="fas fa-cart-plus"></span>
       <span>Add to Cart</span>
     </button>
@@ -192,6 +194,7 @@ export function renderDanhSachSP({
   // Gắn sự kiện cho nút Add to Cart
   document.querySelectorAll(".add-to-cart-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
+      if (btn.dataset.disabled === "true") return;
       const product = {
         id: parseInt(btn.dataset.id),
         name: btn.dataset.name,
