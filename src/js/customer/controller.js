@@ -212,13 +212,6 @@ const initEvents = () => {
     updateCartUI();
     closeCartSidebar();
   });
-
-  // ========== USER ICON - TÍNH NĂNG ĐANG PHÁT TRIỂN ==========
-  if (userIconBtn) {
-    DOMElements.userIconBtn.addEventListener("click", () => {
-      showToast("🔐 Login feature is coming soon!");
-    });
-  }
 };
 
 // ========== KHỞI CHẠY ==========

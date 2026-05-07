@@ -18,7 +18,6 @@ export const closeCartBtn = $('#closeCartBtn');
 export const cartIconBtn = $('#cartIconBtn');
 export const checkoutBtn = $('#checkoutBtn');
 export const clearCartBtn = $('#clearCartBtn');
-export const userIconBtn = $('#userIconBtn');  // <-- THÊM DÒNG NÀY
 export const toast = $('#toast');
 export const toastMsg = $('#toastMsg');
 
