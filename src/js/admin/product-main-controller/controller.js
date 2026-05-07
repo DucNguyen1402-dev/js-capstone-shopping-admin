@@ -576,8 +576,8 @@ function handleProductSortChanged({
  * - EMPTY: no keyword → original list
  * - DEFAULT: keyword present, has match → filtered list
  */
-function resolveProductSearch(searchValue, list) {
-  const { state, list: searchList } = this.useCases.resolveProductSearch(
+function resolveProductSearch({ searchValue, list, useCases }) {
+  const { state, list: searchList } = useCases.resolveProductSearch(
     searchValue,
     list,
   );
@@ -628,10 +628,11 @@ function handleSearchProductRequest({
   );
 
   // Resolve search state and compute matching results
-  const { isSearching, resultList } = productOrchestrator.resolveProductSearch(
-    action.payload.inputValue,
+  const { isSearching, resultList } = resolveProductSearch({
+    searchValue: action.payload.inputValue,
     list,
-  );
+    useCases,
+  });
 
   // Sync internal search state
   productSearchState.isSearching = isSearching;
