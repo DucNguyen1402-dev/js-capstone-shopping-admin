@@ -120,9 +120,17 @@ const filterProducts = () => {
   // Sắp xếp
   const sortValue = DOMElements.sortSelect.value;
   if (sortValue === "priceAsc") {
-    filtered.sort((a, b) => a.price - b.price);
+    filtered.sort((a, b) => {
+      if (a.price === null) return -1;
+      if (b.price === null) return 1;
+      return a.price - b.price;
+    });
   } else if (sortValue === "priceDesc") {
-    filtered.sort((a, b) => b.price - a.price);
+    filtered.sort((a, b) => {
+      if (a.price === null) return -1;
+      if (b.price === null) return 1;
+      return b.price - a.price;
+    });
   } else {
     filtered.sort((a, b) => b.id - a.id);
   }
