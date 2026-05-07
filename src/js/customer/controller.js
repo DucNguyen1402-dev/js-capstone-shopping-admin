@@ -98,7 +98,7 @@ const filterProducts = () => {
   if (priceRange !== "all") {
     filtered = filtered.filter((phone) => {
       const price = phone.price;
-
+      if(price === null) return false;
       if (priceRange === "under300") return price < 300;
       if (priceRange === "300-700") return price >= 300 && price <= 700;
       if (priceRange === "700-1000") return price > 700 && price <= 1000;
