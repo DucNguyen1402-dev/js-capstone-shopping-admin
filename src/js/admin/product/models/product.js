@@ -54,7 +54,7 @@ export class ProductModel {
     return {
       name: () => !this.name || this.name.trim().length < 2,
 
-      price: () => isNaN(this.price) || this.price < 0,
+      price: () => isNaN(this.price) || this.price < 0 || this.price === null & this.status !== "comingSoon",
 
       screen: () => !this.screen || this.screen.trim() === "",
 
